@@ -1,0 +1,36 @@
+@import '../../../colors.scss';
+@import '../../../Common/label/label.scss';
+.Common__mainMenuItem{
+    header {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+    }
+    span{
+        display: inline-block;
+        // margin-right: 3px;
+    }
+    span:nth-child(2),span:nth-child(3),span:nth-child(4){
+        margin-right: 3px;
+    }
+    span:nth-child(1){
+        margin-right: auto;
+   }
+    span:nth-child(2){
+        @include label($green-color);
+   }
+   span:nth-child(3){
+        @include label($yell-label-color);
+    }
+    span:nth-child(4){
+        @include label($red-label-color);
+    }
+    div{
+        background-color: $lightGrey-color;
+        height: 196px;
+        padding: 28px 0 0 47px;
+        font-size: 18px;
+        font-weight: 600;
+    }
+    
+}

@@ -1,0 +1,26 @@
+@import '../../colors.scss';
+@import '../../Common/label/label.scss';
+.Header__AverEvents{
+    border: 2px solid #faf9f9;
+    position: relative;
+    top: 7px;
+    width: 31px;
+    height: 31px;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 22px;
+    line-height: 33px;
+    .Header__exceptions,.Header__errors{
+        position: absolute;
+    }
+    .Header__errors{
+        @include label($yell-label-color);
+        top: -7px;
+        right: -35px;
+    }
+    .Header__exceptions{
+        @include label($red-label-color);
+        bottom: -9px;
+        right: -36px;
+    }
+}

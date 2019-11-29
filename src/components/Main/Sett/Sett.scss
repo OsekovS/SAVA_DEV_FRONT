@@ -1,0 +1,23 @@
+.Sett{
+    // ul{
+    //     display: flex;
+    //     flex-wrap: wrap;
+    //     justify-content: space-evenly;
+    // }
+    // li{
+    //     width: 21%;
+    //     height: 100px;
+    // }
+    ul{
+        padding: 17px 29px 12px 19px;
+        box-sizing: border-box;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: left
+    }
+    li{
+        width: 23.5%;
+        // height: 100px;
+        margin-right: 1.1%;
+    }
+}

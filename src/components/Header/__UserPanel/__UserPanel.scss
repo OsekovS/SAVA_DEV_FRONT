@@ -1,0 +1,32 @@
+@import '../../colors.scss';
+.Header__UserPanel{
+border-left: 2px solid $white-color;
+border-right: 2px solid $white-color;
+cursor: pointer;
+width: 250px;
+padding: 0 13px;
+box-sizing: border-box;
+text-align: center;
+display: flex;
+align-items: center;
+
+img{
+    width: 34px;
+    height: 35px;
+    margin-right: 13px;
+}
+span{
+    font-size: 20px;
+    
+}
+button{
+    background: inherit;
+    width: 10px;
+    height: 10px;
+    border: none;
+    border-left: 2px solid $white-color;
+    border-bottom: 2px solid $white-color;
+    transform: rotate(-45deg);
+    margin-left: 14px;
+}
+}

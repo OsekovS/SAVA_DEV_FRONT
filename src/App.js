@@ -1,69 +1,52 @@
-import React, {Component} from 'react';
-import './App.css';
-import Navbar from './components/Navbar/Navbar';
-import {HashRouter, Route, withRouter} from "react-router-dom";
-
-import UsersContainer from "./components/Users/UsersContainer";
-import HeaderContainer from "./components/Header/HeaderContainer";
-import LoginPage from "./components/Login/Login";
-import {connect, Provider} from "react-redux";
-import {compose} from "redux";
-import {initializeApp} from "./redux/app-reducer";
-import Preloader from "./components/common/Preloader/Preloader";
-import store from "./redux/redux-store";
-import {withSuspense} from "./hoc/withSuspense";
-
-const DialogsContainer = React.lazy(() => import('./components/Dialogs/DialogsContainer'));
-const ProfileContainer = React.lazy(() => import('./components/Profile/ProfileContainer'));
+import React from 'react'
+import './App.scss'
+import Header from './components/Header/Header'
+import NavBar from './components/NavBar/NavBar'
+import Main from './components/Main/Main'
+import {getCookie} from './components/JS/core'
+import {Visualization__cameras,Visualization__acs,Visualization__iss} from './components/Visualization/Visualization'
+import {Settings__lic,Settings__modules,Settings__users,Settings__common} from './components/Settings/Settings'
+import {BrowserRouter, Route} from 'react-router-dom'
 
 
+// import Settings from './components/Settings/Settings';
 
-class App extends Component {
-    componentDidMount() {
-        this.props.initializeApp();
-    }
-
-    render() {
-        if (!this.props.initialized) {
-            return <Preloader />
-        }
-
-        return (
-                    <div className='app-wrapper'>
-                        <HeaderContainer/>
-                        <Navbar/>
-                        <div className='app-wrapper-content'>
-                            <Route path='/dialogs'
-                                   render={withSuspense(DialogsContainer)}/>
-
-                            <Route path='/profile/:userId?'
-                                   render={withSuspense(ProfileContainer)} />
-
-                            <Route path='/users'
-                                   render={() => <UsersContainer/>}/>
-
-                            <Route path='/login'
-                                   render={() => <LoginPage/>}/>
-                        </div>
-                    </div>
-        )
-    }
+const App = (props) => {
+  
+  // setCookie('dsffd', 'Jdsdfohn', {secure: true, 'max-age': 3600}); 
+  return (
+    <div className='app-wrapper'>
+      <Header allEvents={props.state.headerInfo.allEvents}
+      briefUserInfo={props.state.headerInfo.briefUserInfo}/>
+       <NavBar navInfo={props.state.navBar.state}/>
+       
+      <Route path='/main' render={()=><Main 
+      cameras={props.state.allEvents.cameras}
+      acs={props.state.allEvents.acs}
+      iss={props.state.allEvents.iss}
+      />}></Route>
+      <Route path='/visualization/cameras' render={()=><Visualization__cameras 
+      logs={props.state.cameras.logs} />}></Route>
+      <Route path='/visualization/acss' render={()=><Visualization__acs 
+      logs={props.state.acs.logs} />}></Route>
+      <Route path='/visualization/iss' render={()=><Visualization__iss 
+      logs={props.state.iss.logs} />}></Route> 
+      <Route path='/settings/modules' render={()=><Settings__modules 
+      cameras={props.state.cameras.settings} 
+      acs={props.state.acs.settings} 
+      iss={props.state.iss.settings} />}></Route>
+      <Route path='/settings/users' render={()=><Settings__users 
+      users={props.state.users} />}></Route>
+      <Route path='/settings/common' render={()=><Settings__common 
+      common={props.state.net}
+      notific={props.state.notific}
+      timezone={props.state.timezone}
+      dispatch={props.dispatch}
+      />}></Route>
+      <Route path='/settings/lic' render = { () =>  <Settings__lic lic = {props.state.lic}/>  }
+        exactd       />
+    </div>
+  )
 }
 
-const mapStateToProps = (state) => ({
-    initialized: state.app.initialized
-})
-
-let AppContainer = compose(
-    withRouter,
-    connect(mapStateToProps, {initializeApp}))(App);
-
-const SamuraiJSApp = (props) => {
-   return <HashRouter >
-        <Provider store={store}>
-            <AppContainer />
-        </Provider>
-    </HashRouter>
-}
-
-export default SamuraiJSApp;
+export default App;
