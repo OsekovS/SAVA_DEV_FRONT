@@ -32,11 +32,11 @@ const App = (props) => {
       <Route path='/visualization/iss' render={()=><Visualization__iss 
       logs={props.state.iss.logs} />}></Route> 
       <Route path='/settings/modules' render={()=><Settings__modules 
-      cameras={props.state.cameras.settings} 
+      
       acs={props.state.acs.settings} 
       iss={props.state.iss.settings} />}></Route>
       <Route path='/settings/users' render={()=><Settings__users 
-      users={props.state.users} />}></Route>
+       />}></Route>
       <Route path='/settings/common' render={()=><Settings__common 
       common={props.state.net}
       notific={props.state.notific}

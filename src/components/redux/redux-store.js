@@ -16,15 +16,16 @@ import timezoneSettingsReducer from './timezone-settings-reducer'
 let reducers = combineReducers({
     notific: notificSettingsReducer,
     net: netSettingsReducer,
+    timezone: timezoneSettingsReducer,
+    users: usersReducer,
+
+    cameras: camerasReducer,
+    acs: acsReducer,
+    iss: issReducer,
 
     headerInfo: headerReducer,
     navBar: navBarReducer,
     allEvents: allEventsReducer,
-    cameras: camerasReducer,
-    acs: acsReducer,
-    iss: issReducer,
-    users: usersReducer,
-    timezone: timezoneSettingsReducer,
     lic: licReducer,
     form: formReducer
 })

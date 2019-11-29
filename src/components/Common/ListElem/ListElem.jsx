@@ -4,7 +4,7 @@ import {createMarkup} from '../../JS/core'
 
 const ListElem = (props) => {
 
-    return <li className={props.name} 
+    return <li className={props.name}  
     dangerouslySetInnerHTML={createMarkup(
         Object.values(props.items).reduce(gen,'') +
         '<img src=""/><img src=""/>'

@@ -1,4 +1,4 @@
-const UPDATE_NEW_MESSAGE_BODY = 'UPDATE_NEW_MESSAGE_BODY';
+const ADD_CAM = 'ADD_CAM';
 const SEND_MESSAGE = 'SEND_MESSAGE';
 
 let initialState = {
@@ -67,8 +67,15 @@ let initialState = {
 
 const camerasReducer = (state = initialState, action) => {
    switch (action.type) {
-       case UPDATE_NEW_MESSAGE_BODY:
-           return state;
+        case ADD_CAM:
+            console.log('add_cam')
+            // let newcAM = {
+            //     id: state.length,
+            //     name: action.login,
+            //     admin:    action.admin === undefined ? false : action.admin
+            // };        
+            // return [...state,newUser];
+            return state;
        case SEND_MESSAGE:
            return state;
        default:
@@ -76,8 +83,7 @@ const camerasReducer = (state = initialState, action) => {
    }
 }
 
-export const sendMessageCreator = () => ({type: SEND_MESSAGE})
-export const updateNewMessageBodyCreator = (body) =>
-    ({ type: UPDATE_NEW_MESSAGE_BODY, body: body })
+export const addCamCreator = (body) =>
+    ({ type: ADD_CAM, body: body })
 
 export default camerasReducer;
