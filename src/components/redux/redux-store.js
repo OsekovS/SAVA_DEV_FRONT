@@ -14,6 +14,9 @@ import timezoneSettingsReducer from './timezone-settings-reducer'
 
 
 let reducers = combineReducers({
+    notific: notificSettingsReducer,
+    net: netSettingsReducer,
+
     headerInfo: headerReducer,
     navBar: navBarReducer,
     allEvents: allEventsReducer,
@@ -21,12 +24,10 @@ let reducers = combineReducers({
     acs: acsReducer,
     iss: issReducer,
     users: usersReducer,
-    net: netSettingsReducer,
-    notific: notificSettingsReducer,
     timezone: timezoneSettingsReducer,
     lic: licReducer,
     form: formReducer
 })
 let store = createStore(reducers);
-
+window.store=store
 export default store;

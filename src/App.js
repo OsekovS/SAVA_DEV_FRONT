@@ -1,7 +1,7 @@
 import React from 'react'
 import './App.scss'
 import Header from './components/Header/Header'
-import NavBar from './components/NavBar/NavBar'
+import NavBar from './components/Navbar/Navbar'
 import Main from './components/Main/Main'
 import {getCookie} from './components/JS/core'
 import {Visualization__cameras,Visualization__acs,Visualization__iss} from './components/Visualization/Visualization'

@@ -1,35 +1,30 @@
 import React from 'react';
 import {Field, reduxForm} from "redux-form";
 
-const LoginForm = (props) => {
+
+
+const form = (props) => {
     return (
         <form onSubmit={props.handleSubmit}>
+            <p><label>Адрес на который отправлять уведомление<Field placeholder={props.to} name={"to"} component={"input"}/></label></p>
+            <p><label>Адрес с которого отправлять уведомление<Field placeholder={props.from} name={"from"} component={"input"}/></label></p>
             <div>
-                <Field placeholder={"Login"} name={"login"} component={"input"}/>
-            </div>
-            <div>
-                <Field placeholder={"Password"} name={"password"} component={"input"}/>
-            </div>
-            <div>
-                <Field component={"input"} name={"rememberMe"} type={"checkbox"}/> remember me
-            </div>
-            <div>
-                <button>Login</button>
+                <button>Настроить</button>
             </div>
         </form>
     )
 }
 
-const LoginReduxForm =  reduxForm({form: 'login'})(LoginForm)
+const ReduxForm =  reduxForm({form: 'notific'})(form)
 
 const NotificationServer = (props) => {
     const onSubmit = (formData) => {
-        console.log(formData);
+        props.updateSettings(formData)
     }
 
     return <div>
-        <h1>Login</h1>
-        <LoginReduxForm onSubmit={onSubmit} />
+        <span className="settings_text">Настройки уведомлений</span>
+        <ReduxForm to={props.to} from={props.from} onSubmit={onSubmit} />
     </div>
 }
 
