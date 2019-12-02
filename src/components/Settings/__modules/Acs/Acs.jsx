@@ -75,7 +75,7 @@ elemChangeCallBack={onDelObj} elemDellCallBack={onDellEndpoint}/>)
                     <tbody>
                         {objectsElements}  
                     </tbody>
-            </table>
+                </table>
             <ObjectsReduxForm objects={props.objects}  onSubmit={onAddObj} />
             <header className="Common__header Common__header_red">Список конечных точек</header>
                 <table className="Modules_table Modules_table__cam-dev">
@@ -83,7 +83,7 @@ elemChangeCallBack={onDelObj} elemDellCallBack={onDellEndpoint}/>)
                         <ListElem  name='list-elem list-elem__cameras list-elem__title' items={['', 'объект' , 'порт', 'ip адрес']  }/>
                         {endpointsElemens}  
                     </tbody>
-             </table>
+                 </table>
              <EndpsReduxForm objects={props.objects}  onSubmit={onAddEndpoint} />
         </div>
 }
