@@ -1,5 +1,8 @@
+import { addUseActionCreator } from "./users-reducer";
+
 const ADD_CAM = 'ADD_CAM';
-const SEND_MESSAGE = 'SEND_MESSAGE';
+const ADD_OBJ = 'ADD_OBJ';
+const ADD_REG = 'ADD_REG';
 
 let initialState = {
     settings: {
@@ -64,26 +67,59 @@ let initialState = {
         "param":"2019-11-06 12:51:37"
     }]
 };
-
+// {type, obj_num, ip, name, login, password, password_rep}
 const camerasReducer = (state = initialState, action) => {
+    let stateCopy
    switch (action.type) {
         case ADD_CAM:
-            console.log('add_cam')
-            // let newcAM = {
-            //     id: state.length,
-            //     name: action.login,
-            //     admin:    action.admin === undefined ? false : action.admin
-            // };        
-            // return [...state,newUser];
-            return state;
-       case SEND_MESSAGE:
-           return state;
+            console.log('camAjaxik')
+            if(action.obj_num === undefined) action.obj_num = 1;
+            let new_cam = {
+                obj_num: state.settings.objects[action.obj_num-1].name,
+                ip: action.ip, 
+                name: action.name, 
+                login: action.login, 
+            };      
+            stateCopy = {...state};
+            stateCopy.settings = {...state.settings};
+            stateCopy.settings.cameras = state.settings.cameras.map((e) => e);
+            stateCopy.settings.cameras.push(new_cam);;
+            return stateCopy;
+       case ADD_OBJ:
+            console.log('camAjaxik')
+            stateCopy = {...state};
+            stateCopy.settings = {...state.settings}
+            stateCopy.settings.objects = [...state.settings.objects, 
+                {numb: state.settings.objects.length ,name: action.obj_name}]
+            return stateCopy;
+       case ADD_REG:
+            console.log('camAjaxik')
+            if(action.obj_num === undefined) action.obj_num = 1;
+            let new_reg = {
+                obj_num: state.settings.objects[action.obj_num-1].name,
+                ip: action.ip, 
+                name: action.name, 
+                login: action.login, 
+            };      
+            stateCopy = {...state};
+            stateCopy.settings = {...state.settings};
+            stateCopy.settings.registrators = state.settings.registrators.map((e) => e);
+            stateCopy.settings.registrators.push(new_reg);
+
+            return stateCopy;
        default:
            return state;
    }
 }
 
-export const addCamCreator = (body) =>
-    ({ type: ADD_CAM, body: body })
+export const addCamCreator = ({obj_num, ip, name, login, password, password_rep}) =>
+    ({ type: ADD_CAM, obj_num: obj_num, ip: ip, name: name, login: login, password: password, password_rep: password_rep })
+
+export const addRegCreator = ({obj_num, ip, name, login, password, password_rep}) =>
+({ type: ADD_REG, obj_num: obj_num, ip: ip, name: name, login: login, password: password, password_rep: password_rep })
+
+export const addObjCreator = ({obj_name}) =>
+({ type: ADD_OBJ, obj_name: obj_name })
+
 
 export default camerasReducer;

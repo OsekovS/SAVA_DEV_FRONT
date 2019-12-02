@@ -1,4 +1,4 @@
-import {addCamCreator} from "../../../redux/cameras-reducer";
+import {addCamCreator, addRegCreator, addObjCreator} from "../../../redux/cameras-reducer";
 import Cameras from "./Cameras";
 import {connect} from "react-redux";
 
@@ -13,6 +13,12 @@ let mapDispatchToProps = (dispatch) => {
     return {
         addCam: (obj) => {
             dispatch(addCamCreator(obj));
+        },
+        addReg: (obj) => {
+            dispatch(addRegCreator(obj));
+        },
+        addObj: (obj) => {
+            dispatch(addObjCreator(obj));
         }
     }
 }
