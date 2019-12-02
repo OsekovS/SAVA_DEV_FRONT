@@ -52,7 +52,7 @@ const regs_form = (props) => {
                     {objectsElements}
                 </Field>
             </label>
-            <p><label>Ip: <Field name="ip" placeholder={"Ip"} component={"input"}/></label></p>
+            <p><label>Ip адрес: <Field name="ip" placeholder={"Ip"} component={"input"}/></label></p>
             <p><label>Имя: <Field name="name" placeholder={"Имя"} component={"input"}/></label></p>
             <p><label>Логин: <Field name="login" placeholder={"Логин"} component={"input"}/></label></p>
             <p><label>Пароль: <Field name="password" placeholder={"Пароль"} type="password" component={"input"}/></label></p>
@@ -127,7 +127,7 @@ const Cameras = (props) => {
         <header className="Common__header Common__header_red">Список камер</header>
         <table className="Modules_table Modules_table__cam-dev">
             <tbody>
-                <ListElem  name='list-elem list-elem__cameras list-elem__title' items={['объект', 'имя' , 'ip адрес', 'логин']  }/>
+                <ListElem  name='list-elem list-elem__cameras list-elem__title' items={['','объект', 'имя' , 'ip адрес', 'логин']  }/>
                 {camerasElements}   
             </tbody>
         </table>

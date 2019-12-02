@@ -1,4 +1,4 @@
-// import {addCamCreator} from "../../../redux/cameras-reducer";
+import {addEndpCreator, delEndpCreator, addObjCreator, delObjCreator} from "../../../redux/acs-reducer";
 import Acs from "./Acs";
 import {connect} from "react-redux";
 
@@ -10,9 +10,19 @@ let mapStateToProps = (state) => {
 }
 let mapDispatchToProps = (dispatch) => {
     return {
-        // addCam: (obj) => {
-        //     dispatch(addCamCreator(obj));
-        // }
+        addEndp: (id) => {
+            dispatch(addEndpCreator(id));
+        },
+        delEndp: (id) => {
+            dispatch(delEndpCreator(id));
+        },
+        addObj: (obj) => {
+            dispatch(addObjCreator(obj));
+        },
+        delObj: (id) => {
+            dispatch(delObjCreator(id));
+        },
+
     }
 }
 

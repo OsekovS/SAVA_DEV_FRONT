@@ -85,9 +85,9 @@ const camerasReducer = (state = initialState, action) => {
             if(action.obj_num === undefined) action.obj_num = 1;
             let new_cam = {
                 id: state.settings.cameras.length,
-                obj_num: state.settings.objects[action.obj_num-1].name,
-                ip: action.ip, 
+                object: state.settings.objects[action.obj_num-1].name,
                 name: action.name, 
+                ip: action.ip, 
                 login: action.login, 
                 
             };      
