@@ -25,7 +25,7 @@ const Timezone = (props) => {
     }
 
     return <div>
-        <span class="settings_text">Настройки часового пояса></span>	
+        <span className="settings_text">Настройки часового пояса></span>	
         <ReduxForm ntp_server1={props.ntp_server1} ntp_server2={props.ntp_server2} ntp_server3={props.ntp_server3} ntp_server4={props.ntp_server4} onSubmit={onNetSubmit} />
     </div>
 }

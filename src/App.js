@@ -18,32 +18,32 @@ const App = (props) => {
     <div className='app-wrapper'>
       <Header allEvents={props.state.headerInfo.allEvents}
       briefUserInfo={props.state.headerInfo.briefUserInfo}/>
-       <NavBar navInfo={props.state.navBar.state}/>
+       <NavBar />
        
       <Route path='/main' render={()=><Main 
       cameras={props.state.allEvents.cameras}
       acs={props.state.allEvents.acs}
       iss={props.state.allEvents.iss}
       />}></Route>
-      <Route path='/visualization/cameras' render={()=><Visualization__cameras 
+      <Route path='/visualization cameras' render={()=><Visualization__cameras 
       logs={props.state.cameras.logs} />}></Route>
-      <Route path='/visualization/acss' render={()=><Visualization__acs 
+      <Route path='/visualization acs' render={()=><Visualization__acs 
       logs={props.state.acs.logs} />}></Route>
-      <Route path='/visualization/iss' render={()=><Visualization__iss 
+      <Route path='/visualization iss' render={()=><Visualization__iss 
       logs={props.state.iss.logs} />}></Route> 
-      <Route path='/settings/modules' render={()=><Settings__modules 
+      <Route path='/setting module acs' render={()=><Settings__modules 
       
       acs={props.state.acs.settings} 
       iss={props.state.iss.settings} />}></Route>
-      <Route path='/settings/users' render={()=><Settings__users 
+      <Route path='/setting users' render={()=><Settings__users 
        />}></Route>
-      <Route path='/settings/common' render={()=><Settings__common 
+      <Route path='/setting common' render={()=><Settings__common 
       common={props.state.net}
       notific={props.state.notific}
       timezone={props.state.timezone}
       dispatch={props.dispatch}
       />}></Route>
-      <Route path='/settings/lic' render = { () =>  <Settings__lic lic = {props.state.lic}/>  }
+      <Route path='/setting lic' render = { () =>  <Settings__lic lic = {props.state.lic}/>  }
         exactd       />
     </div>
   )

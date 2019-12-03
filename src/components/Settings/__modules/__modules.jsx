@@ -12,9 +12,9 @@ const __modules = (props) => {
     <div className="Settings__modules">
         <Sidebar></Sidebar>
         <div className="Settings__infoHandler">
-            <Route path='/settings/modules/cameras' render={()=><CamerasCont />}></Route>
-            <Route path='/settings/modules/acs' render={()=><AcsCont  />}></Route>
-            <Route path='/settings/modules/iss' render={()=><IssCont />}></Route>
+            <Route path='/settings/modules cameras' render={()=><CamerasCont />}></Route>
+            <Route path='/settings/modules acs' render={()=><AcsCont  />}></Route>
+            <Route path='/settings/modules iss' render={()=><IssCont />}></Route>
         </div>     
     </div>
     </BrowserRouter>

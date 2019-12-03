@@ -24,17 +24,17 @@ class Sidebar extends React.Component {
                     <Elem id={0} func={this.handleClick.bind(this)}
                     active={this.state.actives[0]}
                     name="aside-panel_cameras-control" 
-                    to='/settings/modules/cameras' 
+                    to='/setting modules cameras' 
                     text="SAVA камеры"/>
                     <Elem id={1} func={this.handleClick.bind(this)}
                      active={this.state.actives[1]}
                     name="aside-panel_users-control" 
-                    to='/settings/modules/acs' 
+                    to='/setting modules acs' 
                     text="SAVA СКУД"/>         
                     <Elem id={2} func={this.handleClick.bind(this)}
                      active={this.state.actives[2]}
                      name="aside-panel_users-control" 
-                    to='/settings/modules/iss' 
+                    to='/setting modules iss' 
                     text="SAVA СЗИ"/>         
                 </ul>
             </menu>

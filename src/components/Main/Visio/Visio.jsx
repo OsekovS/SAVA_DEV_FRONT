@@ -9,7 +9,7 @@ const Visio = (props) => {
         <__header text={"Визуализация"} clazz="Common__header Common__header_red"/>
         <ul>
             <li>
-                <NavLink to='/visualization/cameras'>
+                <NavLink to='/visualization cameras'>
                 <__mainMenuItem 
                     head={
                         {
@@ -24,11 +24,12 @@ const Visio = (props) => {
                             text: "Контроль камер DAHUA",
                             src: ""
                         }
-                    }/>
+                    }
+                    to='/visualization cameras'/>
                 </NavLink>
             </li>
             <li>  
-                <NavLink to='/visualization/acss'>
+                <NavLink to='/visualization acs'>
                 <__mainMenuItem 
                         head={
                             {
@@ -43,11 +44,12 @@ const Visio = (props) => {
                                 text: 'Контроль СКУД "Castle"',
                                 src: ""
                             }
-                        }/>
+                        }
+                        to='/visualization acs'/>
                 </NavLink>
             </li>
             <li>
-                <NavLink to='/visualization/iss'>
+                <NavLink to='/visualization iss'>
                 <__mainMenuItem 
                     head={
                         {
@@ -64,7 +66,8 @@ const Visio = (props) => {
     Kaspersky`,
                             src: ""
                         }
-                    }/>
+                    }
+                    to='/visualization iss'/>
                 </NavLink>
             </li>
         </ul>

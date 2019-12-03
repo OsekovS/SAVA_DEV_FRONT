@@ -1,16 +1,15 @@
 import React from 'react';
-// import s from './Header.module.css';
 import './Sett.scss';
 import __header from '../../Common/__header/__header'
-// import __MenuItem from './__menuItem/__MenuItem'
 import __mainMenuItem from './MenuItem/MenuItem'
 import {NavLink} from 'react-router-dom'
 const Sett = () => {
+ 
     return <div className="Sett">
     <__header text={"Настройки"} clazz="Common__header Common__header_red"/>
     <ul>
         <li>
-            <NavLink to='/settings/modules/acs'>
+            <NavLink to='/setting modules acs'>
                 <__mainMenuItem 
                         head={
                                 {
@@ -21,11 +20,12 @@ const Sett = () => {
                                 {
                                     text: "Настройки подключенных модулей",
                                 }
-                        }/>
+                        }
+                        to='/setting modules acs'/>
             </NavLink>
         </li>
         <li>  
-            <NavLink to='/settings/users'>
+            <NavLink to='/setting users'>
                 <__mainMenuItem 
                         head={
                                 {
@@ -37,11 +37,13 @@ const Sett = () => {
                                     text: `Добавление, редактирование и
     удаление пользователей`,
                                 }
-                        }/>
+                        }
+                        to='/setting users'
+                        />
             </NavLink>
         </li>
         <li>
-            <NavLink to='/settings/common'>
+            <NavLink to='/setting common'>
                 <__mainMenuItem 
                         head={
                                 {
@@ -52,11 +54,12 @@ const Sett = () => {
                                 {
                                     text: "Общие настройки сети",
                                 }
-                        }/>
+                        }
+                        to='/setting common'/>
             </NavLink>
         </li>
         <li>
-            <NavLink to='/settings/lic'>
+            <NavLink to='/setting lic'>
                 <__mainMenuItem 
                         head={
                                 {
@@ -67,10 +70,15 @@ const Sett = () => {
                                 {
                                     text: "Добавление файла лицензии",
                                 }
-                        }/>
+                        }
+                        to='/setting lic'/>
             </NavLink>
         </li>
     </ul>
 </div>
 }
+
+
+
+
 export default Sett;
