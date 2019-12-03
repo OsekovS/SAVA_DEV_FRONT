@@ -13,7 +13,8 @@
     "redux": "^4.0.1",
     "redux-form": "^8.2.4",
     "redux-thunk": "^2.3.0",
-    "reselect": "^4.0.0"
+    "reselect": "^4.0.0",
+    "rumble-charts": "^2.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
