@@ -1,7 +1,7 @@
-const DEL_ENDP = 'DEL_ENDP';
-const DEL_OBJ = 'DEL_OBJ';
-const ADD_ENDP = 'ADD_ENDP'
-const ADD_OBJ = 'ADD_ACS_OBJ'
+const DEL_ENDP = 'DEL_ISS_ENDP';
+const DEL_OBJ = 'DEL_ISS_OBJ';
+const ADD_ENDP = 'ADD_ISS_ENDP'
+const ADD_OBJ = 'ADD_ISS_OBJ'
 
 let initialState = {
     settings: { objects: [

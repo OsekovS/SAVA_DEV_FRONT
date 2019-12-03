@@ -17,7 +17,7 @@ const objects_form = (props) => {
     )
 }
 
-const ObjectsReduxForm =  reduxForm({form: 'addCamObj'})(objects_form)
+const ObjectsReduxForm =  reduxForm({form: 'addAcsObj'})(objects_form)
 
 const endps_form = (props) => {
     let objectsElements = props.objects.map((e,n) => <option value={e.id} key={n.toString()}>{e.name}</option>)
@@ -42,7 +42,7 @@ const endps_form = (props) => {
     )
 }
 
-const EndpsReduxForm =  reduxForm({form: 'addCamReg'})(endps_form)
+const EndpsReduxForm =  reduxForm({form: 'addAcsEndp'})(endps_form)
 
 const Acs = (props) => {
 

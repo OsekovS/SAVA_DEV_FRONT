@@ -1,6 +1,6 @@
-const DEL_ENDP = 'DEL_ENDP';
-const DEL_OBJ = 'DEL_OBJ';
-const ADD_ENDP = 'ADD_ENDP'
+const DEL_ENDP = 'DEL_ACS_ENDP';
+const DEL_OBJ = 'DEL_ACS_OBJ';
+const ADD_ENDP = 'ADD_ACS_ENDP'
 const ADD_OBJ = 'ADD_ACS_OBJ'
 
 let initialState = {

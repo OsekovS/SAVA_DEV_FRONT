@@ -6,7 +6,7 @@ import { tsPropertySignature } from '@babel/types';
 const ListElem = (props) => {
     // console.log(props)
     let Elements = Object.values(props.items).map((e,n) => {
-        if(n>0)
+        if(n>0 || props.first)
         return <td name='list-elem' key={n} >{e}</td>
     })
     if(props.name.indexOf('title')===-1){

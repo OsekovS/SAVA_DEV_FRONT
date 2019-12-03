@@ -2,6 +2,7 @@ import { stat } from "fs";
 import { isArray } from "util";
 
 const ADD_USER = 'ADD_USER';
+const DEL_USER = 'DEL_USER'
 
 let initialState = 
             [{name: 'admin', admin: true, id: 0},
@@ -20,12 +21,16 @@ const usersReducer = (state = initialState, action) => {
                 admin:    action.admin === undefined ? false : action.admin
             };        
             return [...state,newUser];
+        case DEL_USER:
+            return state
        default:
            return state;
    }
 }
 
-export const addUseActionCreator = ({login,password,password_rep,admin}) =>{
-    return ({ type: ADD_USER, login: login, password: password, password_rep: password_rep, admin: admin })}
+export const delUserCreator = (id) => ({type: DEL_USER, id: id })
+
+export const addUserCreator = (id) =>
+    ({ type: ADD_USER, id: id })
 
 export default usersReducer;

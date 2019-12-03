@@ -18,11 +18,24 @@ const form = (props) => {
     )
 }
 
+
+
+
 const ReduxForm =  reduxForm({form: 'addUser'})(form)
 
 const __users = (props) => {
-    let usersElements = props.users.map(e => {  
-    return <ListElem key={e.id} items={{name: e.name, admin: e.admin}} />
+    const onDellUser = (id) => {
+        props.delUser(id)
+    }
+    const onAddUser = (id) => {
+        props.addUser(id)
+    }
+
+    let usersElements = props.users.map((e,n) => {  
+
+    return <ListElem first={true} name='list-elem' items={{name: e.name, admin: e.admin}} 
+    key={n.toString()}
+    elemChangeCallBack={onDellUser} elemDellCallBack={onDellUser}/>
     })
     const onNetSubmit = (formData) => {
         props.addUser(formData)
@@ -31,7 +44,7 @@ const __users = (props) => {
         {/* <__header text={"Список пользователей"} clazz="Common__header Common__header_red"/> */}
         <header className="Common__header Common__header_red">Список пользователей</header>
             {usersElements}
-            <ReduxForm  onSubmit={onNetSubmit} />
+            <ReduxForm  onSubmit={onAddUser} />
         </div>
 }
 
