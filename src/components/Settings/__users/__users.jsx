@@ -6,7 +6,7 @@ import {Field, reduxForm} from "redux-form";
 const form = (props) => {
     return (
         <form onSubmit={props.handleSubmit}>
-             <span class="settings_text">Добавить пользователя</span>	
+             <span className="settings_text">Добавить пользователя</span>	
             <p><label>Логин: <Field name="login" placeholder={"Логин"} component={"input"}/></label></p>
             <p><label>Пароль: <Field name="password" placeholder={"Пароль"} type="password" component={"input"}/></label></p>
             <p><label>Повторный пароль: <Field name="password_rep" placeholder={"Повторный пароль"} type="password" component={"input"}/></label></p>
@@ -33,17 +33,18 @@ const __users = (props) => {
 
     let usersElements = props.users.map((e,n) => {  
 
-    return <ListElem first={true} name='list-elem' items={{name: e.name, admin: e.admin}} 
+    return <ListElem name='list-elem' items={e} 
     key={n.toString()}
     elemChangeCallBack={onDellUser} elemDellCallBack={onDellUser}/>
     })
-    const onNetSubmit = (formData) => {
-        props.addUser(formData)
-    }
+
     return <div className="Settings__users">
         {/* <__header text={"Список пользователей"} clazz="Common__header Common__header_red"/> */}
-        <header className="Common__header Common__header_red">Список пользователей</header>
-            {usersElements}
+            <table className="Modules_table Modules_table__cam-dev">
+                    <tbody>
+                        {usersElements}  
+                    </tbody>
+                </table>
             <ReduxForm  onSubmit={onAddUser} />
         </div>
 }
