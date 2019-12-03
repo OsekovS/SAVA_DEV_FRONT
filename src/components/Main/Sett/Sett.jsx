@@ -9,7 +9,7 @@ const Sett = () => {
     <__header text={"Настройки"} clazz="Common__header Common__header_red"/>
     <ul>
         <li>
-            <NavLink to='/setting modules acs'>
+            <NavLink to='/setting module acs'>
                 <__mainMenuItem 
                         head={
                                 {
@@ -21,7 +21,7 @@ const Sett = () => {
                                     text: "Настройки подключенных модулей",
                                 }
                         }
-                        to='/setting modules acs'/>
+                        to='/setting module acs'/>
             </NavLink>
         </li>
         <li>  

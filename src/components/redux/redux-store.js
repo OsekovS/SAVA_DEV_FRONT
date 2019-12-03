@@ -11,7 +11,7 @@ import netSettingsReducer from './net-settings-reducer'
 import licReducer from './lic-reducer'
 import notificSettingsReducer from './notific-settings-reducer'
 import timezoneSettingsReducer from './timezone-settings-reducer'
-
+import modSidebarReducer from './mod-sidebar-reducer'
 
 let reducers = combineReducers({
     notific: notificSettingsReducer,
@@ -27,7 +27,8 @@ let reducers = combineReducers({
     navBar: navBarReducer,
     allEvents: allEventsReducer,
     lic: licReducer,
-    form: formReducer
+    form: formReducer,
+    modSidebar: modSidebarReducer
 })
 let store = createStore(reducers);
 window.store=store

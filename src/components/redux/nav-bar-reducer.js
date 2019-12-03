@@ -9,7 +9,7 @@ let initialState = {
         acs: 'СКУД',
         iss: 'СЗИ',
         cameras: 'камер',
-        modules: 'модуля',
+        module: 'модуля',
         setting: 'Настройка',
         users: 'пользователей',
         common: 'общая',
