@@ -13,7 +13,7 @@ let initialState = {
         endpoints:   [{
             id: '0',
             object: 'Санаторий Звенигород',
-            ip: '111.111.11.11',
+            ip: '333.111.333.11',
             name: 'Комп Сергея',
             port: '6000',
             login: '3ojA'
@@ -21,7 +21,7 @@ let initialState = {
         {
             id: '1',
             object: 'Больница №46',
-            ip: '222.222.22.22',
+            ip: '222.999.22.22',
             name: 'Комп Елены',
             port: '6000',
             login: '2miZ'
@@ -29,7 +29,7 @@ let initialState = {
         {
             id: '2',
             object: 'Детский сад "Яблочко"',
-            ip: '444.444.444.444',
+            ip: '777.444.444.777',
             name: 'Комп Кота',
             port: '6000',
             login: 'aiZ'

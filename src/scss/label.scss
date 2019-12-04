@@ -1,0 +1,13 @@
+@import '../components/colors.scss';
+
+@mixin label($color) {
+  width: 42px;
+  height: 20px;
+  font-size: 14px;
+  line-height: 20px;
+  border-radius: 10px;
+  color: $black;
+  background-color: $color;
+  text-align: center;
+  cursor: pointer;
+}

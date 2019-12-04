@@ -1,0 +1,14 @@
+@import '../components/colors.scss';
+
+@mixin button($bg-color,$width,$height) {
+  width: $width;
+  height: $height;
+  font-size: 20px;
+  line-height: $height;
+  border-radius: 8px;
+  color: $white-color;
+  background-color: $bg-color;
+  text-align: center;
+  cursor: pointer;
+  border: none;
+}

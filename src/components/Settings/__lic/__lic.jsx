@@ -4,7 +4,7 @@ import './__lic.scss';
 const __lic = (props) => {
     return <div className="Settings__lic">
         <form encType="multipart/form-data" action="settings_admin.php" method="POST">       
-            <span className='settings_text'>Лицензия</span>	
+            <h2 className='h2__center'>Лицензия</h2>	
             <p>Дата начала лицензии: {props.lic.lic_start}</p>
             <p>Дата окночания лицензии: {props.lic.lic_end}</p>
             <p>Срок лицензии: {props.lic.amount}</p>
@@ -19,7 +19,7 @@ const __lic = (props) => {
                 <label htmlFor="myfile" className="custom-file-input__label button_red">Выберите файл</label>
                 <input type="file" className="custom-file-input" id="myfile" name="userfile" multiple></input>
             </p>
-            <p><input className="button_red" type="submit" name="lic" value="Загрузить" /></p>
+            <p><input className="button__red" type="submit" name="lic" value="Загрузить" /></p>
         </form>
     </div>
 }
