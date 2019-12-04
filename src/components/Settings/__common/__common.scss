@@ -1,0 +1,25 @@
+@import '../../../scss/button.scss';
+@import '../../colors.scss';
+
+.Common{
+    width: 500px;
+    margin: 0 auto;
+    padding-top: 50px;
+    button{
+        @include button($red-color,200px,30px);
+            display: block;
+            margin: 15px auto 0 auto;
+    }
+    h2{
+        margin-bottom: 20px;
+    }
+   
+    label{
+        display: flex;
+        justify-content: space-between;
+        margin: 0 auto 10px auto;
+    }
+    div{
+        margin-bottom: 50px;
+    }
+}

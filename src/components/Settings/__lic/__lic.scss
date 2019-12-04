@@ -11,7 +11,24 @@
         flex-direction: column;
         justify-content: space-evenly;
         input[type=submit]{
-            @include button($red-label-color,230px,40px)
+            @include button($red-color,230px,40px);
+            display: block;
+            margin: 0 auto;
+        }
+        input[type=file]{
+            display: none;
+        }
+        label{
+            @include button($red-color,150px,30px);
+            display: inline-block;
+            margin-left: 15px;
+        }
+        p{
+            font-size: 18px;
+        }
+        p:nth-child(7){
+            display: flex;
+            align-items: center;
         }
     }
 

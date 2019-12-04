@@ -6,7 +6,7 @@ import './__common.scss';
 
 
 const __common = (props) => {
-    return <div className="Sett">
+    return <div className="Common">
         <NetCont></NetCont>
         <TimezoneCont ></TimezoneCont>
         

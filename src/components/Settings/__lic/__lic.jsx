@@ -16,7 +16,7 @@ const __lic = (props) => {
             {/* <!-- Название элемента input определяет имя в массиве $_FILES --> */}
             {/* <!-- <p>Загрузить файл лицензии: <input name="userfile" type="file" /></p> --> */}
             <p>Загрузить файл лицензии:
-                <label htmlFor="myfile" className="custom-file-input__label button_red">Выберите файл</label>
+                <label htmlFor="myfile">Выберите файл</label>
                 <input type="file" className="custom-file-input" id="myfile" name="userfile" multiple></input>
             </p>
             <p><input className="button__red" type="submit" name="lic" value="Загрузить" /></p>

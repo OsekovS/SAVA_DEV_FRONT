@@ -1,0 +1,17 @@
+@import '../components/colors.scss';
+
+input[type=text], input[type=password]{
+    border-radius: 4px;
+    padding: 2px 5px;
+    border: 2px solid $grey-form-color;
+}
+
+input[type=text]:focus,input[type=password]:focus{
+    border-radius: 4px;
+    border: 2px solid $red-color;
+    outline: none;
+}
+
+label {
+    font-size: 16px;;
+}
