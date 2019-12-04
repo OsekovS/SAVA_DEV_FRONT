@@ -37,9 +37,9 @@ const usersReducer = (state = initialState, action) => {
    }
 }
 
-export const delUserCreator = (id) => ({type: DEL_USER, id: id })
+export const delUser = (id) => ({type: DEL_USER, id: id })
 
-export const addUserCreator = ({login, password_rep, password, admin}) =>
+export const addUser = ({login, password_rep, password, admin}) =>
     ({ type: ADD_USER, login: login, password_rep: password_rep, password: password, admin: admin})
 
 export default usersReducer;
