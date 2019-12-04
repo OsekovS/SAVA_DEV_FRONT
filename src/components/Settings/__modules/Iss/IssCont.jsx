@@ -1,4 +1,4 @@
-import {addEndpCreator, delEndpCreator, addObjCreator, delObjCreator} from "../../../redux/iss-reducer";
+import {addEndpCreator, delEndpCreator, addObjCreator, delObjCreator,changeModeCreator} from "../../../redux/iss-reducer";
 import Iss from "./Iss";
 import {connect} from "react-redux";
 
@@ -6,6 +6,7 @@ let mapStateToProps = (state) => {
     return {
             objects: state.iss.settings.objects,
             endpoints: state.iss.settings.endpoints,
+            mode: state.iss.settings.mode
     }
 }
 let mapDispatchToProps = (dispatch) => {
@@ -22,7 +23,9 @@ let mapDispatchToProps = (dispatch) => {
         delObj: (id) => {
             dispatch(delObjCreator(id));
         },
-
+        changeMode: (mode) => {
+            dispatch(changeModeCreator(mode));
+        },
     }
 }
 

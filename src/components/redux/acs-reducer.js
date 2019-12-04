@@ -1,15 +1,17 @@
 const DEL_ENDP = 'DEL_ACS_ENDP';
 const DEL_OBJ = 'DEL_ACS_OBJ';
 const ADD_ENDP = 'ADD_ACS_ENDP'
-const ADD_OBJ = 'ADD_ACS_OBJ'
+const ADD_OBJ = 'ADD_ACS_OBJ';
+const CHANGE_MODE = 'CHANGE_ACS_MODE'
 
 let initialState = {
     settings: {
-        objects: [
-            {id: '0', name: 'Санаторий Звенигород'},
-            {id: '1', name: 'Больница №46'},
-            {id: '2', name: 'Детский сад "Яблочко"'},
-            {id: '3', name: 'Офис'}
+    mode: 'view',//'view',
+    objects: [
+        {id: '0', name: 'Санаторий Звенигород'},
+        {id: '1', name: 'Больница №46'},
+        {id: '2', name: 'Детский сад "Яблочко"'},
+        {id: '3', name: 'Офис'}
     ],
     endpoints:  [{
         id: '0',
@@ -71,7 +73,7 @@ const acsReducer = (state = initialState, action) => {
             stateCopy.settings = {...state.settings};
             stateCopy.settings.endpoints = state.settings.endpoints.map((e) => e);
             stateCopy.settings.endpoints.push(new_endp);
-            console.log(stateCopy)
+            stateCopy.settings.mode = 'view'
             // return state;
             return stateCopy;
        case DEL_ENDP:
@@ -84,11 +86,18 @@ const acsReducer = (state = initialState, action) => {
             stateCopy.settings = {...state.settings}
             stateCopy.settings.objects = [...state.settings.objects, 
                 {id: state.settings.objects.length ,name: action.obj_name}]
+            stateCopy.settings.mode = 'view'
             return stateCopy;
        case DEL_OBJ:
             stateCopy = {...state};
             stateCopy.settings = {...state.settings};
             stateCopy.settings.objects = state.settings.objects.filter(e => e.id!==action.id)
+            return stateCopy
+        case CHANGE_MODE:
+            stateCopy = {...state};
+            stateCopy.settings = {...state.settings};
+            stateCopy.settings.mode = action.mode
+            console.log(stateCopy)
             return stateCopy
        default:
            return state;
@@ -106,5 +115,8 @@ export const addEndpCreator = ({obj_num, ip, name, port, login, password, passwo
 export const addObjCreator = ({obj_name}) =>
 ({ type: ADD_OBJ, obj_name: obj_name })
 
+
+export const changeModeCreator = (mode) =>
+({ type: CHANGE_MODE, mode: mode })
 
 export default acsReducer;

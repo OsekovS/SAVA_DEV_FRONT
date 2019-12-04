@@ -1,14 +1,14 @@
-import { addUseActionCreator } from "./users-reducer";
-
 const ADD_CAM = 'ADD_CAM';
 const ADD_OBJ = 'ADD_OBJ';
 const ADD_REG = 'ADD_REG';
 const DEL_CAM = 'DEL_CAM';
 const DEL_REG = 'DEL_REG';
 const DEL_OBJ ='DEL_OBJ'
+const CHANGE_MODE = 'CHANGE_CAM_MODE'
 
 let initialState = {
     settings: {
+    mode: 'view',
     objects: [
         {id: '0', name: 'Санаторий Звенигород'},
         {id: '1', name: 'Больница №46'},
@@ -94,7 +94,8 @@ const camerasReducer = (state = initialState, action) => {
             stateCopy = {...state};
             stateCopy.settings = {...state.settings};
             stateCopy.settings.cameras = state.settings.cameras.map((e) => e);
-            stateCopy.settings.cameras.push(new_cam);;
+            stateCopy.settings.cameras.push(new_cam);
+            stateCopy.settings.mode = 'view'
             return stateCopy;
         case DEL_CAM:
             console.log(action.id)
@@ -108,6 +109,7 @@ const camerasReducer = (state = initialState, action) => {
             stateCopy.settings = {...state.settings}
             stateCopy.settings.objects = [...state.settings.objects, 
                 {id: state.settings.objects.length ,name: action.obj_name}]
+            stateCopy.settings.mode = 'view'
             return stateCopy;
         case DEL_OBJ:
             stateCopy = {...state};
@@ -129,13 +131,20 @@ const camerasReducer = (state = initialState, action) => {
             stateCopy.settings = {...state.settings};
             stateCopy.settings.registrators = state.settings.registrators.map((e) => e);
             stateCopy.settings.registrators.push(new_reg);
-
+            stateCopy.settings.mode = 'view'
+            
             return stateCopy;
         case DEL_REG:
                 console.log(action.ip)
                 stateCopy = {...state};
                 stateCopy.settings = {...state.settings};
                 stateCopy.settings.registrators = state.settings.registrators.filter(e => e.id!==action.id)
+                return stateCopy
+        case CHANGE_MODE:
+                stateCopy = {...state};
+                stateCopy.settings = {...state.settings};
+                stateCopy.settings.mode = action.mode
+                console.log(stateCopy)
                 return stateCopy
        default:
            return state;
@@ -160,6 +169,8 @@ export const delRegCreator = (id) =>
 export const delObjCreator = (id) =>
 ({ type: DEL_OBJ, id: id })
 
+export const changeModeCreator = (mode) =>
+({ type: CHANGE_MODE, mode: mode })
 
 
 export default camerasReducer;

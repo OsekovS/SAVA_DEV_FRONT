@@ -1,10 +1,9 @@
 @import '../../colors.scss';
 
 .Header__Ref{
-   background: inherit;
-   color: $white-color;
-
-   border: 2px solid $header-labels-color;
+    background: inherit;
+    color: $white-color;
+    border: 2px solid $header-labels-color;
     position: relative;
     top: 11px;
     width: 44px;
@@ -13,7 +12,5 @@
     text-align: center;
     font-size: 29px;
     line-height: 42px;
-
-
     cursor: pointer;
 }

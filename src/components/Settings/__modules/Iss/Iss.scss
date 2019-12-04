@@ -1,0 +1,27 @@
+.Settings__iss{
+    .modal-form-keeper{
+        form,header{
+            width: 600px;
+            label,div{
+                width: 435px;
+            }
+        }
+        select{
+            width: 255px;
+        }
+        option{
+            width: 255px;
+            font-size: 13px;
+            
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            
+        }
+        }
+        
+        & > button{
+            margin: 20px;
+        }
+    }
+    

@@ -6,62 +6,71 @@ import {Field, reduxForm} from "redux-form";
 
 const cameras_form = (props) => {
     let objectsElements = props.objects.map((e,n) => <option value={e.id} key={n.toString()}>{e.name}</option>)
-    return (
-        <form onSubmit={props.handleSubmit}>
-            <span className="settings_text">Добавить конечную точку</span>	
+    if(props.mode==='addCam') return (
+        <div className="modal-form-keeper" >
+            <header className="Common__header Common__header_red">Добавить камеру</header>
+        <form className="modal-form" onSubmit={props.handleSubmit}>	
             <label>Объект: 
                 <Field name="obj_num" component={"select"} >
                     {objectsElements}
                 </Field>
             </label>
-            <p><label>Ip адрес: <Field name="ip" placeholder={"Ip"} component={"input"}/></label></p>
-            <p><label>Имя: <Field name="name" placeholder={"Имя"} component={"input"}/></label></p>
-            <p><label>Логин: <Field name="login" placeholder={"Логин"} component={"input"}/></label></p>
-            <p><label>Пароль: <Field name="password" placeholder={"Пароль"} type="password" component={"input"}/></label></p>
-            <p><label>Повторный пароль: <Field name="password_rep" placeholder={"Повторный пароль"} type="password" component={"input"}/></label></p>           
+            <label>Ip адрес: <Field name="ip" placeholder={"Ip"} component={"input"} type="text"/></label>
+            <label>Имя: <Field name="name" placeholder={"Имя"} component={"input"} type="text"/></label>
+            <label>Логин: <Field name="login" placeholder={"Логин"} component={"input"} type="text"/></label>
+            <label>Пароль: <Field name="password" placeholder={"Пароль"} type="password" component={"input"}/></label>
+            <label>Повторный пароль: <Field name="password_rep" placeholder={"Повторный пароль"} type="password" component={"input"}/></label>           
             <div>
-                <button>Добавить</button>
+                <button>Добавить</button> <button onClick={props.callback.bind(this,'view')}>Отмена</button>
             </div>
         </form>
+        </div>  
     )
+    else return null
 }
 
 const CamerasReduxForm =  reduxForm({form: 'addCamCam'})(cameras_form)
 
 const objects_form = (props) => {
-    return (
-        <form onSubmit={props.handleSubmit}>
-            <span className="settings_text">Добавить объект</span>	
-            <p><label>Название: <Field name="obj_name" placeholder={"Название объекта"} component={"input"}/></label></p>           
+    if(props.mode==='addObj') return (
+        <div className="modal-form-keeper modal-form-keeper__small" >
+            <header className="Common__header Common__header_red">Добавить объект</header>
+        <form className="modal-form" onSubmit={props.handleSubmit}>	
+            <label>Название: <Field name="obj_name" placeholder={"Название объекта"} component={"input"} type="text"/></label>         
             <div>
-                <button>Добавить</button>
+                <button>Добавить</button> <button onClick={props.callback.bind(this,'view')}>Отмена</button>
             </div>
         </form>
+        </div>
     )
+    else return null
 }
 
 const ObjectsReduxForm =  reduxForm({form: 'addCamObj'})(objects_form)
 
 const regs_form = (props) => {
     let objectsElements = props.objects.map((e,n) => <option value={e.id} key={n.toString()}>{e.name}</option>)
-    return (
-        <form onSubmit={props.handleSubmit}>
-            <span className="settings_text">Добавить конечную точку</span>	
+    if(props.mode==='addReg') return (
+        <div className="modal-form-keeper" >
+            <header className="Common__header Common__header_red">Добавить регистратор</header>
+        <form className="modal-form" onSubmit={props.handleSubmit}>
             <label>Объект: 
                 <Field name="obj_num" component={"select"} >
                     {objectsElements}
                 </Field>
             </label>
-            <p><label>Ip адрес: <Field name="ip" placeholder={"Ip"} component={"input"}/></label></p>
-            <p><label>Имя: <Field name="name" placeholder={"Имя"} component={"input"}/></label></p>
-            <p><label>Логин: <Field name="login" placeholder={"Логин"} component={"input"}/></label></p>
-            <p><label>Пароль: <Field name="password" placeholder={"Пароль"} type="password" component={"input"}/></label></p>
-            <p><label>Повторный пароль: <Field name="password_rep" placeholder={"Повторный пароль"} type="password" component={"input"}/></label></p>           
+            <label>Ip адрес: <Field name="ip" placeholder={"Ip"} component={"input"} type="text"/></label>
+            <label>Имя: <Field name="name" placeholder={"Имя"} component={"input"} type="text"/></label>
+            <label>Логин: <Field name="login" placeholder={"Логин"} component={"input"} type="text"/></label>
+            <label>Пароль: <Field name="password" placeholder={"Пароль"} type="password" component={"input"}/></label>
+            <label>Повторный пароль: <Field name="password_rep" placeholder={"Повторный пароль"} type="password" component={"input"}/></label>           
             <div>
-                <button>Добавить</button>
+                <button>Добавить</button> <button onClick={props.callback.bind(this,'view')}>Отмена</button>
             </div>
         </form>
+        </div>
     )
+    else return null
 }
 
 const RegsReduxForm =  reduxForm({form: 'addCamReg'})(regs_form)
@@ -105,6 +114,9 @@ const Cameras = (props) => {
     const onChangeObject = (formData) => {
         props.changeObj(formData)
     }
+    const onChangeMode = (mode) =>{
+        props.changeMode(mode)
+    }
     let objectsElements = props.objects.map((e,n) =>{ 
         return <ListElem name='list-elem' items={e} key={n.toString()}
         elemChangeCallBack={onChangeObject} elemDellCallBack={onDelObject} />})
@@ -116,14 +128,15 @@ const Cameras = (props) => {
     let registratorsElements = props.registrators.map((e,n) => <ListElem name='list-elem' items={e} key={n.toString()}
         elemChangeCallBack={onChangeRegistrator} elemDellCallBack={onDelRegistrator}/>)
 
-    return <div >
+    return <div className="Settings__cameras">
         <header className="Common__header Common__header_red">Объекты инфраструктуры</header>
         <table className="Modules_table Modules_table__cam-obj">
             <tbody>
                 {objectsElements}
             </tbody>
         </table>
-        <ObjectsReduxForm  onSubmit={onAddObject} />
+        <button onClick={onChangeMode.bind(this,'addObj')}>Добавить</button>
+        <ObjectsReduxForm  onSubmit={onAddObject}  mode={props.mode} callback={onChangeMode}/>
         <header className="Common__header Common__header_red">Список камер</header>
         <table className="Modules_table Modules_table__cam-dev">
             <tbody>
@@ -131,14 +144,16 @@ const Cameras = (props) => {
                 {camerasElements}   
             </tbody>
         </table>
-        <CamerasReduxForm objects={props.objects}  onSubmit={onAddCamera} />
+        <button onClick={onChangeMode.bind(this,'addCam')}>Добавить</button>
+        <CamerasReduxForm objects={props.objects}  onSubmit={onAddCamera}  mode={props.mode} callback={onChangeMode} />
         <header className="Common__header Common__header_red">Список регистраторов</header>
         <table className="Modules_table Modules_table__cam-dev">
             <tbody>
                 {registratorsElements}
             </tbody>
         </table>
-        <RegsReduxForm objects={props.objects}  onSubmit={onAddRegistrator} />
+        <button onClick={onChangeMode.bind(this,'addReg')}>Добавить</button>
+        <RegsReduxForm objects={props.objects}  onSubmit={onAddRegistrator}  mode={props.mode} callback={onChangeMode} />
         </div>
 }
 

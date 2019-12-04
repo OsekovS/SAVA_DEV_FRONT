@@ -1,4 +1,4 @@
-import {addEndpCreator, delEndpCreator, addObjCreator, delObjCreator} from "../../../redux/acs-reducer";
+import {addEndpCreator, delEndpCreator, addObjCreator, delObjCreator, changeModeCreator} from "../../../redux/acs-reducer";
 import Acs from "./Acs";
 import {connect} from "react-redux";
 
@@ -6,6 +6,7 @@ let mapStateToProps = (state) => {
     return {
             objects: state.acs.settings.objects,
             endpoints: state.acs.settings.endpoints,
+            mode: state.acs.settings.mode
     }
 }
 let mapDispatchToProps = (dispatch) => {
@@ -22,7 +23,9 @@ let mapDispatchToProps = (dispatch) => {
         delObj: (id) => {
             dispatch(delObjCreator(id));
         },
-
+        changeMode: (mode) => {
+            dispatch(changeModeCreator(mode));
+        },
     }
 }
 

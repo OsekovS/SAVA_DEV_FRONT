@@ -3,7 +3,7 @@
 @mixin button($bg-color,$width,$height) {
   width: $width;
   height: $height;
-  font-size: 16px;
+  font-size: 14px;
   line-height: $height;
   border-radius: 8px;
   color: $white-color;

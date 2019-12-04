@@ -1,4 +1,4 @@
-import {addCamCreator, addRegCreator, addObjCreator ,delCamCreator, delRegCreator, delObjCreator} from "../../../redux/cameras-reducer";
+import {addCamCreator, addRegCreator, addObjCreator ,delCamCreator, delRegCreator, delObjCreator, changeModeCreator} from "../../../redux/cameras-reducer";
 import Cameras from "./Cameras";
 import {connect} from "react-redux";
 
@@ -7,6 +7,7 @@ let mapStateToProps = (state) => {
             objects: state.cameras.settings.objects,
             cameras: state.cameras.settings.cameras,
             registrators: state.cameras.settings.registrators,
+            mode: state.cameras.settings.mode
     }
 }
 let mapDispatchToProps = (dispatch) => {
@@ -29,7 +30,9 @@ let mapDispatchToProps = (dispatch) => {
         delObj: (id) => {
             dispatch(delObjCreator(id));
         },
-
+        changeMode: (mode) => {
+            dispatch(changeModeCreator(mode));
+        },
     }
 }
 

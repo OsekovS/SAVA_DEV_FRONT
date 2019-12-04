@@ -1,4 +1,3 @@
-
 const SIDEBAR_CHANGE = 'SIDEBAR_CHANGE';
 
 // let initialState = {

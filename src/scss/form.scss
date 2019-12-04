@@ -1,17 +1,59 @@
 @import '../components/colors.scss';
 
-input[type=text], input[type=password]{
+input[type=text], input[type=password],select{
     border-radius: 4px;
     padding: 2px 5px;
     border: 2px solid $grey-form-color;
 }
-
-input[type=text]:focus,input[type=password]:focus{
+   
+input[type=text]:focus,input[type=password]:focus,select:focus{
     border-radius: 4px;
     border: 2px solid $red-color;
     outline: none;
 }
 
-label {
-    font-size: 16px;;
+label,input[type=text], input[type=password],select{
+    font-size: 20px;;
+}
+// 22px
+
+.modal-form{
+    margin: auto;
+    background-color: #fff;
+    padding: 10px 0 10px 0;
+    background-color: $lightGrey-color;
+    label,div{
+        margin: 0 auto 20px auto;
+    }
+   div,label{
+    display: flex;
+    justify-content: space-between;
+   }
+   label{
+    justify-content: space-between;
+   }
+   div{
+    justify-content: space-evenly;
+   }
+}
+.modal-form-keeper{
+    z-index: 3;
+    /* display: block; */
+    padding-top: 100px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    /* background-color: rgb(0,0,0); */
+    background-color: rgba(255, 255, 255, 0.6);
+    header{
+        border-top-left-radius: 6px;
+        border-top-right-radius: 6px;
+        margin: 0 auto;
+    }
+}
+.modal-form-keeper__small{
+    margin-top: 135px;
 }
