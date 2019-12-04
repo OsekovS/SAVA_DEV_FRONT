@@ -3,30 +3,30 @@
 border-left: 2px solid $white-color;
 border-right: 2px solid $white-color;
 cursor: pointer;
-width: 250px;
-padding: 0 13px;
+width: 320px;
+height: 55px;
+padding: 0 0 0 27px;
 box-sizing: border-box;
 text-align: center;
 display: flex;
 align-items: center;
 
 img{
-    width: 34px;
-    height: 35px;
-    margin-right: 13px;
+    margin-right: 20px;
 }
 span{
-    font-size: 20px;
+    font-size: 30px;
     
 }
 button{
     background: inherit;
-    width: 10px;
-    height: 10px;
+    width: 14px;
+    height: 14px;
     border: none;
-    border-left: 2px solid $white-color;
-    border-bottom: 2px solid $white-color;
+    border-left: 3px solid $white-color;
+    border-bottom: 3px solid $white-color;
     transform: rotate(-45deg);
     margin-left: 14px;
+
 }
 }
