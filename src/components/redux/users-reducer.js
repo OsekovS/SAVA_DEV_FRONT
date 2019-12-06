@@ -1,15 +1,20 @@
 import { stat } from "fs";
 import { isArray } from "util";
-
+import * as axios from 'axios'
 const ADD_USER = 'ADD_USER';
 const DEL_USER = 'DEL_USER'
+const TOG_FECH = 'TOG_FECH'
+const UPLOAD_USERS = 'UPLOAD_USERS'
 
 let initialState = 
-            [{id: '0', name: 'admin', admin: true},
-            { id: '1', name: 'user1', admin: false,},
-            { id: '2', name: 'admin1', admin: true,},
-            { id: '3', name: 'admin2', admin: true,},
-            { id: '4', name: 'user2', admin: false,}]
+           {
+               users:  [{id: '0', name: 'admin', admin: true},
+               { id: '1', name: 'user1', admin: false,},
+               { id: '2', name: 'admin1', admin: true,},
+               { id: '3', name: 'admin2', admin: true,},
+               { id: '4', name: 'user2', admin: false,}],
+               isFetching: false
+           }
 ;
 
 const usersReducer = (state = initialState, action) => {
@@ -22,24 +27,59 @@ const usersReducer = (state = initialState, action) => {
                 name: action.login,
                 admin:    action.admin === undefined ? false : action.admin
             };        
-            stateCopy = [...state,newUser]
+            stateCopy ={...state}
+            stateCopy.users = [...state.users,newUser]
             console.log(state)
             console.log(stateCopy)
             return stateCopy;
         case DEL_USER:
             console.log(action.id)
-            stateCopy = {...state};
-            
-            stateCopy= state.filter(e => e.id!==action.id)
+            stateCopy ={...state}
+            stateCopy.users= state.users.filter(e => e.id!==action.id)
+            return stateCopy
+        case TOG_FECH:
+                stateCopy ={...state}
+                stateCopy.isFetching = action.status
+            return stateCopy
+        case UPLOAD_USERS:
+                stateCopy ={...state}
+                stateCopy.users = action.usernames.map( (e) => ({
+                    id: e[1],
+                    name: e[0],
+                    admin:    e[2] !== ''
+                }))
+                return stateCopy
             return stateCopy
        default:
            return state;
    }
 }
 
+export const toggleIsFetching = (bool) => ({type: TOG_FECH, status: bool })
+
 export const delUser = (id) => ({type: DEL_USER, id: id })
 
 export const addUser = ({login, password_rep, password, admin}) =>
     ({ type: ADD_USER, login: login, password_rep: password_rep, password: password, admin: admin})
+
+export const uploadUser = (users) => ({type: UPLOAD_USERS, users: users })
+
+export const getUsers = () => {
+    return (dispatch) => {
+        dispatch(toggleIsFetching(true));
+console.log('!!!')
+        axios.get("users-form-processor.php").then(response => {
+            dispatch(toggleIsFetching(false));
+            let json = JSON.parse(response);
+            dispatch(uploadUser(json.usernames));
+        }).catch(function (error) {
+            // handle error
+            console.log(error);
+          })
+          .finally(function () {
+            // always executed
+          });;
+    }
+}
 
 export default usersReducer;

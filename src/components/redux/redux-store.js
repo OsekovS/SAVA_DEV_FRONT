@@ -1,4 +1,4 @@
-import {createStore, combineReducers} from 'redux'
+import {applyMiddleware,createStore, combineReducers} from 'redux'
 import { reducer as formReducer } from 'redux-form'
 import {headerReducer} from './header-reducer'
 import navBarReducer from './nav-bar-reducer'
@@ -12,7 +12,7 @@ import licReducer from './lic-reducer'
 import notificSettingsReducer from './notific-settings-reducer'
 import timezoneSettingsReducer from './timezone-settings-reducer'
 import modSidebarReducer from './mod-sidebar-reducer'
-
+import thunkMiddleware from "redux-thunk";
 let reducers = combineReducers({
     notific: notificSettingsReducer,
     net: netSettingsReducer,
@@ -30,6 +30,7 @@ let reducers = combineReducers({
     form: formReducer,
     modSidebar: modSidebarReducer
 })
-let store = createStore(reducers);
+
+let store = createStore(reducers, applyMiddleware(thunkMiddleware));
 window.store=store
 export default store;
