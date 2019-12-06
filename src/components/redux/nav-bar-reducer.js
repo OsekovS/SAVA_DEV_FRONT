@@ -3,7 +3,7 @@ const NAV_BAR_CHANGE = 'NAV_BAR_CHANGE';
 const NAV_BAR_DIR_CHANGE = 'NAV_BAR_DIR_CHANGE';
 
 let initialState = {
-    state: [{link:'main',text:'Главная'}],
+    state: [{link:'',text:'Главная'}],
     translate: {
         visualization: 'Визуализация данных',
         acs: 'СКУД',
@@ -14,7 +14,7 @@ let initialState = {
         users: 'пользователей',
         common: 'общая',
         lic: 'лицензии',
-        main: 'Главная'
+        '': 'Главная'
     }
 };
 // state = initialState, action

@@ -20,7 +20,7 @@ const App = (props) => {
       briefUserInfo={props.state.headerInfo.briefUserInfo}/>
        <NavBar />
        
-      <Route path='/main' render={()=><Main 
+      <Route exact path='/' render={()=><Main 
       cameras={props.state.allEvents.cameras}
       acs={props.state.allEvents.acs}
       iss={props.state.allEvents.iss}

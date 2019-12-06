@@ -15,10 +15,10 @@ const rawNavBar = (props) => {
     }
     let barString = props.navInfo.map((e,n,array) => {
         if(n<array.length-1)
-        return <NavLink to={process.env.PUBLIC_URL + '/'+e.link}
+        return <NavLink to={'/'+e.link}
         key={n.toString()}><span onClick={onClick.bind(this,e.link)}>/ {e.text}</span> </NavLink>
         else 
-        return <NavLink to={process.env.PUBLIC_URL + '/'+e.link}
+        return <NavLink to={'/'+e.link}
         key={n.toString()}><span >/ {e.text}</span> </NavLink>
     })
     return <p className="NavPanel">
