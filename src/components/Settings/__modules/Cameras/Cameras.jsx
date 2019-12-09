@@ -77,17 +77,14 @@ const RegsReduxForm =  reduxForm({form: 'addCamReg'})(regs_form)
 
 const Cameras = (props) => {
 
-    const onAddCamera = (formData) => {
-        props.addCam(formData)
+    const onAddField = (formData) => {
+        console.log('changeField')
+        console.log(formData)
+        let a = {...formData}
+        a.mode = props.mode;
+        props.addFieldThunk(a)
     }
 
-    const onAddRegistrator = (formData) => {
-        props.addReg(formData)
-    }
-
-    const onAddObject = (formData) => {
-        props.addObj(formData)
-    }
 
     const onDelCamera = (id) => {
         // console.log(ip)
@@ -136,7 +133,7 @@ const Cameras = (props) => {
             </tbody>
         </table>
         <button onClick={onChangeMode.bind(this,'addObj')}>Добавить</button>
-        <ObjectsReduxForm  onSubmit={onAddObject}  mode={props.mode} callback={onChangeMode}/>
+        <ObjectsReduxForm  onSubmit={onAddField}  mode={props.mode} callback={onChangeMode}/>
         <header className="Common__header Common__header_red">Список камер</header>
         <table className="Modules_table Modules_table__cam-dev">
             <tbody>
@@ -145,7 +142,7 @@ const Cameras = (props) => {
             </tbody>
         </table>
         <button onClick={onChangeMode.bind(this,'addCam')}>Добавить</button>
-        <CamerasReduxForm objects={props.objects}  onSubmit={onAddCamera}  mode={props.mode} callback={onChangeMode} />
+        <CamerasReduxForm objects={props.objects}  onSubmit={onAddField}  mode={props.mode} callback={onChangeMode} />
         <header className="Common__header Common__header_red">Список регистраторов</header>
         <table className="Modules_table Modules_table__cam-dev">
             <tbody>
@@ -153,7 +150,7 @@ const Cameras = (props) => {
             </tbody>
         </table>
         <button onClick={onChangeMode.bind(this,'addReg')}>Добавить</button>
-        <RegsReduxForm objects={props.objects}  onSubmit={onAddRegistrator}  mode={props.mode} callback={onChangeMode} />
+        <RegsReduxForm objects={props.objects}  onSubmit={onAddField}  mode={props.mode} callback={onChangeMode} />
         </div>
 }
 

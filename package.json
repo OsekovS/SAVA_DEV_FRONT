@@ -20,12 +20,16 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "fbuild": "react-scripts build && node-mv build ../html/",
-    "rebuild": "react-scripts build && node clean.js && node-mv build ../html",
+    "fbuild": "react-scripts build && node-mv build ../html && node-mv ../php ../html",
+    "rebuild": "node clean.js && react-scripts build &&  node copy.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "move": "node-mv build ../html",
+    "movphp": "node-mv ../php build/php",
+    "del": "node clean.js",
+    "copy": "node copy.js"
   },
   "eslintConfig": {
     "extends": "react-app"

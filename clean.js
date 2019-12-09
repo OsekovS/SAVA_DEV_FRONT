@@ -1,4 +1,7 @@
 var fs = require('fs');
+var copydir = require('copy-dir');
+ 
+
 
 function deleteFolderRecursive(path) {
   if (fs.existsSync(path) && fs.lstatSync(path).isDirectory()) {
@@ -17,8 +20,15 @@ function deleteFolderRecursive(path) {
   }
 };
 
+console.log("Save php...");
+copydir.sync('../html/php', '../php', {
+  utimes: true,  // keep add time and modify time
+  mode: true,    // keep file mode
+  cover: true    // cover file when exists, default is true
+});
+console.log("Successfully save php");
 console.log("Cleaning working tree...");
 
-deleteFolderRecursive("../htmlDev");
+deleteFolderRecursive("../html");
 
 console.log("Successfully cleaned working tree!");

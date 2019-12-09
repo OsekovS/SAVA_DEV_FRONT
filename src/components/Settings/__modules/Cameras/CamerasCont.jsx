@@ -1,6 +1,5 @@
-import {addCam, addReg, addObj,
-    delCam, delReg, delObj, 
-    changeMode, getCameras} from "../../../redux/cameras-reducer";
+import {   delCam, delReg, delObj, 
+    changeMode, getCameras, addFieldThunk} from "../../../redux/cameras-reducer";
 import Cameras from "./Cameras";
 import {connect} from "react-redux";
 import React from 'react'
@@ -20,11 +19,8 @@ class rawCameras extends React.Component {
             objects={this.props.objects}
             cameras={this.props.cameras}
             registrators={this.props.registrators}
-            addCam = {this.props.addCam}
-            delCam = {this.props.delCam}
-            addReg = {this.props.addReg}
             delReg = {this.props.delReg}
-            addObj = {this.props.addObj}
+            addFieldThunk = {this.props.addFieldThunk}
             delObj = {this.props.delObj}
             changeMode = {this.props.changeMode}
         />
@@ -43,42 +39,14 @@ let mapStateToProps = (state) => {
     }
 }
 let mapDispatchToProps =  {
-        addCam,
         delCam,
-        addReg,
         delReg,
-        addObj,
         delObj,
         changeMode,
-        getCameras
+        getCameras,
+        addFieldThunk
 }
 
-// let mapDispatchToProps = (dispatch) => {
-//     return {
-//         addCam: (obj) => {
-//             dispatch(addCamCreator(obj));
-//         },
-//         delCam: (id) => {
-//             dispatch(delCamCreator(id));
-//         },
-//         addReg: (obj) => {
-//             dispatch(addRegCreator(obj));
-//         },
-//         delReg: (id) => {
-//             dispatch(delRegCreator(id));
-//         },
-//         addObj: (obj) => {
-//             dispatch(addObjCreator(obj));
-//         },
-//         delObj: (id) => {
-//             dispatch(delObjCreator(id));
-//         },
-//         changeMode: (mode) => {
-//             dispatch(changeModeCreator(mode));
-//         },
-//         getCameras
-//     }
-// }
 
 
 const CamerasCont = connect(mapStateToProps, mapDispatchToProps)(rawCameras);

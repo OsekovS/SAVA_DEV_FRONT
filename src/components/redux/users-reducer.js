@@ -44,8 +44,8 @@ const usersReducer = (state = initialState, action) => {
         case UPLOAD_USERS:
                 stateCopy ={...state}
                 stateCopy.users = action.usernames.map( (e) => ({
-                    id: e[1],
-                    name: e[0],
+                    id: e[0],
+                    name: e[1],
                     admin:    e[2] !== ''
                 }))
                 return stateCopy
@@ -61,15 +61,19 @@ export const delUser = (id) => ({type: DEL_USER, id: id })
 export const addUser = ({login, password_rep, password, admin}) =>
     ({ type: ADD_USER, login: login, password_rep: password_rep, password: password, admin: admin})
 
-export const uploadUser = (users) => ({type: UPLOAD_USERS, users: users })
+export const uploadUser = (usernames) => ({type: UPLOAD_USERS, usernames})
 
 export const getUsersThunk = () => {
     return (dispatch) => {
         dispatch(toggleIsFetching(true));
-        console.log('!!!')
-        axios.get("users-form-processor.php").then(response => {
+        console.log('!')
+        
+        axios.post("php/users-form-processor.php",{need: "user"}).then(response => {
+            console.log(response.request)
             dispatch(toggleIsFetching(false));
-            let json = JSON.parse(response);
+            let json = JSON.parse(response.request.response);
+            console.log(json)
+            // dispatch({})
             dispatch(uploadUser(json.usernames));
         }).catch(function (error) {
             // handle error
@@ -84,8 +88,9 @@ export const getUsersThunk = () => {
 export const delUserThunk = (id) => {
     console.log(id)
     return (dispatch) => {
-    axios.post("users-form-processor.php",{delUser: id}).then(response => {
-        let json = JSON.parse(response);
+    axios.post("php/users-form-processor.php",{delField: id}).then(response => {
+        console.log(response)
+        let json = JSON.parse(response.request.response);
         if(json.result==="done")
             dispatch(delUser(id));
         else alert("Не удалось удалить пользователя")
@@ -100,22 +105,34 @@ export const delUserThunk = (id) => {
 }
 
 export const addUserThunk = (user) => {
+    console.log(user)
     if(user.admin === undefined)
         user.admin = false
     if(Object.values(user).length === 4){
-        return (dispatch) => {
-        axios.post("users-form-processor.php",{addUser: user}).then(response => {
-            let json = JSON.parse(response);
-            if(json.result==="done")
-                dispatch(addUser(user));
-            else alert("Пользователь с таким id уже существует")
-        }).catch(function (error) {
-            // handle error
-            console.log(error);
-        })
-        .finally(function () {
-            // always executed
-        });
+            if(user.password===user.password_rep){
+                    return (dispatch) => {
+                axios.post("php/users-form-processor.php",{addField: user,
+                    _login: user.login,
+                    _password: user.password,
+                    _admin: user.admin
+                }).then(response => {
+                    console.log(response)
+                    let json = JSON.parse(response.request.response);
+                    if(json.result==="done")
+                        dispatch(addUser(user));
+                    else alert("Пользователь с таким id уже существует")
+                }).catch(function (error) {
+                    // handle error
+                    console.log(error);
+                })
+                .finally(function () {
+                    // always executed
+                });
+            }
+        }
+        else  {
+            alert('Содержимое полей "Пароль" и "Повторный пароль" должно совпадать')
+            return {type: '' }
         }
     }
     else  {
@@ -124,5 +141,26 @@ export const addUserThunk = (user) => {
     }
 }
 
+export const changePassThunk = () => {
+    return (dispatch) => {
+        dispatch(toggleIsFetching(true));
+        console.log('!')
+        
+        axios.post("php/users-form-processor.php",{need: "user"}).then(response => {
+            console.log(response.request)
+            dispatch(toggleIsFetching(false));
+            let json = JSON.parse(response.request.response);
+            console.log(json)
+            // dispatch({})
+            dispatch(uploadUser(json.usernames));
+        }).catch(function (error) {
+            // handle error
+            console.log(error);
+          })
+          .finally(function () {
+            // always executed
+          });
+    }
+}
 
 export default usersReducer;

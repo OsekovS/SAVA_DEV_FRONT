@@ -24,17 +24,18 @@ const form = (props) => {
 const ReduxForm =  reduxForm({form: 'addUser'})(form)
 
 const __users = (props) => {
+
     const onDellUser = (id) => {
         props.delUserThunk(id)
     }
     const onAddUser = (user) => {
         props.addUserThunk(user)
     }
-
+    console.log(props.users)
     let usersElements = props.users.map((e,n) => {  
 
     return <ListElem name='list-elem' items={e} 
-    key={n.toString()}
+    key={e.id}
     elemChangeCallBack={onDellUser} elemDellCallBack={onDellUser}/>
     })
 

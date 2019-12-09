@@ -206,15 +206,18 @@ export const delObj = (id) =>
 export const changeMode = (mode) =>
 ({ type: CHANGE_MODE, mode: mode })
 
-export const uploadCameras = (json) =>
-({ type: UPLOAD_CAMS, json })
+export const uploadCameras = (json,reqObj) =>
+({ type: UPLOAD_CAMS, json, need: reqObj.need })
 
 export const getCameras = (reqObj) => {
+    console.log(reqObj)
     return (dispatch) => {
         console.log('cameras-form-processor.php')
-        axios.post("cameras-form-processor.php", reqObj).then(response => {
-            let json = JSON.parse(response);
-            dispatch(uploadCameras(json));
+        axios.post("php/cameras-form-processor.php", reqObj).then(response => {
+            console.log(response)
+            let json = JSON.parse(response.request.response);
+            console.log(json)
+            dispatch(uploadCameras(json,reqObj));
         }).catch(function (error) {
             // handle error
             console.log(error);
@@ -222,6 +225,43 @@ export const getCameras = (reqObj) => {
           .finally(function () {
             // always executed
           });;
+    }
+}
+
+export const addFieldThunk = (fields,reqObj) => {
+    console.log(reqObj)
+    console.log(fields)
+    if(Object.values(fields).length === fields.length){
+            if(fields.password===fields.password_rep){
+                return {type: '' }
+            //         return (dispatch) => {
+            //     axios.post("php/cameras-form-processor.php",{addField: user,
+            //         _login: user.login,
+            //         _password: user.password,
+            //         _admin: user.admin
+            //     }).then(response => {
+            //         console.log(response)
+            //         let json = JSON.parse(response.request.response);
+            //         if(json.result==="done")
+            //             dispatch(addUser(user));
+            //         else alert("Пользователь с таким id уже существует")
+            //     }).catch(function (error) {
+            //         // handle error
+            //         console.log(error);
+            //     })
+            //     .finally(function () {
+            //         // always executed
+            //     });
+            // }
+        }
+        else  {
+            alert('Содержимое полей "Пароль" и "Повторный пароль" должно совпадать')
+            return {type: '' }
+        }
+    }
+    else  {
+        alert("Необходимо заполнить все поля")
+        return {type: '' }
     }
 }
 
