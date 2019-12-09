@@ -1,3 +1,5 @@
+import * as axios from 'axios'
+
 const ADD_CAM = 'ADD_CAM';
 const ADD_OBJ = 'ADD_OBJ';
 const ADD_REG = 'ADD_REG';
@@ -5,6 +7,7 @@ const DEL_CAM = 'DEL_CAM';
 const DEL_REG = 'DEL_REG';
 const DEL_OBJ ='DEL_OBJ'
 const CHANGE_MODE = 'CHANGE_CAM_MODE'
+const UPLOAD_CAMS = 'UPLOAD_CAMS'
 
 let initialState = {
     settings: {
@@ -146,31 +149,80 @@ const camerasReducer = (state = initialState, action) => {
                 stateCopy.settings.mode = action.mode
                 console.log(stateCopy)
                 return stateCopy
+        case UPLOAD_CAMS:
+                stateCopy = {...state};
+                if(action['need']==='settings'){
+                    stateCopy.settings.cameras = action.json.cameras.map( (e) => ({
+                        id: e[0],
+                        object: e[1],
+                        name: e[2],
+                        ip: e[3],
+                        login: e[4]
+                    }))
+                    stateCopy.settings.registrators = action.json.registrators.map( (e) => ({
+                        id: e[0],
+                        object: e[1],
+                        name: e[2],
+                        ip: e[3],
+                        login: e[4]
+                    }))
+                    stateCopy.settings.objects = action.json.objects.map( (e) => ({
+                        id: e[0], name: e[1]
+                    }))
+                }
+                else{
+                    stateCopy.settings.logs = action.json.registrators.map( (e) => ({
+                        time: e['time'],
+                        ip_cam: e['ip_cam'],
+                        type: e['type'],
+                        comment: e['comment'],
+                        param: e['param']
+                    }))
+                }
+            return stateCopy
        default:
            return state;
    }
 }
 
-export const addCamCreator = ({obj_num, ip, name, login, password, password_rep}) =>
+export const addCam = ({obj_num, ip, name, login, password, password_rep}) =>
     ({ type: ADD_CAM, obj_num: obj_num, ip: ip, name: name, login: login, password: password, password_rep: password_rep })
 
-export const addRegCreator = ({obj_num, ip, name, login, password, password_rep}) =>
+export const addReg = ({obj_num, ip, name, login, password, password_rep}) =>
 ({ type: ADD_REG, obj_num: obj_num, ip: ip, name: name, login: login, password: password, password_rep: password_rep })
 
-export const addObjCreator = ({obj_name}) =>
+export const addObj = ({obj_name}) =>
 ({ type: ADD_OBJ, obj_name: obj_name })
 
-export const delCamCreator = (id) =>
+export const delCam = (id) =>
 ({ type: DEL_CAM, id: id })
 
-export const delRegCreator = (id) =>
+export const delReg = (id) =>
 ({ type: DEL_REG, id: id })
 
-export const delObjCreator = (id) =>
+export const delObj = (id) =>
 ({ type: DEL_OBJ, id: id })
 
-export const changeModeCreator = (mode) =>
+export const changeMode = (mode) =>
 ({ type: CHANGE_MODE, mode: mode })
 
+export const uploadCameras = (json) =>
+({ type: UPLOAD_CAMS, json })
+
+export const getCameras = (reqObj) => {
+    return (dispatch) => {
+        console.log('cameras-form-processor.php')
+        axios.post("cameras-form-processor.php", reqObj).then(response => {
+            let json = JSON.parse(response);
+            dispatch(uploadCameras(json));
+        }).catch(function (error) {
+            // handle error
+            console.log(error);
+          })
+          .finally(function () {
+            // always executed
+          });;
+    }
+}
 
 export default camerasReducer;

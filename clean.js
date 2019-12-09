@@ -19,6 +19,6 @@ function deleteFolderRecursive(path) {
 
 console.log("Cleaning working tree...");
 
-deleteFolderRecursive("../html");
+deleteFolderRecursive("../htmlDev");
 
 console.log("Successfully cleaned working tree!");

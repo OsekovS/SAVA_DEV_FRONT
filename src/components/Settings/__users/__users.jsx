@@ -25,10 +25,10 @@ const ReduxForm =  reduxForm({form: 'addUser'})(form)
 
 const __users = (props) => {
     const onDellUser = (id) => {
-        props.delUser(id)
+        props.delUserThunk(id)
     }
-    const onAddUser = (id) => {
-        props.addUser(id)
+    const onAddUser = (user) => {
+        props.addUserThunk(user)
     }
 
     let usersElements = props.users.map((e,n) => {  

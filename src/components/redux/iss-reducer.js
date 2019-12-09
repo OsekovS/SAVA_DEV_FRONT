@@ -1,9 +1,11 @@
+import * as axios from 'axios'
+
 const DEL_ENDP = 'DEL_ISS_ENDP';
 const DEL_OBJ = 'DEL_ISS_OBJ';
 const ADD_ENDP = 'ADD_ISS_ENDP'
 const ADD_OBJ = 'ADD_ISS_OBJ'
 const CHANGE_MODE = 'CHANGE_ISS_MODE'
-
+const UPLOAD_ISS = 'UPLOAD_ISS'
 
 let initialState = {
     settings: { 
@@ -93,22 +95,68 @@ const issReducer = (state = initialState, action) => {
             stateCopy.settings.mode = action.mode
             console.log(stateCopy)
             return stateCopy
+        case UPLOAD_ISS:
+            stateCopy = {...state};
+            if(action['need']==='settings'){
+            stateCopy.settings.endpoints = action.json.endpoints.map( (e) => ({
+                id: e[0],
+                object: e[1],
+                ip: e[2],
+                name: e[3],
+                port: e[4],
+                login: e[5]
+            }))
+            stateCopy.settings.registrators = action.json.registrators.map( (e) => ({
+                id: e[0], name: e[1]
+            }))
+        }
+        else{
+            stateCopy.settings.logs = action.json.registrators.map( (e) => ({
+                time: e['time'],
+                ip_cam: e['ip_cam'],
+                type: e['type'],
+                comment: e['comment'],
+                param: e['param']
+            }))
+        }
+            return stateCopy
        default:
            return state;
    }
 }
  
-export const delObjCreator = (id) => ({type: DEL_OBJ, id: id })
+export const delObj = (id) => ({type: DEL_OBJ, id: id })
 
-export const delEndpCreator = (id) =>
+export const delEndp = (id) =>
     ({ type: DEL_ENDP, id: id })
 
-export const addEndpCreator = ({obj_num, ip, name, port, login, password, password_rep}) => (
+export const addEndp = ({obj_num, ip, name, port, login, password, password_rep}) => (
     { type: ADD_ENDP, obj_num: obj_num, ip: ip, name: name, port: port, login: login, password: password, password_rep: password_rep })
 
-export const addObjCreator = ({obj_name}) =>
+export const addObj = ({obj_name}) =>
 ({ type: ADD_OBJ, obj_name: obj_name })
-export const changeModeCreator = (mode) =>
+
+export const changeMode = (mode) =>
 ({ type: CHANGE_MODE, mode: mode })
+
+export const uploadIss = (json) =>
+({ type: UPLOAD_ISS, json })
+
+export const getIss = (reqObj) => {
+    return (dispatch) => {
+        console.log('iss-form-processor.php')
+        axios.post("iss-form-processor.php", reqObj).then(response => {
+            let json = JSON.parse(response);
+            json['need'] = reqObj['need']
+            dispatch(uploadIss(json));
+        }).catch(function (error) {
+            // handle error
+            console.log(error);
+          })
+          .finally(function () {
+            // always executed
+          });
+    }
+}
 
 export default issReducer;

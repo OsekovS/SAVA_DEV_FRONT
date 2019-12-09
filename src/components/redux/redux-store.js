@@ -13,6 +13,7 @@ import notificSettingsReducer from './notific-settings-reducer'
 import timezoneSettingsReducer from './timezone-settings-reducer'
 import modSidebarReducer from './mod-sidebar-reducer'
 import thunkMiddleware from "redux-thunk";
+
 let reducers = combineReducers({
     notific: notificSettingsReducer,
     net: netSettingsReducer,

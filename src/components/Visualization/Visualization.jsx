@@ -1,7 +1,7 @@
-import __cameras from './__cameras/__cameras'
-import __acs from './__acs/__acs'
-import __iss from './__iss/__iss'
+import CamerasLogs from './__cameras/__camerasCont'
+import acsLogs from './__acs/__acsCont'
+import issLogs from './__iss/__issCont'
 
-export {__cameras as Visualization__cameras,
-        __acs as Visualization__acs,
-        __iss as Visualization__iss}
+export {CamerasLogs as Visualization__cameras,
+        acsLogs as Visualization__acs,
+        issLogs as Visualization__iss}

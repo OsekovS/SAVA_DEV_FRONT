@@ -7,6 +7,11 @@ import {
     symbolWye, symbolTriangle, symbolStar
 } from 'd3-shape';
 
+
+import value from './helpers/value';
+import colorFunc from './helpers/colorFunc';
+import propTypes from './helpers/propTypes';
+
 const symbolsMap = {
     'circle': symbolCircle,
     'cross': symbolCross,
@@ -16,11 +21,6 @@ const symbolsMap = {
     'triangle-up': symbolTriangle,
     'star': symbolStar
 };
-
-import value from './helpers/value';
-import colorFunc from './helpers/colorFunc';
-import propTypes from './helpers/propTypes';
-
 const methods = {
     dots: 'renderCircle',
     dot: 'renderCircle',

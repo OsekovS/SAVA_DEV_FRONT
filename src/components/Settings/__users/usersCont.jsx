@@ -1,10 +1,10 @@
-import {addUser, delUser, getUsers} from "../../redux/users-reducer";
+import {addUserThunk, delUserThunk, getUsersThunk} from "../../redux/users-reducer";
 import __users from "./__users";
 import {connect} from "react-redux";
 import React from 'react'
 class UsersContainer extends React.Component {
     componentDidMount() {
-        this.props.getUsers();
+        this.props.getUsersThunk();
         // console.log('!')
     }
 
@@ -13,14 +13,12 @@ class UsersContainer extends React.Component {
     }
 
     render() {
-        return <>
-            { this.props.isFetching ? <img src={require("../../Common/load.gif")} /> :  <__users 
+        return  <__users 
                 users={this.props.users} 
-                addUser={this.props.addUser}
-                delUser={this.props.delUser}/> }
-           
-        </>
-    }
+                addUserThunk={this.props.addUserThunk}
+                delUserThunk={this.props.delUserThunk}/>
+             }
+
 }
 
 let mapStateToProps = (state) => {
@@ -30,9 +28,9 @@ let mapStateToProps = (state) => {
     }
 }
 let mapDispatchToProps ={
-        addUser,
-        delUser,
-        getUsers
+        addUserThunk,
+        delUserThunk,
+        getUsersThunk
 }
 
 const usersCont = connect(mapStateToProps, mapDispatchToProps)(UsersContainer);

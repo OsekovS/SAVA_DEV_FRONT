@@ -49,7 +49,6 @@ const usersReducer = (state = initialState, action) => {
                     admin:    e[2] !== ''
                 }))
                 return stateCopy
-            return stateCopy
        default:
            return state;
    }
@@ -64,10 +63,10 @@ export const addUser = ({login, password_rep, password, admin}) =>
 
 export const uploadUser = (users) => ({type: UPLOAD_USERS, users: users })
 
-export const getUsers = () => {
+export const getUsersThunk = () => {
     return (dispatch) => {
         dispatch(toggleIsFetching(true));
-console.log('!!!')
+        console.log('!!!')
         axios.get("users-form-processor.php").then(response => {
             dispatch(toggleIsFetching(false));
             let json = JSON.parse(response);
@@ -78,8 +77,52 @@ console.log('!!!')
           })
           .finally(function () {
             // always executed
-          });;
+          });
     }
 }
+
+export const delUserThunk = (id) => {
+    console.log(id)
+    return (dispatch) => {
+    axios.post("users-form-processor.php",{delUser: id}).then(response => {
+        let json = JSON.parse(response);
+        if(json.result==="done")
+            dispatch(delUser(id));
+        else alert("Не удалось удалить пользователя")
+    }).catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .finally(function () {
+        // always executed
+      });
+    }
+}
+
+export const addUserThunk = (user) => {
+    if(user.admin === undefined)
+        user.admin = false
+    if(Object.values(user).length === 4){
+        return (dispatch) => {
+        axios.post("users-form-processor.php",{addUser: user}).then(response => {
+            let json = JSON.parse(response);
+            if(json.result==="done")
+                dispatch(addUser(user));
+            else alert("Пользователь с таким id уже существует")
+        }).catch(function (error) {
+            // handle error
+            console.log(error);
+        })
+        .finally(function () {
+            // always executed
+        });
+        }
+    }
+    else  {
+        alert("Необходимо заполнить все поля")
+        return {type: '' }
+    }
+}
+
 
 export default usersReducer;
