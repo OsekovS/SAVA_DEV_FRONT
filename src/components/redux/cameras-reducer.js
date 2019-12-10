@@ -79,12 +79,25 @@ let initialState = {
         "param":"2019-11-06 12:51:37"
     }]
 };
+
+let translator = {
+    'addObj': {
+        tb_name: 'object_list',
+        field_len: 1,
+        uni_type: 'name',
+    },
+    'addReg': {
+        tb_name: 'registrar_list',
+        field_len: 6,
+        uni_type: 'ip_reg',
+    },
+}
 // {type, obj_num, ip, name, login, password, password_rep}
 const camerasReducer = (state = initialState, action) => {
     let stateCopy
    switch (action.type) {
         case ADD_CAM:
-            console.log('camAjaxik')
+            // console.log(action)
             if(action.obj_num === undefined) action.obj_num = 1;
             let new_cam = {
                 id: state.settings.cameras.length,
@@ -92,7 +105,6 @@ const camerasReducer = (state = initialState, action) => {
                 name: action.name, 
                 ip: action.ip, 
                 login: action.login, 
-                
             };      
             stateCopy = {...state};
             stateCopy.settings = {...state.settings};
@@ -107,11 +119,11 @@ const camerasReducer = (state = initialState, action) => {
             stateCopy.settings.cameras = state.settings.cameras.filter(e => e.id!==action.id)
             return stateCopy
        case ADD_OBJ:
-            console.log('camAjaxik')
+            // console.log('camAjaxik')
             stateCopy = {...state};
             stateCopy.settings = {...state.settings}
             stateCopy.settings.objects = [...state.settings.objects, 
-                {id: state.settings.objects.length ,name: action.obj_name}]
+                {id: action.id ,name: action.name}]
             stateCopy.settings.mode = 'view'
             return stateCopy;
         case DEL_OBJ:
@@ -120,20 +132,19 @@ const camerasReducer = (state = initialState, action) => {
             stateCopy.settings.objects = state.settings.objects.filter(e => e.id!==action.id)
             return stateCopy
        case ADD_REG:
-            console.log('camAjaxik')
-            if(action.obj_num === undefined) action.obj_num = 1;
             let new_reg = {
-                id: state.settings.registrators.length,
-                obj_num: state.settings.objects[action.obj_num-1].name,
-                ip: action.ip, 
+                id: (action.id).toString(),
+                object: action.obj,
                 name: action.name, 
+                ip: action.ip_reg, 
                 login: action.login, 
-                
             };      
             stateCopy = {...state};
             stateCopy.settings = {...state.settings};
-            stateCopy.settings.registrators = state.settings.registrators.map((e) => e);
+            // stateCopy.settings.registrators = state.settings.registrators.map((e) => e);
+            console.log(state.settings.registrators)
             stateCopy.settings.registrators.push(new_reg);
+            console.log(stateCopy.settings.registrators)
             stateCopy.settings.mode = 'view'
             
             return stateCopy;
@@ -188,11 +199,12 @@ const camerasReducer = (state = initialState, action) => {
 export const addCam = ({obj_num, ip, name, login, password, password_rep}) =>
     ({ type: ADD_CAM, obj_num: obj_num, ip: ip, name: name, login: login, password: password, password_rep: password_rep })
 
-export const addReg = ({obj_num, ip, name, login, password, password_rep}) =>
-({ type: ADD_REG, obj_num: obj_num, ip: ip, name: name, login: login, password: password, password_rep: password_rep })
-
-export const addObj = ({obj_name}) =>
-({ type: ADD_OBJ, obj_name: obj_name })
+export const addReg = ({ id, ip_reg, name, login, pass, obj }) =>{
+    // console.log({ id, ip_reg, name, login, pass, obj })
+    return {type: ADD_REG, id, ip_reg, name, login, pass, obj }
+}
+export const addObj = ({id, name}) =>
+({ type: ADD_OBJ, id, name})
 
 export const delCam = (id) =>
 ({ type: DEL_CAM, id: id })
@@ -228,31 +240,42 @@ export const getCameras = (reqObj) => {
     }
 }
 
-export const addFieldThunk = (fields,reqObj) => {
-    console.log(reqObj)
-    console.log(fields)
-    if(Object.values(fields).length === fields.length){
-            if(fields.password===fields.password_rep){
-                return {type: '' }
-            //         return (dispatch) => {
-            //     axios.post("php/cameras-form-processor.php",{addField: user,
-            //         _login: user.login,
-            //         _password: user.password,
-            //         _admin: user.admin
-            //     }).then(response => {
-            //         console.log(response)
-            //         let json = JSON.parse(response.request.response);
-            //         if(json.result==="done")
-            //             dispatch(addUser(user));
-            //         else alert("Пользователь с таким id уже существует")
-            //     }).catch(function (error) {
-            //         // handle error
-            //         console.log(error);
-            //     })
-            //     .finally(function () {
-            //         // always executed
-            //     });
-            // }
+export const addFieldThunk = (reqObj) => {
+
+    if(Object.values(reqObj.form).length === translator[reqObj.mode].field_len){
+            if(reqObj.form.pass===reqObj.form.pass_rep){
+                delete reqObj.form.pass_rep
+                // reqObj.obj = state.settings.cameras.objects[reqObj.obj]
+                return (dispatch) => {
+                    let json={form: reqObj.form, addField: {uni_type: translator[reqObj.mode].uni_type, uni_val: reqObj.form[translator[reqObj.mode].uni_type], tb_name: translator[reqObj.mode].tb_name}}
+                    console.log(json)
+                    axios.post("php/cameras-form-processor.php",json).then(response => {
+                        console.log(response)
+                        json = JSON.parse(response.request.response);
+                        console.log(json)
+                        if(json.result==="done")
+                            switch (reqObj.mode) {
+                                case 'addObj':
+                                    console.log('addObj')
+                                    return   dispatch(addObj({...reqObj.form, id: json.id}));
+                                case 'addReg':
+                                    console.log('addReg')
+                                    return   dispatch(addReg({...reqObj.form, id: json.id}));
+                                case 'addReg':
+                                    console.log('addReg')
+                                    return   dispatch(addReg({...reqObj.form, id: json.id}));
+                                default:
+                                    return {type: ''};
+                            }
+                        else alert("Пользователь с таким id уже существует")
+                    }).catch(function (error) {
+                        // handle error
+                        console.log(error);
+                    })
+                    .finally(function () {
+                        // always executed
+                    });
+                }
         }
         else  {
             alert('Содержимое полей "Пароль" и "Повторный пароль" должно совпадать')
@@ -263,6 +286,38 @@ export const addFieldThunk = (fields,reqObj) => {
         alert("Необходимо заполнить все поля")
         return {type: '' }
     }
+}
+
+export const delFieldThunk = (reqObj) => {
+
+        return (dispatch) => {
+            let json = {tb_name: reqObj.delete, id: reqObj.id, delete: true}
+            console.log(json)
+            axios.post("php/cameras-form-processor.php",json).then(response => {
+                console.log(response)
+                json = JSON.parse(response.request.response);
+                console.log(json)
+                if(json.result==="done")
+                    switch (reqObj.delete) {
+                        case 'cameras_list':
+                            return   dispatch(delCam(reqObj.id));
+                        case 'registrar_list':
+                            return   dispatch(delReg(reqObj.id));
+                        case 'object_list':
+                            return   dispatch(delObj(reqObj.id));
+                        default:
+                            return {type: ''};
+                    }
+                else alert("При удалении возникла ошибка")
+            }).catch(function (error) {
+                // handle error
+                console.log(error);
+            })
+            .finally(function () {
+                // always executed
+            });
+        }
+
 }
 
 export default camerasReducer;

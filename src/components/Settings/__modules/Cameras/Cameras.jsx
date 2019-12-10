@@ -11,15 +11,15 @@ const cameras_form = (props) => {
             <header className="Common__header Common__header_red">Добавить камеру</header>
         <form className="modal-form" onSubmit={props.handleSubmit}>	
             <label>Объект: 
-                <Field name="obj_num" component={"select"} >
+                <Field name="obj" component={"select"} >
                     {objectsElements}
                 </Field>
             </label>
-            <label>Ip адрес: <Field name="ip" placeholder={"Ip"} component={"input"} type="text"/></label>
+            <label>Ip адрес: <Field name="ip_cam" placeholder={"Ip"} component={"input"} type="text"/></label>
             <label>Имя: <Field name="name" placeholder={"Имя"} component={"input"} type="text"/></label>
             <label>Логин: <Field name="login" placeholder={"Логин"} component={"input"} type="text"/></label>
-            <label>Пароль: <Field name="password" placeholder={"Пароль"} type="password" component={"input"}/></label>
-            <label>Повторный пароль: <Field name="password_rep" placeholder={"Повторный пароль"} type="password" component={"input"}/></label>           
+            <label>Пароль: <Field name="pass" placeholder={"Пароль"} type="password" component={"input"}/></label>
+            <label>Повторный пароль: <Field name="pass_rep" placeholder={"Повторный пароль"} type="password" component={"input"}/></label>           
             <div>
                 <button>Добавить</button> <button onClick={props.callback.bind(this,'view')}>Отмена</button>
             </div>
@@ -36,7 +36,7 @@ const objects_form = (props) => {
         <div className="modal-form-keeper modal-form-keeper__small" >
             <header className="Common__header Common__header_red">Добавить объект</header>
         <form className="modal-form" onSubmit={props.handleSubmit}>	
-            <label>Название: <Field name="obj_name" placeholder={"Название объекта"} component={"input"} type="text"/></label>         
+            <label>Название: <Field name="name" placeholder={"Название объекта"} component={"input"} type="text"/></label>         
             <div>
                 <button>Добавить</button> <button onClick={props.callback.bind(this,'view')}>Отмена</button>
             </div>
@@ -55,15 +55,15 @@ const regs_form = (props) => {
             <header className="Common__header Common__header_red">Добавить регистратор</header>
         <form className="modal-form" onSubmit={props.handleSubmit}>
             <label>Объект: 
-                <Field name="obj_num" component={"select"} >
+                <Field name="obj" component={"select"} >
                     {objectsElements}
                 </Field>
             </label>
-            <label>Ip адрес: <Field name="ip" placeholder={"Ip"} component={"input"} type="text"/></label>
+            <label>Ip адрес: <Field name="ip_reg" placeholder={"Ip"} component={"input"} type="text"/></label>
             <label>Имя: <Field name="name" placeholder={"Имя"} component={"input"} type="text"/></label>
             <label>Логин: <Field name="login" placeholder={"Логин"} component={"input"} type="text"/></label>
-            <label>Пароль: <Field name="password" placeholder={"Пароль"} type="password" component={"input"}/></label>
-            <label>Повторный пароль: <Field name="password_rep" placeholder={"Повторный пароль"} type="password" component={"input"}/></label>           
+            <label>Пароль: <Field name="pass" placeholder={"Пароль"} type="password" component={"input"}/></label>
+            <label>Повторный пароль: <Field name="pass_rep" placeholder={"Повторный пароль"} type="password" component={"input"}/></label>           
             <div>
                 <button>Добавить</button> <button onClick={props.callback.bind(this,'view')}>Отмена</button>
             </div>
@@ -78,25 +78,35 @@ const RegsReduxForm =  reduxForm({form: 'addCamReg'})(regs_form)
 const Cameras = (props) => {
 
     const onAddField = (formData) => {
+        console.log(formData.obj )
+        if(props.mode==='addReg'||props.mode==='addCam')
+        {
+             if(formData.obj===undefined)
+                formData.obj = Object.values(props.objects)[0].name
+            else{
+                Object.values(props.objects).map((e) => {
+                    if(e.id==formData.obj) formData.obj = e.name
+                })
+            }
+        }
         console.log('changeField')
         console.log(formData)
-        let a = {...formData}
+        let a = {form: formData}
         a.mode = props.mode;
         props.addFieldThunk(a)
     }
 
 
     const onDelCamera = (id) => {
-        // console.log(ip)
-        props.delCam(id)
+        props.delFieldThunk({id:id, delete:'cameras_list'})
     }
 
     const onDelRegistrator = (id) => {
-        props.delReg(id)
+        props.delFieldThunk({id:id, delete:'registrar_list'})
     }
 
     const onDelObject = (id) => {
-        props.delObj(id)
+        props.delFieldThunk({id:id, delete:'object_list'})
     }
 
     const onChangeCamera = (formData) => {
