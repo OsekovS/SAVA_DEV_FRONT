@@ -10,7 +10,7 @@ const objects_form = (props) => {
         <div className="modal-form-keeper modal-form-keeper__small" >
             <header className="Common__header Common__header_red">Добавить объект</header>
             <form className="modal-form" onSubmit={props.handleSubmit}>
-                <p><label>Название: <Field name="obj_name" placeholder={"Название объекта"} component={"input"} type="text"/></label></p>           
+                <p><label>Название: <Field name="name" placeholder={"Название объекта"} component={"input"} type="text"/></label></p>           
                 <div>
                     <button>Добавить</button> <button onClick={props.callback.bind(this,'view')}>Отменить</button>
                 </div>
@@ -18,7 +18,6 @@ const objects_form = (props) => {
         </div>
         )
     else return null
-    
 }
 
 const ObjectsReduxForm =  reduxForm({form: 'addAcsObj'})(objects_form)
@@ -31,16 +30,15 @@ const endps_form = (props) => {
             <header className="Common__header Common__header_red">Добавить конечную точку</header>
             <form className="modal-form" onSubmit={props.handleSubmit}>
             <label>Объект: 
-                <Field name="obj_num" component={"select"}  >
+                <Field name="obj" component={"select"}  >
                     {objectsElements}
                 </Field>
             </label>
-            <label>Ip адрес: <Field name="ip" placeholder={"Ip"} component={"input"} type="text"/></label>
             <label>Имя: <Field name="name" placeholder={"Имя"} component={"input"} type="text"/></label>
             <label>Порт: <Field name="port" placeholder={"Имя"} component={"input"} type="text"/></label>
             <label>Логин: <Field name="login" placeholder={"Логин"} component={"input"} type="text"/></label>
-            <label>Пароль: <Field name="password" placeholder={"Пароль"} type="password" component={"input"}/></label>
-            <label>Повторный пароль: <Field name="password_rep" placeholder={"Повторный пароль"} type="password" component={"input"}/></label>           
+            <label>Пароль: <Field name="pass" placeholder={"Пароль"} type="password" component={"input"}/></label>
+            <label>Повторный пароль: <Field name="pass_rep" placeholder={"Повторный пароль"} type="password" component={"input"}/></label>           
             <div>
                 <button >Сохранить</button><button onClick={props.callback.bind(this,'view')}>Отменить</button>
             </div>
@@ -54,20 +52,29 @@ const EndpsReduxForm =  reduxForm({form: 'addAcsEndp'})(endps_form)
 
 const Acs = (props) => {
 
-    const onDelObj = (id) => {
-        props.delObj(id)
+    const onAddField = (formData) => {
+        console.log(formData )
+        if(props.mode==='addEndp')
+        {
+             if(formData.obj===undefined)
+                formData.obj = Object.values(props.objects)[0].name
+            else{
+                Object.values(props.objects).map((e) => {
+                    if(e.id==formData.obj) formData.obj = e.name
+                })
+            }
+        }
+        let a = {form: formData}
+        a.mode = props.mode;
+        props.addFieldThunk(a)
     }
 
-    const onAddEndpoint = (id) => {
-        props.addEndp(id)
+    const onDelObj = (id) => {
+        props.delObj(id)
     }
     
     const onDellEndpoint = (id) => {
         props.delEndp(id)
-    }
-
-    const onAddObj = (id) => {
-        props.addObj(id)
     }
     
     const onChangeMode = (mode) =>{
@@ -80,8 +87,6 @@ elemChangeCallBack={onDelObj} elemDellCallBack={onDelObj}/>)
 let endpointsElemens = props.endpoints.map((e,n) => <ListElem name='list-elem' items={e} key={n.toString()}
 elemChangeCallBack={onDelObj} elemDellCallBack={onDellEndpoint}/>)
 
-// let objForm = false ? <frameElement><ObjectsReduxForm objects={props.objects}  onSubmit={onAddObj} /> <button>Добавить</button></frameElement> 
-// : <button>Добавить</button> ;
     return <div className="Settings__acs">
             <header className="Common__header Common__header_red">Объекты инфраструктуры</header>
                 <table className="Modules_table Modules_table__cam-dev">
@@ -90,16 +95,16 @@ elemChangeCallBack={onDelObj} elemDellCallBack={onDellEndpoint}/>)
                     </tbody>
                 </table>
                 <button onClick={onChangeMode.bind(this,'addObj')}>Добавить</button>
-                <ObjectsReduxForm mode={props.mode} onSubmit={onAddObj} callback={onChangeMode}/>
+                <ObjectsReduxForm mode={props.mode} onSubmit={onAddField} callback={onChangeMode}/>
             <header className="Common__header Common__header_red">Список конечных точек</header>
                 <table className="Modules_table Modules_table__cam-dev">
                     <tbody>
-                        <ListElem  name='list-elem list-elem__cameras list-elem__title' items={['', 'объект', 'ip адрес','имя' , 'порт', 'логин']  }/>
+                        <ListElem  name='list-elem list-elem__cameras list-elem__title' items={['', 'объект','имя' , 'порт', 'логин']  }/>
                         {endpointsElemens}  
                     </tbody>
-                 </table>
+                </table>
                  <button onClick={onChangeMode.bind(this,'addEndp')}>Добавить</button>
-             <EndpsReduxForm objects={props.objects} mode={props.mode} onSubmit={onAddEndpoint}  callback={onChangeMode}/>
+             <EndpsReduxForm objects={props.objects} mode={props.mode} onSubmit={onAddField}  callback={onChangeMode}/>
         </div>
 }
 

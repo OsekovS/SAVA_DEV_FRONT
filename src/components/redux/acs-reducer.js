@@ -58,6 +58,21 @@ let initialState = {
     }]
 };
 
+let translator = {
+    'addObj': {
+        tb_name: 'object_list',
+        field_len: 1,
+        uni_type: 'name',
+        uni_type_usr: 'именем'
+    },
+    'addEndp': {
+        tb_name: 'endpoints_list',
+        field_len: 6,
+        uni_type: 'ip',
+        uni_type_usr: 'ip'
+    }
+}
+
 const acsReducer = (state = initialState, action) => {
     let stateCopy
    switch (action.type) {
@@ -88,7 +103,7 @@ const acsReducer = (state = initialState, action) => {
             stateCopy = {...state};
             stateCopy.settings = {...state.settings}
             stateCopy.settings.objects = [...state.settings.objects, 
-                {id: state.settings.objects.length ,name: action.obj_name}]
+                {id: action.id ,name: action.name}]
             stateCopy.settings.mode = 'view'
             return stateCopy;
        case DEL_OBJ:
@@ -107,13 +122,12 @@ const acsReducer = (state = initialState, action) => {
             if(action['need']==='settings'){
                 stateCopy.settings.endpoints = action.json.endpoints.map( (e) => ({
                     id: e[0],
-                    object: e[1],
-                    ip: e[2],
-                    name: e[3],
-                    port: e[4],
-                    login: e[5]
+                    object: e[2], 
+                    name: e[1],
+                    port: e[3],
+                    login: e[4]
                 }))
-                stateCopy.settings.registrators = action.json.registrators.map( (e) => ({
+                stateCopy.settings.objects = action.json.objects.map( (e) => ({
                     id: e[0], name: e[1]
                 }))
             }
@@ -140,24 +154,23 @@ export const delEndp = (id) =>
 export const addEndp = ({obj_num, ip, name, port, login, password, password_rep}) => (
     { type: ADD_ENDP, obj_num: obj_num, ip: ip, name: name, port: port, login: login, password: password, password_rep: password_rep })
 
-export const addObj = ({obj_name}) =>
-({ type: ADD_OBJ, obj_name: obj_name })
-
+export const addObj = ({id, name}) =>
+({ type: ADD_OBJ, id, name })
 
 export const changeMode = (mode) =>
 ({ type: CHANGE_MODE, mode: mode })
 
 
-export const uploadAcs = (json) =>
-({ type: UPLOAD_ACS, json })
-
+export const uploadAcs = (json,reqObj) =>
+({ type: UPLOAD_ACS, json, need: reqObj.need })
 
 export const getAcs = (reqObj) => {
     return (dispatch) => {
         console.log('acs-form-processor.php')
-        axios.get("acs-form-processor.php", reqObj).then(response => {
-            let json = JSON.parse(response);
-            dispatch(uploadAcs(json));
+        axios.post("php/acs-form-processor.php", reqObj).then(response => {
+            console.log(response)
+            let json = JSON.parse(response.request.response);
+            dispatch(uploadAcs(json,reqObj));
         }).catch(function (error) {
             // handle error
             console.log(error);
@@ -165,6 +178,50 @@ export const getAcs = (reqObj) => {
           .finally(function () {
             // always executed
           });;
+    }
+}
+
+export const addFieldThunk = (reqObj) => {
+    console.log(reqObj)
+    if(Object.values(reqObj.form).length === translator[reqObj.mode].field_len){
+            if(reqObj.form.pass===reqObj.form.pass_rep){
+                delete reqObj.form.pass_rep
+                // reqObj.obj = state.settings.cameras.objects[reqObj.obj]
+                return (dispatch) => {
+                    let json={form: reqObj.form, addField: {uni_type: translator[reqObj.mode].uni_type, uni_val: reqObj.form[translator[reqObj.mode].uni_type], tb_name: translator[reqObj.mode].tb_name}}
+                    console.log(json)
+                    axios.post("php/acs-form-processor.php",json).then(response => {
+                        console.log(response)
+                        json = JSON.parse(response.request.response);
+                        console.log(json)
+                        if(json.result==="done")
+                            switch (reqObj.mode) {
+                                case 'addObj':
+                                    console.log({...reqObj.form, id: json.id})
+                                    return   dispatch(addObj(reqObj.form));
+                                case 'addEndp':
+                                    return   dispatch(addEndp({...reqObj.form, id: json.id}));
+                                default:
+                                    return {type: ''};
+                            }
+                        else alert(`Пользователь с таким ${translator[reqObj.mode].uni_type} уже существует`)
+                    }).catch(function (error) {
+                        // handle error
+                        console.log(error);
+                    })
+                    .finally(function () {
+                        // always executed
+                    });
+                }
+        }
+        else  {
+            alert('Содержимое полей "Пароль" и "Повторный пароль" должно совпадать')
+            return {type: '' }
+        }
+    }
+    else  {
+        alert("Необходимо заполнить все поля")
+        return {type: '' }
     }
 }
 

@@ -1,3 +1,5 @@
+import * as axios from 'axios'
+
 const UPDATE_NEW_MESSAGE_BODY = 'UPDATE_NEW_MESSAGE_BODY';
 const SEND_MESSAGE = 'SEND_MESSAGE';
 
@@ -26,6 +28,8 @@ let initialState = {
 const headerReducer = (state = initialState, action) => {
    switch (action.type) {
        case UPDATE_NEW_MESSAGE_BODY:
+           let newState = {...initialState}
+           action.events.forEach(element => console.log(element));
            return state;
        case SEND_MESSAGE:
            return state;
@@ -34,8 +38,29 @@ const headerReducer = (state = initialState, action) => {
    }
 }
 
-export const sendMessageCreator = () => ({type: SEND_MESSAGE})
-export const updateNewMessageBodyCreator = (body) =>
-    ({ type: UPDATE_NEW_MESSAGE_BODY, body: body })
+export const uploadEvents = (events) =>
+    ({ type: UPDATE_NEW_MESSAGE_BODY, events })
+
+    
+
+export const getNotification = () => {
+    return (dispatch) => {
+        // console.log('!')
+        axios.post("php/users-form-processor.php",{need: "notification"}).then(response => {
+            // console.log(response.request)
+            let json = JSON.parse(response.request.response);
+            console.log(json)
+            // dispatch({})
+            dispatch(uploadEvents(json));
+        }).catch(function (error) {
+            // handle error
+            console.log(error);
+            })
+            .finally(function () {
+            // always executed
+            });
+    }
+}
+
 
 export default headerReducer;

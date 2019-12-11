@@ -1,4 +1,4 @@
-import  {addEndp, delEndp, addObj,
+import  {addFieldThunk, delEndp, 
     delObj, changeMode, getAcs} from "../../../redux/acs-reducer";
 import Acs from "./Acs";
 import {connect} from "react-redux";
@@ -20,9 +20,8 @@ class rawAcs extends React.Component {
             objects={this.props.objects}
             endpoints={this.props.endpoints}
 
-            addEndp={this.props.addEndp}
             delEndp={this.props.delEndp}
-            addObj={this.props.addObj}
+            addFieldThunk={this.props.addFieldThunk}
             delObj={this.props.delObj}
             changeMode={this.props.changeMode}
         />
@@ -37,9 +36,8 @@ let mapStateToProps = (state) => {
     }
 }
 let mapDispatchToProps = {
-    addEndp,
+    addFieldThunk,
     delEndp,
-    addObj,
     delObj,
     changeMode, getAcs
 }

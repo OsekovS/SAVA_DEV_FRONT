@@ -78,7 +78,7 @@ const RegsReduxForm =  reduxForm({form: 'addCamReg'})(regs_form)
 const Cameras = (props) => {
 
     const onAddField = (formData) => {
-        console.log(formData.obj )
+        // console.log(formData.obj )
         if(props.mode==='addReg'||props.mode==='addCam')
         {
              if(formData.obj===undefined)
@@ -89,8 +89,8 @@ const Cameras = (props) => {
                 })
             }
         }
-        console.log('changeField')
-        console.log(formData)
+        // console.log('changeField')
+        // console.log(formData)
         let a = {form: formData}
         a.mode = props.mode;
         props.addFieldThunk(a)
@@ -98,6 +98,7 @@ const Cameras = (props) => {
 
 
     const onDelCamera = (id) => {
+        
         props.delFieldThunk({id:id, delete:'cameras_list'})
     }
 
@@ -106,7 +107,17 @@ const Cameras = (props) => {
     }
 
     const onDelObject = (id) => {
-        props.delFieldThunk({id:id, delete:'object_list'})
+        let obj = {id:id, delete:'object_list'}
+        props.objects.forEach(element => {
+            if(element.id==id) obj.objName = element.name
+        });
+        props.delFieldThunk(obj)
+
+        // props.delFieldThunk({id:id, delete:'object_list', 
+        // object: Object.values(props.objects).map((e) => {
+        //     if(e.id==id) return e.name
+        //     })
+        // })
     }
 
     const onChangeCamera = (formData) => {
@@ -156,6 +167,7 @@ const Cameras = (props) => {
         <header className="Common__header Common__header_red">Список регистраторов</header>
         <table className="Modules_table Modules_table__cam-dev">
             <tbody>
+            <ListElem  name='list-elem list-elem__cameras list-elem__title' items={['','объект', 'имя' , 'ip адрес', 'логин']  }/>
                 {registratorsElements}
             </tbody>
         </table>
