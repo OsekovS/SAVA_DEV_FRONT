@@ -28,9 +28,24 @@ let initialState = {
 const headerReducer = (state = initialState, action) => {
    switch (action.type) {
        case UPDATE_NEW_MESSAGE_BODY:
-           let newState = {...initialState}
-           action.events.forEach(element => console.log(element));
-           return state;
+           let newState = {
+               all: {
+                    exceptions: 0,
+                    errors: 0
+                }
+            }
+            console.log(action.events)
+           action.events.forEach(element => {
+                    newState[element[0]] = {
+                    events: element[1],
+                    exceptions: element[2],
+                    errors: element[3]
+                }
+                newState.all.exceptions += parseInt(element[3])
+                newState.all.errors += parseInt(element[2])
+            });
+            console.log(newState)
+           return newState;
        case SEND_MESSAGE:
            return state;
        default:
@@ -38,7 +53,7 @@ const headerReducer = (state = initialState, action) => {
    }
 }
 
-export const uploadEvents = (events) =>
+export const uploadEvents = ({events}) =>
     ({ type: UPDATE_NEW_MESSAGE_BODY, events })
 
     
