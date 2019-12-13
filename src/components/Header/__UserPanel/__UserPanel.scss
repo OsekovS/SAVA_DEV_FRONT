@@ -9,8 +9,9 @@ padding: 0 0 0 27px;
 box-sizing: border-box;
 text-align: center;
 display: flex;
+z-index: 2;
 align-items: center;
-
+background: $grey-color;
 img{
     margin-right: 20px;
 }
@@ -18,7 +19,7 @@ span{
     font-size: 30px;
     
 }
-button{
+.Header__ButtDown{
     background: inherit;
     width: 14px;
     height: 14px;
@@ -29,4 +30,8 @@ button{
     margin-left: 14px;
 
 }
+}
+.Header__UserPanel_opened{
+    height: 150px;
+    flex-direction: column;
 }

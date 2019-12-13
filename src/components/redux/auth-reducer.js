@@ -2,8 +2,8 @@ import * as axios from 'axios'
 import {setCookie,getCookie} from '../JS/Cookies'
 const UPDATE_PAGE = "UPDATE_PAGE"
 const LOG_IN = "LOG_IN"
+const LOG_OUT = "LOG_OUT"
 
-const SEND_MESSAGE = 'SEND_MESSAGE';
 
 let initialState = {
     isAuth: false,
@@ -29,6 +29,13 @@ const authReducer = (state = initialState, action) => {
             stateCopy.briefUserInfo.name = getCookie('login')
             stateCopy.briefUserInfo.admin = action.admin === "1" ? 'администратор' : 'оператор'
             return stateCopy;
+        case LOG_OUT:
+            stateCopy = {...state}
+            stateCopy.isAuth = false
+            setCookie("admin","")
+            setCookie("hash","")
+            setCookie("login","")
+            return stateCopy;
        default:
            return state;
    }
@@ -36,7 +43,10 @@ const authReducer = (state = initialState, action) => {
 
 // export const delUser = (id) => ({type: DEL_USER, id: id })
 const logIn = ({hash,login,admin}) => ({type: LOG_IN,hash,login,admin})
+export const logOut = () => ({type: LOG_OUT})
+
 const updatePage = () => ({type: UPDATE_PAGE})
+
 export const logInThunk = (logObj) => {
     return (dispatch) => {
         console.log(logObj)
