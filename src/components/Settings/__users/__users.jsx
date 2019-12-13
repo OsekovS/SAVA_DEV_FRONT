@@ -2,12 +2,14 @@ import React from 'react';
 import './__users.scss';
 import ListElem from '../../Common/ListElem/ListElem'
 import {Field, reduxForm} from "redux-form";
-
+import {required, maxLengthCreator} from '../../utils/fieldValidators/fieldValidators'
+import {Input} from '../../Common/Input/Input'
+const length10 = maxLengthCreator(10)
 const form = (props) => {
     return (
         <form onSubmit={props.handleSubmit}>
              <span className="settings_text">Добавить пользователя</span>	
-            <p><label>Логин: <Field name="login" placeholder={"Логин"} component={"input"}/></label></p>
+            <p><label>Логин: <Field name="login" placeholder={"Логин"} component={Input} validate={[required, length10]}/></label></p>
             <p><label>Пароль: <Field name="password" placeholder={"Пароль"} type="password" component={"input"}/></label></p>
             <p><label>Повторный пароль: <Field name="password_rep" placeholder={"Повторный пароль"} type="password" component={"input"}/></label></p>
             <p><label>Права администратора: <Field name="admin"  component={"input"} type="checkbox"/></label></p>

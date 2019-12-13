@@ -3,12 +3,9 @@ import {connect} from "react-redux";
 import './NavBar.scss';
 import {NavLink} from 'react-router-dom'
 import {changeLinkDirectCreator} from "../redux/nav-bar-reducer";
-
-// onClick={e => {
-//     e.preventDefault()
-//     onClick.bind(this,e.link)
-// }}
-
+import {withAuthRedirect} from '../utils/HOCs/AutoRedirect/AutoRedirect'
+import {compose} from "redux";
+// rawNavBar
 const rawNavBar = (props) => {
     const onClick = (to) => {
         props.changeLink(to)
@@ -21,6 +18,7 @@ const rawNavBar = (props) => {
         return <NavLink to={'/'+e.link}
         key={n.toString()}><span >/ {e.text}</span> </NavLink>
     })
+    // if(!props.auth.isAuth) return null
     return <p className="NavPanel">
         {barString}
         </p>
@@ -28,7 +26,8 @@ const rawNavBar = (props) => {
 
 let mapStateToProps = (state) => {
     return {
-        navInfo: state.navBar.state
+        navInfo: state.navBar.state,
+        // auth: state.auth
     }
 }
 let mapDispatchToProps = (dispatch) => {
@@ -38,6 +37,14 @@ let mapDispatchToProps = (dispatch) => {
         }
     }
 }
+// let mapDispatchToProps = {
+//     checkCookies
+//   }
+ const  NavBar = (connect(mapStateToProps,mapDispatchToProps)(rawNavBar));
+// const NavBar = compose(
+//     connect(mapStateToProps, mapDispatchToProps),
+//     withAuthRedirect
+//     )(rawNavBar)
 
-const NavBar = connect(mapStateToProps, mapDispatchToProps)(rawNavBar);
+// const NavBar = connect(mapStateToProps, mapDispatchToProps)(rawNavBar);
 export default NavBar;

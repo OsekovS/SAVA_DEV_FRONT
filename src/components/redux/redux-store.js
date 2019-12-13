@@ -12,6 +12,7 @@ import licReducer from './lic-reducer'
 import notificSettingsReducer from './notific-settings-reducer'
 import timezoneSettingsReducer from './timezone-settings-reducer'
 import modSidebarReducer from './mod-sidebar-reducer'
+import authReducer from './auth-reducer'
 import thunkMiddleware from "redux-thunk";
 
 let reducers = combineReducers({
@@ -19,7 +20,7 @@ let reducers = combineReducers({
     net: netSettingsReducer,
     timezone: timezoneSettingsReducer,
     users: usersReducer,
-
+    auth: authReducer,
     cameras: camerasReducer,
     acs: acsReducer,
     iss: issReducer,

@@ -1,7 +1,7 @@
 import React from 'react';
 import './__lic.scss';
-
-const __lic = (props) => {
+import {connect} from "react-redux";
+const rawlic = (props) => {
     return <div className="Settings__lic">
         <form encType="multipart/form-data" action="settings_admin.php" method="POST">       
             <h2 className='h2__center'>Лицензия</h2>	
@@ -23,5 +23,15 @@ const __lic = (props) => {
         </form>
     </div>
 }
+
+let mapStateToProps = (state) => {
+    return {
+        lic: state.lic
+    }
+}
+let mapDispatchToProps ={
+}
+
+const __lic = connect(mapStateToProps, mapDispatchToProps)(rawlic);
 
 export default __lic;

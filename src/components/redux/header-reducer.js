@@ -1,5 +1,4 @@
-const UPDATE_NEW_MESSAGE_BODY = 'UPDATE_NEW_MESSAGE_BODY';
-const SEND_MESSAGE = 'SEND_MESSAGE';
+const UPDATE_HEADER_EVENTS = 'UPDATE_HEADER_EVENTS';
 
 let initialState = {
     briefUserInfo: {name: 'administrator',
@@ -12,17 +11,35 @@ let initialState = {
 
 export const headerReducer = (state = initialState, action) => {
    switch (action.type) {
-       case UPDATE_NEW_MESSAGE_BODY:
-           return state;
-       case SEND_MESSAGE:
-           return state;
+       case UPDATE_HEADER_EVENTS:
+           console.log('лохпидр')
+            return state;
        default:
            return state;
    }
 }
+// const innerUpdateHeaderEvents = (body) =>
+//     ({ type: UPDATE_HEADER_EVENTS, body })
 
-export const sendMessageCreator = () => ({type: SEND_MESSAGE})
-export const updateNewMessageBodyCreator = (body) =>
-    ({ type: UPDATE_NEW_MESSAGE_BODY, body: body })
+// export const updateHeaderEvents = (body) =>dispatch(innerUpdateHeaderEvents(body));
 
-// export default headerReducer;
+// export const updateHeaderEvents = () => {
+//     return (dispatch) => {
+//         // console.log('!')
+//         axios.post("php/users-form-processor.php",{need: "notification"}).then(response => {
+//             // console.log(response.request)
+//             let json = JSON.parse(response.request.response);
+//             console.log(json)
+//             // dispatch({})
+//             dispatch(uploadEvents(json));
+//         }).catch(function (error) {
+//             // handle error
+//             console.log(error);
+//             })
+//             .finally(function () {
+//             // always executed
+//             });
+//     }
+// }
+
+export default headerReducer;

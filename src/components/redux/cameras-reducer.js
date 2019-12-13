@@ -230,13 +230,13 @@ export const uploadCameras = (json,reqObj) =>
 ({ type: UPLOAD_CAMS, json, need: reqObj.need })
 
 export const getCameras = (reqObj) => {
-    // console.log(reqObj)
+    console.log(reqObj)
     return (dispatch) => {
         console.log('cameras-form-processor.php')
         axios.post("php/cameras-form-processor.php", reqObj).then(response => {
-            // console.log(response)
+            console.log(response)
             let json = JSON.parse(response.request.response);
-            // console.log(json)
+            // console.log(json)/
             dispatch(uploadCameras(json,reqObj));
         }).catch(function (error) {
             // handle error

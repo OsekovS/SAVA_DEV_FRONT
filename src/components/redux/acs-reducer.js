@@ -165,11 +165,13 @@ export const uploadAcs = (json,reqObj) =>
 ({ type: UPLOAD_ACS, json, need: reqObj.need })
 
 export const getAcs = (reqObj) => {
+    console.log(reqObj)
     return (dispatch) => {
         console.log('acs-form-processor.php')
         axios.post("php/acs-form-processor.php", reqObj).then(response => {
             console.log(response)
             let json = JSON.parse(response.request.response);
+            console.log(json)
             dispatch(uploadAcs(json,reqObj));
         }).catch(function (error) {
             // handle error

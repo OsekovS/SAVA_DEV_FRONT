@@ -1,5 +1,5 @@
 import * as axios from 'axios'
-
+// import {updateHeaderEvents} from './header-reducer'
 const UPDATE_NEW_MESSAGE_BODY = 'UPDATE_NEW_MESSAGE_BODY';
 const SEND_MESSAGE = 'SEND_MESSAGE';
 
@@ -34,7 +34,7 @@ const headerReducer = (state = initialState, action) => {
                     errors: 0
                 }
             }
-            console.log(action.events)
+            // console.log(action.events)
            action.events.forEach(element => {
                     newState[element[0]] = {
                     events: element[1],
@@ -44,7 +44,9 @@ const headerReducer = (state = initialState, action) => {
                 newState.all.exceptions += parseInt(element[3])
                 newState.all.errors += parseInt(element[2])
             });
-            console.log(newState)
+            // (updateHeaderEvents(newState.all))
+            // console.log(newState)
+
            return newState;
        case SEND_MESSAGE:
            return state;
@@ -64,7 +66,7 @@ export const getNotification = () => {
         axios.post("php/users-form-processor.php",{need: "notification"}).then(response => {
             // console.log(response.request)
             let json = JSON.parse(response.request.response);
-            console.log(json)
+            // console.log(json)
             // dispatch({})
             dispatch(uploadEvents(json));
         }).catch(function (error) {
