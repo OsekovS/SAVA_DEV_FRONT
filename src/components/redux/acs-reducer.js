@@ -60,14 +60,14 @@ let initialState = {
 
 let translator = {
     'addObj': {
-        tb_name: 'object_list',
+        tb_name: 'objects',
         field_len: 1,
         uni_type: 'name',
         uni_type_usr: 'именем'
     },
     'addEndp': {
-        tb_name: 'endpoints_list',
-        field_len: 6,
+        tb_name: 'endpoints',
+        field_len: 5,
         uni_type: 'ip',
         uni_type_usr: 'ip'
     }
@@ -226,5 +226,24 @@ export const addFieldThunk = (reqObj) => {
         return {type: '' }
     }
 }
+
+// export const delThunk = (id) => {
+//     console.log(id)
+//     return (dispatch) => {
+//     axios.post("php/users-form-processor.php",{delField: id}).then(response => {
+//         console.log(response)
+//         let json = JSON.parse(response.request.response);
+//         if(json.result==="done")
+//             dispatch(delUser(id));
+//         else alert("Не удалось удалить пользователя")
+//     }).catch(function (error) {
+//         // handle error
+//         console.log(error);
+//       })
+//       .finally(function () {
+//         // always executed
+//       });
+//     }
+// }
 
 export default acsReducer;

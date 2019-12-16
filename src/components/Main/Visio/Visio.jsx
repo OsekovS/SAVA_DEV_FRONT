@@ -14,9 +14,9 @@ const Visio = (props) => {
                     head={
                         {
                             text: "SAVA видеокамеры",
-                            events: props.cameras.events,
-                            errors: props.cameras.errors,
-                            exceptions: props.cameras.exceptions
+                            events: props.cameras_dahua.events,
+                            errors: props.cameras_dahua.errors,
+                            exceptions: props.cameras_dahua.exceptions
                         }
                     } 
                     body={
@@ -34,9 +34,9 @@ const Visio = (props) => {
                         head={
                             {
                                 text: "SAVA СКУД",
-                                events: props.acs.events,
-                                errors: props.acs.errors,
-                                exceptions: props.acs.exceptions
+                                events: props.acs_castle_ep2.events,
+                                errors: props.acs_castle_ep2.errors,
+                                exceptions: props.acs_castle_ep2.exceptions
                             }
                         } 
                         body={

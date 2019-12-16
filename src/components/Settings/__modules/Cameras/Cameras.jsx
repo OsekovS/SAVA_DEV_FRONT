@@ -15,7 +15,7 @@ const cameras_form = (props) => {
                     {objectsElements}
                 </Field>
             </label>
-            <label>Ip адрес: <Field name="ip_cam" placeholder={"Ip"} component={"input"} type="text"/></label>
+            <label>Ip адрес: <Field name="ip" placeholder={"Ip"} component={"input"} type="text"/></label>
             <label>Имя: <Field name="name" placeholder={"Имя"} component={"input"} type="text"/></label>
             <label>Логин: <Field name="login" placeholder={"Логин"} component={"input"} type="text"/></label>
             <label>Пароль: <Field name="pass" placeholder={"Пароль"} type="password" component={"input"}/></label>
@@ -59,7 +59,7 @@ const regs_form = (props) => {
                     {objectsElements}
                 </Field>
             </label>
-            <label>Ip адрес: <Field name="ip_reg" placeholder={"Ip"} component={"input"} type="text"/></label>
+            <label>Ip адрес: <Field name="ip" placeholder={"Ip"} component={"input"} type="text"/></label>
             <label>Имя: <Field name="name" placeholder={"Имя"} component={"input"} type="text"/></label>
             <label>Логин: <Field name="login" placeholder={"Логин"} component={"input"} type="text"/></label>
             <label>Пароль: <Field name="pass" placeholder={"Пароль"} type="password" component={"input"}/></label>
@@ -74,6 +74,29 @@ const regs_form = (props) => {
 }
 
 const RegsReduxForm =  reduxForm({form: 'addCamReg'})(regs_form)
+
+const change_regs_form = (props) => {
+    if(props.mode==='changReg') return (
+        <div className="modal-form-keeper" >
+            <header className="Common__header Common__header_red">Изменение параметров регистратора</header>
+        <form className="modal-form" onSubmit={props.handleSubmit}>
+
+            <label>Ip адрес: <Field name="ip" placeholder={"Ip"} component={"input"} type="text"/></label>
+            <label>Имя: <Field name="name" placeholder={"Имя"} component={"input"} type="text"/></label>
+            <label>Логин: <Field name="login" placeholder={"Логин"} component={"input"} type="text"/></label>
+            <label>Пароль: <Field name="pass" placeholder={"Пароль"} type="password" component={"input"}/></label>
+            <label>Повторный пароль: <Field name="pass_rep" placeholder={"Повторный пароль"} type="password" component={"input"}/></label>           
+            <div>
+                <button>Добавить</button> <button onClick={props.callback.bind(this,'view')}>Отмена</button>
+            </div>
+        </form>
+        </div>
+    )
+    else return null
+}
+
+const RegsReduxForm =  reduxForm({form: 'changCamReg'})(change_regs_form)
+
 
 const Cameras = (props) => {
 
@@ -99,15 +122,15 @@ const Cameras = (props) => {
 
     const onDelCamera = (id) => {
         
-        props.delFieldThunk({id:id, delete:'cameras_list'})
+        props.delFieldThunk({id:id, delete:'cameras'})
     }
 
     const onDelRegistrator = (id) => {
-        props.delFieldThunk({id:id, delete:'registrar_list'})
+        props.delFieldThunk({id:id, delete:'registrators'})
     }
 
     const onDelObject = (id) => {
-        let obj = {id:id, delete:'object_list'}
+        let obj = {id:id, delete:'object'}
         props.objects.forEach(element => {
             if(element.id==id) obj.objName = element.name
         });

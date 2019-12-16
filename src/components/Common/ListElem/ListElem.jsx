@@ -10,7 +10,7 @@ const ListElem = (props) => {
         return <td name='list-elem' key={n} >{e}</td>
     })
     if(props.name.indexOf('title')===-1){
-        Elements.push(<ChangeIcon key={Object.values(props.items).length}></ChangeIcon>)
+        Elements.push(<ChangeIcon key={Object.values(props.items).length } callBack={props.elemChangeCallBack.bind(this,props.items.id)}>></ChangeIcon>)
         Elements.push(<DelIcon  key={Object.values(props.items).length+1} callBack={props.elemDellCallBack.bind(this,props.items.id)}></DelIcon>)
     }
     return <tr className={props.name}  >

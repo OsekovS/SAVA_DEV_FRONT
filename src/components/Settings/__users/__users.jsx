@@ -24,17 +24,33 @@ const form = (props) => {
     else return null
 }
 
+const AddForm =  reduxForm({form: 'addUser'})(form)
 
+const form2 = (props) => {
+    if(props.mode==='changPass') {return (
+        <div className="modal-form-keeper" >
+            <header className="Common__header Common__header_red">Добавить камеру</header>
+        <form  className="modal-form" onSubmit={props.handleSubmit}>
+             <span className="settings_text">Добавить пользователя</span>	
+            <p><label>Старый пароль: <Field name="old_password" placeholder={"Старый пароль"} type="password" component={Input} validate={[required, length10]}/></label></p>
+            <p><label>Пароль: <Field name="password" placeholder={"Новый пароль"} type="password" component={"input"}/></label></p>
+            <p><label>Повторный пароль: <Field name="password_rep" placeholder={"Новый пароль повторно"} type="password" component={"input"}/></label></p>
+            <div>
+                <button >Добавить</button> <button onClick={props.callback}>Отмена</button>
+            </div>
+        </form>
+        </div>
+    )}
+    else return null
+}
 
-
-const ReduxForm =  reduxForm({form: 'addUser'})(form)
+const ChangeForm =  reduxForm({form: 'changPass'})(form2)
 
 class __users extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {mode: ''}
-    
-        // Эта привязка обязательна для работы `this` в колбэке. .bind(this,'addUser')
+        this.state = {mode: '', edited: ''}
+            // Эта привязка обязательна для работы `this` в колбэке. .bind(this,'addUser')
         //this.onChangeMode = this.onChangeMode.bind(this, 'addUser');
         // this.onLogOut = this.onLogOut.bind(this);
       }
@@ -48,13 +64,28 @@ class __users extends React.Component {
             mode: 'view'
         }));
     }
-    onChangeMode = (mode) =>{
+    onChangePass = (formData) => {
         console.log(this)
-        console.log(mode)
+        console.log(this.state.edited)
+        console.log(formData)
+        this.props.changePassThunk(formData,this.state.edited)
+    }
+    onChangeMode = (mode) =>{
+        // console.log(this)
+        // console.log(mode)
         this.setState(state => ({
             mode: mode
         }));
-        console.log(this)
+        // console.log(this)
+    }
+    onSetEditedPass = (arg) =>{
+        // console.log(arg)
+        // console.log(this)
+        this.setState(state => ({
+            edited: arg
+        }));
+        this.onChangeMode('changPass')
+        // console.log(this)
     }
 
     render() {
@@ -62,7 +93,7 @@ class __users extends React.Component {
 
             return <ListElem name='list-elem' items={e} 
             key={e.id}
-            elemChangeCallBack={this.onDellUser} elemDellCallBack={this.onDellUser}/>
+            elemChangeCallBack={this.onSetEditedPass} elemDellCallBack={this.onDellUser}/>
             })
         return  <div className="Settings__users">
                 {/* <__header text={"Список пользователей"} clazz="Common__header Common__header_red"/> */}
@@ -72,7 +103,8 @@ class __users extends React.Component {
                             </tbody>
                         </table>
                         <button onClick={this.onChangeMode.bind(this, 'addUser')}>Добавить</button>
-                    <ReduxForm mode={this.state.mode} onSubmit={this.onAddUser} callback={this.onChangeMode.bind(this, 'view')} />
+                    <AddForm mode={this.state.mode} onSubmit={this.onAddUser} callback={this.onChangeMode.bind(this, 'view')} />
+                    <ChangeForm mode={this.state.mode} onSubmit={this.onChangePass} callback={this.onChangeMode.bind(this, 'view')} />
                 </div>
              }
 

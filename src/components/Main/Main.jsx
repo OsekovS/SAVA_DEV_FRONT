@@ -14,8 +14,8 @@ class rawMain extends React.Component {
   render() {
       return <main>
         <Visio
-          cameras={this.props.cameras}
-          acs={this.props.acs}
+          cameras_dahua={this.props.cameras_dahua}
+          acs_castle_ep2={this.props.acs_castle_ep2}
           iss={this.props.iss}/>
         <Sett/>
       </main>
@@ -24,8 +24,8 @@ class rawMain extends React.Component {
 
 let mapStateToProps = (state) => {
   return {
-    cameras: state.allEvents.cameras,
-    acs: state.allEvents.acs,
+    cameras_dahua: state.allEvents.cameras_dahua,
+    acs_castle_ep2: state.allEvents.acs_castle_ep2,
     iss: state.allEvents.iss
   }
 }

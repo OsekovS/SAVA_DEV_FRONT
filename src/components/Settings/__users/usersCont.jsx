@@ -1,4 +1,4 @@
-import {addUserThunk, delUserThunk, getUsersThunk} from "../../redux/users-reducer";
+import {addUserThunk, delUserThunk, getUsersThunk, changePassThunk} from "../../redux/users-reducer";
 import __users from "./__users";
 import {connect} from "react-redux";
 import React from 'react'
@@ -16,7 +16,8 @@ class UsersContainer extends React.Component {
         return  <__users 
                 users={this.props.users} 
                 addUserThunk={this.props.addUserThunk}
-                delUserThunk={this.props.delUserThunk}/>
+                delUserThunk={this.props.delUserThunk}
+                changePassThunk={this.props.changePassThunk}/>
              }
 
 }
@@ -32,7 +33,7 @@ let mapDispatchToProps ={
         addUserThunk,
         delUserThunk,
         getUsersThunk,
-        // changeMode
+        changePassThunk
 }
 
 const usersCont = connect(mapStateToProps, mapDispatchToProps)(UsersContainer);

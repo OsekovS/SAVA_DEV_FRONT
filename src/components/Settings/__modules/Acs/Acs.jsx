@@ -34,8 +34,7 @@ const endps_form = (props) => {
                     {objectsElements}
                 </Field>
             </label>
-            <label>Имя: <Field name="name" placeholder={"Имя"} component={"input"} type="text"/></label>
-            <label>Порт: <Field name="port" placeholder={"Имя"} component={"input"} type="text"/></label>
+            <label>ip: <Field name="ip" placeholder={"ip"} component={"input"} type="text"/></label>
             <label>Логин: <Field name="login" placeholder={"Логин"} component={"input"} type="text"/></label>
             <label>Пароль: <Field name="pass" placeholder={"Пароль"} type="password" component={"input"}/></label>
             <label>Повторный пароль: <Field name="pass_rep" placeholder={"Повторный пароль"} type="password" component={"input"}/></label>           
@@ -99,7 +98,7 @@ elemChangeCallBack={onDelObj} elemDellCallBack={onDellEndpoint}/>)
             <header className="Common__header Common__header_red">Список конечных точек</header>
                 <table className="Modules_table Modules_table__cam-dev">
                     <tbody>
-                        <ListElem  name='list-elem list-elem__cameras list-elem__title' items={['', 'объект','имя' , 'порт', 'логин']  }/>
+                        <ListElem  name='list-elem list-elem__cameras list-elem__title' items={['', 'ip', 'объект', 'логин']  }/>
                         {endpointsElemens}  
                     </tbody>
                 </table>

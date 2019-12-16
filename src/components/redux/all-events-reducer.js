@@ -4,12 +4,12 @@ const UPDATE_NEW_MESSAGE_BODY = 'UPDATE_NEW_MESSAGE_BODY';
 const SEND_MESSAGE = 'SEND_MESSAGE';
 
 let initialState = {
-    cameras: {
+    acs_castle_ep2: {
         events: 1000,
         exceptions: 9,
         errors: 0
     },
-    acs: {
+    cameras_dahua: {
         events: 1100,
         exceptions: 406,
         errors: 0
@@ -66,7 +66,7 @@ export const getNotification = () => {
         axios.post("php/users-form-processor.php",{need: "notification"}).then(response => {
             // console.log(response.request)
             let json = JSON.parse(response.request.response);
-            // console.log(json)
+            console.log(json)
             // dispatch({})
             dispatch(uploadEvents(json));
         }).catch(function (error) {

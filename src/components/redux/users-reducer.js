@@ -107,6 +107,30 @@ export const delUserThunk = (id) => {
     }
 }
 
+
+export const changePassThunk = (formData,id) => {
+    console.log(formData)
+    console.log(id)
+    return (dispatch) => {
+        if(formData.password===formData.password_rep){
+    axios.post("php/users-form-processor.php",{changePass: {id,formData}}).then(response => {
+        console.log(response)
+        let json = JSON.parse(response.request.response);
+        if(json.result)
+        alert("Пароль успешно изменен")
+        else alert("Старый пароль был введен неверно")
+    }).catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .finally(function () {
+        // always executed
+      });
+    }
+    else alert("Поля 'Новый пароль' и 'Повторно введенный новый пароль' должны совпадать")
+    }
+}
+
 export const addUserThunk = (user) => {
     console.log(user)
     if(user.admin === undefined)
@@ -144,26 +168,6 @@ export const addUserThunk = (user) => {
     }
 }
 
-export const changePassThunk = () => {
-    return (dispatch) => {
-        dispatch(toggleIsFetching(true));
-        console.log('!')
-        
-        axios.post("php/users-form-processor.php",{need: "user"}).then(response => {
-            console.log(response.request)
-            dispatch(toggleIsFetching(false));
-            let json = JSON.parse(response.request.response);
-            console.log(json)
-            // dispatch({})
-            dispatch(uploadUser(json.usernames));
-        }).catch(function (error) {
-            // handle error
-            console.log(error);
-          })
-          .finally(function () {
-            // always executed
-          });
-    }
-}
+
 
 export default usersReducer;

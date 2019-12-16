@@ -82,21 +82,21 @@ let initialState = {
 
 let translator = {
     'addObj': {
-        tb_name: 'object_list',
+        tb_name: 'object',
         field_len: 1,
         uni_type: 'name',
         uni_type_usr: 'именем'
     },
     'addReg': {
-        tb_name: 'registrar_list',
+        tb_name: 'registrators',
         field_len: 6,
-        uni_type: 'ip_reg',
+        uni_type: 'ip',
         uni_type_usr: 'ip'
     },
     'addCam': {
-        tb_name: 'cameras_list',
+        tb_name: 'cameras',
         field_len: 6,
-        uni_type: 'ip_cam',
+        uni_type: 'ip',
         uni_type_usr: 'ip'
     },
 }
@@ -105,12 +105,12 @@ const camerasReducer = (state = initialState, action) => {
     let stateCopy
    switch (action.type) {
         case ADD_CAM:
-            // console.log(action)
+            console.log(action)
             let new_cam = {
                 id: (action.id).toString(),
                 object: action.obj,
                 name: action.name, 
-                ip: action.ip_cam, 
+                ip: action.ip, 
                 login: action.login, 
             };   
             stateCopy = {...state};
@@ -140,11 +140,12 @@ const camerasReducer = (state = initialState, action) => {
             stateCopy.settings.registrators = state.settings.registrators.filter(e => e.object!==action.name)
             return stateCopy
        case ADD_REG:
+            console.log(action)
             let new_reg = {
                 id: (action.id).toString(),
                 object: action.obj,
                 name: action.name, 
-                ip: action.ip_reg, 
+                ip: action.ip, 
                 login: action.login, 
             };      
             stateCopy = {...state};
@@ -173,19 +174,19 @@ const camerasReducer = (state = initialState, action) => {
                 if(action['need']==='settings'){
                     stateCopy.settings.cameras = action.json.cameras.map( (e) => ({
                         id: e[0],
-                        object: e[1],
-                        name: e[2],
+                        object: e[2],
+                        name: e[1],
                         ip: e[3],
                         login: e[4]
                     }))
                     stateCopy.settings.registrators = action.json.registrators.map( (e) => ({
                         id: e[0],
-                        object: e[1],
-                        name: e[2],
+                        object: e[2],
+                        name: e[1],
                         ip: e[3],
                         login: e[4]
                     }))
-                    stateCopy.settings.objects = action.json.objects.map( (e) => ({
+                    stateCopy.settings.objects = action.json.object.map( (e) => ({
                         id: e[0], name: e[1]
                     }))
                 }
@@ -204,12 +205,12 @@ const camerasReducer = (state = initialState, action) => {
    }
 }
 
-export const addCam = ({ id, ip_reg, name, login, pass, obj }) =>
-    ({type: ADD_CAM, id, ip_reg, name, login, pass, obj })
+export const addCam = ({ id, ip, name, login, pass, obj }) =>
+    ({type: ADD_CAM, id, ip, name, login, pass, obj })
 
-export const addReg = ({ id, ip_reg, name, login, pass, obj }) =>{
+export const addReg = ({ id, ip, name, login, pass, obj }) =>{
     // console.log({ id, ip_reg, name, login, pass, obj })
-    return {type: ADD_REG, id, ip_reg, name, login, pass, obj }
+    return {type: ADD_REG, id, ip, name, login, pass, obj }
 }
 export const addObj = ({id, name}) =>
 ({ type: ADD_OBJ, id, name})
@@ -236,7 +237,7 @@ export const getCameras = (reqObj) => {
         axios.post("php/cameras-form-processor.php", reqObj).then(response => {
             console.log(response)
             let json = JSON.parse(response.request.response);
-            // console.log(json)/
+            console.log(json)
             dispatch(uploadCameras(json,reqObj));
         }).catch(function (error) {
             // handle error
@@ -295,7 +296,7 @@ export const addFieldThunk = (reqObj) => {
 }
 
 export const delFieldThunk = (reqObj) => {
-    // console.log(reqObj)
+    console.log(reqObj)
         return (dispatch) => {
             let json = {tb_name: reqObj.delete, id: reqObj.id, objName: reqObj.objName, delete: true}
             // console.log(json)
@@ -305,11 +306,11 @@ export const delFieldThunk = (reqObj) => {
                 // console.log(json)
                 if(json.result==="done")
                     switch (reqObj.delete) {
-                        case 'cameras_list':
+                        case 'cameras':
                             return   dispatch(delCam(reqObj.id));
-                        case 'registrar_list':
+                        case 'registrators':
                             return   dispatch(delReg(reqObj.id));
-                        case 'object_list':
+                        case 'object':
                             // return getCameras({"need": "settings"})
                             // return {type: ''};
                             return   dispatch(delObj(reqObj.id, reqObj.objName));

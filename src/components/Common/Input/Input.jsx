@@ -2,9 +2,9 @@ import React from 'react';
 import './Input.scss'
 
 export const Input = ({input, meta, ...props}) => {
-  console.log(input)
-  console.log(meta)
-  console.log(props)
+  // console.log(input)
+  // console.log(meta)
+  // console.log(props)
   const hasError = meta.touched && meta.error
   return (
     <>
