@@ -24,13 +24,15 @@ class UsersContainer extends React.Component {
 let mapStateToProps = (state) => {
     return {
         users: state.users.users,
-        isFetching: state.users.isFetching
+        isFetching: state.users.isFetching,
+        // mode: state.users.mode
     }
 }
 let mapDispatchToProps ={
         addUserThunk,
         delUserThunk,
-        getUsersThunk
+        getUsersThunk,
+        // changeMode
 }
 
 const usersCont = connect(mapStateToProps, mapDispatchToProps)(UsersContainer);

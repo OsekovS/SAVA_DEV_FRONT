@@ -13,7 +13,8 @@ let initialState =
                { id: '2', name: 'admin1', admin: true,},
                { id: '3', name: 'admin2', admin: true,},
                { id: '4', name: 'user2', admin: false,}],
-               isFetching: false
+               isFetching: false,
+                // mode: ''
            }
 ;
 
@@ -62,6 +63,8 @@ export const addUser = ({login, password_rep, password, admin}) =>
     ({ type: ADD_USER, login: login, password_rep: password_rep, password: password, admin: admin})
 
 export const uploadUser = (usernames) => ({type: UPLOAD_USERS, usernames})
+
+
 
 export const getUsersThunk = () => {
     return (dispatch) => {
