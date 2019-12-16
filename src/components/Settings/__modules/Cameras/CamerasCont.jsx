@@ -1,4 +1,4 @@
-import {   delFieldThunk, 
+import {   delFieldThunk, changeElemThunk,
     changeMode, getCameras, addFieldThunk} from "../../../redux/cameras-reducer";
 import Cameras from "./Cameras";
 import {connect} from "react-redux";
@@ -22,6 +22,7 @@ class rawCameras extends React.Component {
             registrators={this.props.registrators}
             delFieldThunk = {this.props.delFieldThunk}
             addFieldThunk = {this.props.addFieldThunk}
+            changeElemThunk ={this.props.changeElemThunk}
         />
     }
 }
@@ -39,7 +40,8 @@ let mapDispatchToProps =  {
         delFieldThunk,
         changeMode,
         getCameras,
-        addFieldThunk
+        addFieldThunk,
+        changeElemThunk
 }
 
 

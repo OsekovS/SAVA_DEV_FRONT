@@ -8,6 +8,9 @@ const DEL_REG = 'DEL_REG';
 const DEL_OBJ ='DEL_OBJ'
 const CHANGE_MODE = 'CHANGE_CAM_MODE'
 const UPLOAD_CAMS = 'UPLOAD_CAMS'
+const CHANGE_CAM = 'CHANGE_CAM'
+const CHANGE_REG = 'CHANGE_REG'
+const CHANGE_OBJ = 'CHANGE_OBJ'
 
 let initialState = {
     settings: {
@@ -224,6 +227,15 @@ export const delReg = (id) =>
 export const delObj = (id,name) =>
 ({ type: DEL_OBJ, id, name })
 
+export const changeCam = (id) =>
+({ type: CHANGE_CAM, id: id })
+
+export const changeReg = (id) =>
+({ type: CHANGE_REG, id: id })
+
+export const changeObj = (id,name) =>
+({ type: CHANGE_OBJ, id, name })
+
 export const changeMode = (mode) =>
 ({ type: CHANGE_MODE, mode: mode })
 
@@ -297,36 +309,69 @@ export const addFieldThunk = (reqObj) => {
 
 export const delFieldThunk = (reqObj) => {
     console.log(reqObj)
-        return (dispatch) => {
-            let json = {tb_name: reqObj.delete, id: reqObj.id, objName: reqObj.objName, delete: true}
+    return (dispatch) => {
+        let json = {tb_name: reqObj.delete, id: reqObj.id, objName: reqObj.objName, delete: true}
+        // console.log(json)
+        axios.post("php/cameras-form-processor.php",json).then(response => {
+            // console.log(response)
+            json = JSON.parse(response.request.response);
             // console.log(json)
-            axios.post("php/cameras-form-processor.php",json).then(response => {
-                // console.log(response)
-                json = JSON.parse(response.request.response);
-                // console.log(json)
-                if(json.result==="done")
-                    switch (reqObj.delete) {
-                        case 'cameras':
-                            return   dispatch(delCam(reqObj.id));
-                        case 'registrators':
-                            return   dispatch(delReg(reqObj.id));
-                        case 'object':
-                            // return getCameras({"need": "settings"})
-                            // return {type: ''};
-                            return   dispatch(delObj(reqObj.id, reqObj.objName));
-                        default:
-                            return {type: ''};
-                    }
-                else alert("При удалении возникла ошибка")
-            }).catch(function (error) {
-                // handle error
-                console.log(error);
-            })
-            .finally(function () {
-                // always executed
-            });
-        }
+            if(json.result==="done")
+                switch (reqObj.delete) {
+                    case 'cameras':
+                        return   dispatch(delCam(reqObj.id));
+                    case 'registrators':
+                        return   dispatch(delReg(reqObj.id));
+                    case 'object':
+                        // return getCameras({"need": "settings"})
+                        // return {type: ''};
+                        return   dispatch(delObj(reqObj.id, reqObj.objName));
+                    default:
+                        return {type: ''};
+                }
+            else alert("При удалении возникла ошибка")
+        }).catch(function (error) {
+            // handle error
+            console.log(error);
+        })
+        .finally(function () {
+            // always executed
+        });
+    }
+}
 
+export const changeElemThunk = (formData, state) => {
+    console.log(formData)
+    console.log(state)
+    return (dispatch) => { 
+        let json = {tb_name: reqObj.delete, id: reqObj.id, objName: reqObj.objName, delete: true}
+        // console.log(json)
+        axios.post("php/cameras-form-processor.php",{formData,mode: state.mode,id: state.edited}).then(response => {
+            // console.log(response)
+            json = JSON.parse(response.request.response);
+            // console.log(json)
+            if(json.result==="done")
+                switch (state.edited) {
+                    case 'changObj':
+                        return   dispatch(delCam(reqObj.id));
+                    case 'changCam':
+                        return   dispatch(delReg(reqObj.id));
+                    case 'changReg':
+                        // return getCameras({"need": "settings"})
+                        // return {type: ''};
+                        return   dispatch(delObj(reqObj.id, reqObj.objName));
+                    default:
+                        return {type: ''};
+                }
+            else alert("При удалении возникла ошибка")
+        }).catch(function (error) {
+            // handle error
+            console.log(error);
+        })
+        .finally(function () {
+            // always executed
+        });
+    }
 }
 
 export default camerasReducer;
