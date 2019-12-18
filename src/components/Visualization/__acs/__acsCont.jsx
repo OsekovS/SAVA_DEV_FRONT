@@ -16,13 +16,17 @@ class rawAcs extends React.Component {
     render() {
         return <__acs 
             logs={this.props.logs} 
+            bar1={this.props.bar1} 
+            bar2={this.props.bar2} 
         />
     }
 }
 
 let mapStateToProps = (state) => {
     return {
-        logs: state.acs.logs
+        logs: state.acs.logs.logs,
+        bar1:  state.acs.logs.bar1,
+        bar2:  state.acs.logs.bar2
     }
 }
 let mapDispatchToProps = {

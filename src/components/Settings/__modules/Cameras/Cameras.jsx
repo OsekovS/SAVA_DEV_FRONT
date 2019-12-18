@@ -16,8 +16,8 @@ class Cameras extends React.Component {
 
 
      onAddField = (formData) => {
-        // console.log(formData.obj )
-        if(this.props.mode==='addReg'||this.props.mode==='addCam')
+        console.log(this.state.mode)
+        if(this.state.mode==='addReg'||this.state.mode==='addCam')
         {
              if(formData.obj===undefined)
                 formData.obj = Object.values(this.props.objects)[0].name
@@ -30,8 +30,9 @@ class Cameras extends React.Component {
         // console.log('changeField')
         // console.log(formData)
         let a = {form: formData}
-        a.mode = this.props.mode;
+        a.mode = this.state.mode;
         this.props.addFieldThunk(a)
+        this.onChangeMode({mode: '',id: ''}) 
     }
 
 
@@ -72,24 +73,29 @@ class Cameras extends React.Component {
     // }
      onChangeMode = ({mode,id}) =>{
         // console.log(mode)
-        console.log(this.state)
+        // console.log(this.state)
+        // console.log(mode)
         this.setState(state => ({
-            mode: mode
-        }));
-        if(id!==undefined) {
-            this.setState(state => ({
+            mode: mode,
             edited: id
-            }));
-        }
-        console.log(this.state)
+        }));
+        // if(id!==undefined) {
+        //     this.setState(state => ({
+            
+        //     }));
+        // }
+        // console.log(this.state)
     }
 
     onChange = (formData) =>{
+        // console.log(this.state)
+        // console.log(this.props.objects[this.state.edited])
         this.props.changeElemThunk(formData,this.state)
+        this.onChangeMode({mode: '',id: ''}) 
     }
 
     render() {
-
+        console.log(this.props)
     let objectsElements = this.props.objects.map((e,n) =>{ 
         return <ListElem name='list-elem' items={e} key={n.toString()}
         elemChangeCallBack={this.onChangeMode} elemDellCallBack={this.onDelObject}  changeType={'changObj'}/>})
@@ -108,9 +114,9 @@ class Cameras extends React.Component {
                 {objectsElements}
             </tbody>
         </table>
-        <button onClick={this.onChangeMode.bind(this,{mode: 'addObj'})}>Добавить</button>
-        <ObjectsReduxForm  onSubmit={this.onAddField}  mode={this.state.mode} callback={this.onChangeMode}/>
-        <ChangObjsForm  onSubmit={this.onChange} mode={this.state.mode} callback={this.onChangeMode}/>
+        <button onClick={this.onChangeMode.bind(this,{mode: 'addObj',id:''})}>Добавить</button>
+        <ObjectsReduxForm  onSubmit={this.onAddField.bind(this)}  mode={this.state.mode} callback={this.onChangeMode}/>
+        <ChangObjsForm  onSubmit={this.onChange.bind(this)} mode={this.state.mode} callback={this.onChangeMode}/>
         <header className="Common__header Common__header_red">Список камер</header>
         <table className="Modules_table Modules_table__cam-dev">
             <tbody>
@@ -119,8 +125,8 @@ class Cameras extends React.Component {
             </tbody>
         </table>
         <button onClick={this.onChangeMode.bind(this,{mode: 'addCam'})}>Добавить</button>
-        <CamerasReduxForm objects={this.props.objects}  onSubmit={this.onAddField}  mode={this.state.mode} callback={this.onChangeMode} />
-        <ChangCamsForm  onSubmit={this.onChange} mode={this.state.mode} callback={this.onChangeMode}/>
+        <CamerasReduxForm objects={this.props.objects}  onSubmit={this.onAddField.bind(this)}  mode={this.state.mode} callback={this.onChangeMode} />
+        <ChangCamsForm  onSubmit={this.onChange.bind(this)} mode={this.state.mode} callback={this.onChangeMode}/>
         <header className="Common__header Common__header_red">Список регистраторов</header>
         <table className="Modules_table Modules_table__cam-dev">
             <tbody>
@@ -129,8 +135,8 @@ class Cameras extends React.Component {
             </tbody>
         </table>
         <button onClick={this.onChangeMode.bind(this,{mode: 'addReg'})}>Добавить</button>
-        <RegsReduxForm objects={this.props.objects}  onSubmit={this.onAddField}  mode={this.state.mode} callback={this.onChangeMode} />
-        <ChangRegsForm  onSubmit={this.onChange} mode={this.state.mode} callback={this.onChangeMode}/>
+        <RegsReduxForm objects={this.props.objects}  onSubmit={this.onAddField.bind(this)}  mode={this.state.mode} callback={this.onChangeMode} />
+        <ChangRegsForm  onSubmit={this.onChange.bind(this)} mode={this.state.mode} callback={this.onChangeMode}/>
         </div>
     }
 }
@@ -255,7 +261,7 @@ const change_objs_form = (props) => {
         <div className="modal-form-keeper" >
             <header className="Common__header Common__header_red">Изменение названия объекта</header>
         <form className="modal-form" onSubmit={props.handleSubmit}>
-            <label>Новое название: <Field name="newName" placeholder={"Имя"} component={"input"} type="text"/></label>          
+            <label>Новое название: <Field name="name" placeholder={"Имя"} component={"input"} type="text"/></label>          
             <div>
                 <button>Изменить</button> <button onClick={props.callback.bind(this,'view')}>Отмена</button>
             </div>

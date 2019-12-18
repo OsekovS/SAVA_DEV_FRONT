@@ -38,7 +38,7 @@ export default class Ticks extends Component {
         }
 
         if (_.isUndefined(maxTicks)) {
-            maxTicks = Math.min((length + minDistance) / minDistance, 5);
+            maxTicks = Math.min((length + minDistance) / minDistance, 24);
         }
 
         if (_.isUndefined(distance)) {

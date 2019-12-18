@@ -14,7 +14,7 @@ const CHANGE_OBJ = 'CHANGE_OBJ'
 
 let initialState = {
     settings: {
-    mode: 'view',
+    // mode: 'view',
     objects: [
         {id: '0', name: 'Санаторий Звенигород'},
         {id: '1', name: 'Больница №46'},
@@ -102,6 +102,16 @@ let translator = {
         uni_type: 'ip',
         uni_type_usr: 'ip'
     },
+    'changObj': {
+        field_len: 1,
+    },
+    'changCam': {
+        field_len: 4,
+    },
+    'changReg': {
+        field_len: 4,
+    }
+
 }
 // {type, obj_num, ip, name, login, password, password_rep}
 const camerasReducer = (state = initialState, action) => {
@@ -118,14 +128,27 @@ const camerasReducer = (state = initialState, action) => {
             };   
             stateCopy = {...state};
             stateCopy.settings = {...state.settings};
-            stateCopy.settings.cameras.push(new_cam);
-            stateCopy.settings.mode = 'view'
+            // stateCopy.settings.cameras.push(new_cam);
+            stateCopy.settings.cameras = [...state.settings.cameras, 
+                new_cam]
+            // stateCopy.settings.mode = 'view'
             return stateCopy;
         case DEL_CAM:
             console.log(action.id)
             stateCopy = {...state};
             stateCopy.settings = {...state.settings};
             stateCopy.settings.cameras = state.settings.cameras.filter(e => e.id!==action.id)
+            return stateCopy
+        case CHANGE_CAM:
+            stateCopy = {...state};
+            stateCopy.settings = {...state.settings};
+            stateCopy.settings.cameras = state.settings.cameras.map(e => {
+                if(e.id===action.id){
+                    e.login = action.login
+                    return e
+                }
+                else return e
+            })
             return stateCopy
        case ADD_OBJ:
             // console.log('camAjaxik')
@@ -142,6 +165,37 @@ const camerasReducer = (state = initialState, action) => {
             stateCopy.settings.cameras = state.settings.cameras.filter(e => e.object!==action.name)
             stateCopy.settings.registrators = state.settings.registrators.filter(e => e.object!==action.name)
             return stateCopy
+        case CHANGE_OBJ:
+            console.log(action)
+            stateCopy = {...state};
+            stateCopy.settings = {...state.settings};
+            console.log(state.settings.objects)
+            let old_name = ''
+            stateCopy.settings.objects = state.settings.objects.map(e => {
+                if(e.id===action.id){
+                    old_name = e.name
+                    e.name = action.name
+                    return e
+                }
+                else return e
+            })
+            console.log(old_name)
+            stateCopy.settings.cameras = state.settings.cameras.map(e => {
+                if(e.object===old_name){
+                    e.object = action.name
+                    return e
+                }
+                else return e
+            })
+            stateCopy.settings.registrators = state.settings.registrators.map(e => {
+                if(e.object===old_name){
+                    e.object = action.name
+                    return e
+                }
+                else return e
+            })
+            console.log(stateCopy.settings.objects)
+            return stateCopy
        case ADD_REG:
             console.log(action)
             let new_reg = {
@@ -153,12 +207,8 @@ const camerasReducer = (state = initialState, action) => {
             };      
             stateCopy = {...state};
             stateCopy.settings = {...state.settings};
-            // stateCopy.settings.registrators = state.settings.registrators.map((e) => e);
-            console.log(state.settings.registrators)
-            stateCopy.settings.registrators.push(new_reg);
-            console.log(stateCopy.settings.registrators)
-            stateCopy.settings.mode = 'view'
-            
+            stateCopy.settings.registrators = [...state.settings.registrators, 
+                new_reg]
             return stateCopy;
         case DEL_REG:
                 console.log(action.ip)
@@ -166,12 +216,17 @@ const camerasReducer = (state = initialState, action) => {
                 stateCopy.settings = {...state.settings};
                 stateCopy.settings.registrators = state.settings.registrators.filter(e => e.id!==action.id)
                 return stateCopy
-        case CHANGE_MODE:
-                stateCopy = {...state};
-                stateCopy.settings = {...state.settings};
-                stateCopy.settings.mode = action.mode
-                console.log(stateCopy)
-                return stateCopy
+        case CHANGE_REG:
+            stateCopy = {...state};
+            stateCopy.settings = {...state.settings};
+            stateCopy.settings.registrators = state.settings.registrators.map(e => {
+                if(e.id===action.id){
+                    e.login = action.login
+                    return e
+                }
+                else return e
+            })
+            return stateCopy
         case UPLOAD_CAMS:
                 stateCopy = {...state};
                 if(action['need']==='settings'){
@@ -227,17 +282,15 @@ export const delReg = (id) =>
 export const delObj = (id,name) =>
 ({ type: DEL_OBJ, id, name })
 
-export const changeCam = (id) =>
-({ type: CHANGE_CAM, id: id })
+export const changeCam = ({login, id}) =>
+({ type: CHANGE_CAM, id, login })
 
-export const changeReg = (id) =>
-({ type: CHANGE_REG, id: id })
+export const changeReg = ({login, id}) =>
+({ type: CHANGE_REG, id, login })
 
-export const changeObj = (id,name) =>
+export const changeObj = ({name, id}) =>
 ({ type: CHANGE_OBJ, id, name })
 
-export const changeMode = (mode) =>
-({ type: CHANGE_MODE, mode: mode })
 
 export const uploadCameras = (json,reqObj) =>
 ({ type: UPLOAD_CAMS, json, need: reqObj.need })
@@ -262,7 +315,7 @@ export const getCameras = (reqObj) => {
 }
 
 export const addFieldThunk = (reqObj) => {
-    
+    // console.log(reqObj)
     if(Object.values(reqObj.form).length === translator[reqObj.mode].field_len){
             if(reqObj.form.pass===reqObj.form.pass_rep){
                 delete reqObj.form.pass_rep
@@ -281,7 +334,6 @@ export const addFieldThunk = (reqObj) => {
                                 case 'addReg':
                                     return   dispatch(addReg({...reqObj.form, id: json.id}));
                                 case 'addCam':
-
                                     return   dispatch(addCam({...reqObj.form, id: json.id}));
                                 default:
                                     return {type: ''};
@@ -343,27 +395,32 @@ export const delFieldThunk = (reqObj) => {
 export const changeElemThunk = (formData, state) => {
     console.log(formData)
     console.log(state)
+    // console.log(state)
     return (dispatch) => { 
-        let json = {tb_name: reqObj.delete, id: reqObj.id, objName: reqObj.objName, delete: true}
         // console.log(json)
-        axios.post("php/cameras-form-processor.php",{formData,mode: state.mode,id: state.edited}).then(response => {
-            // console.log(response)
-            json = JSON.parse(response.request.response);
-            // console.log(json)
+        if(Object.values(formData).length === translator[state.mode].field_len){
+        if(formData.pass===formData.pass_rep){
+            delete formData.pass_rep
+        axios.post("php/cameras-form-processor.php",{change:{formData,mode: state.mode,id: state.edited}}).then(response => {
+            console.log(response)
+            let json = JSON.parse(response.request.response);
+            console.log(json)
+            // console.log(formData)
+
             if(json.result==="done")
-                switch (state.edited) {
+                switch (state.mode) {
                     case 'changObj':
-                        return   dispatch(delCam(reqObj.id));
+                        return   dispatch(changeObj({name: formData.name, id:state.edited}));
                     case 'changCam':
-                        return   dispatch(delReg(reqObj.id));
+                        return   dispatch(changeCam({login: formData.login, id: state.edited}));
                     case 'changReg':
-                        // return getCameras({"need": "settings"})
-                        // return {type: ''};
-                        return   dispatch(delObj(reqObj.id, reqObj.objName));
+                        return   dispatch(changeReg({login: formData.login, id: state.edited}));
                     default:
                         return {type: ''};
                 }
-            else alert("При удалении возникла ошибка")
+            else if(json.result==="exist") alert("Поле с таким уникальным значением (имя/ip) уже существует")
+            else if(json.result==="pass_err") alert("Ошибка, неверно введен пароль")
+            else alert("При изменении имени возникла ошибка в базе данных")
         }).catch(function (error) {
             // handle error
             console.log(error);
@@ -371,7 +428,15 @@ export const changeElemThunk = (formData, state) => {
         .finally(function () {
             // always executed
         });
+    }else  {
+        alert('Содержимое полей "Пароль" и "Повторный пароль" должно совпадать')
+        return {type: '' }
+    }}
+    else  {
+        alert("Необходимо заполнить все поля")
+        return {type: '' }
     }
+}
 }
 
 export default camerasReducer;

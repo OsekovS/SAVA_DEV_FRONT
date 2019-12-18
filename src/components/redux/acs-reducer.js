@@ -41,21 +41,33 @@ let initialState = {
         login: 'aiZ'
     }]
     },
-    logs: 
-    [{
-        "time":"2019\/11\/06 12:53:11",
-        "ip_cam":"192.168.3.109",
-        "type":"Event",
-        "comment":"Motion detect",
-        "param":"2019-11-06 12:50:40"
-    },
-    {
-        "time":"2019\/11\/06 12:53:11",
-        "ip_cam":"192.168.3.109",
-        "type":"Event",
-        "comment":"Motion detect",
-        "param":"2019-11-06 12:51:37"
-    }]
+    logs: {
+        logs:  [{
+            "time":"2019\/11\/06 12:53:11",
+            "ip_cam":"192.168.3.109",
+            "type":"Event",
+            "comment":"Motion detect",
+            "param":"2019-11-06 12:50:40"
+        },
+        {
+            "time":"2019\/11\/06 12:53:11",
+            "ip_cam":"192.168.3.109",
+            "type":"Event",
+            "comment":"Motion detect",
+            "param":"2019-11-06 12:51:37"
+        }],
+        bar1: {series: [{
+            data: [13, 17, 19]           
+            }],
+            xLabels : ['xz','e','x']
+        },
+        bar2: {series: [{
+            data: [13, 17, 19]           
+            }],
+            xLabels : ['xz','e','x']
+        }
+    }
+   
 };
 
 let translator = {
@@ -132,13 +144,13 @@ const acsReducer = (state = initialState, action) => {
                 }))
             }
             else{
-                stateCopy.settings.logs = action.json.registrators.map( (e) => ({
-                    time: e['time'],
-                    ip_cam: e['ip_cam'],
-                    type: e['type'],
-                    comment: e['comment'],
-                    param: e['param']
-                }))
+                // console.log(state.logs.bar.series)
+                stateCopy.logs.logs = action.json.logs.map( (e) => e._source)
+                stateCopy.logs.bar1.series = [{data: Object.values(action.json.bar1.series.data)}]
+                stateCopy.logs.bar1.xLabels = Object.values(action.json.bar1.xLabels);
+                stateCopy.logs.bar2.series = [{data: Object.values(action.json.bar2.series.data)}]
+                stateCopy.logs.bar2.xLabels = Object.values(action.json.bar2.xLabels);
+                // console.log(stateCopy.logs.bar.series)
             }
                 return stateCopy
        default:
