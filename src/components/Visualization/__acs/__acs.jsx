@@ -14,8 +14,27 @@ import Dots from '../../Graphs/Dots'
 const __acs = (props) => {
 
 console.log(props)
+
+
+let series = {bar2: {series: [{
+  data: [13, 17, 19]           
+  }],
+  xLabels : ['xz','e','x']
+}}
+
+    let xLabels1
+    let xLabels2
     let Elements = props.logs.map(e => <LogElem name='' items={e} />)
-    // console.log(series2)
+    let clientWidth = document.body.clientWidth
+    if(clientWidth<1400){
+      xLabels1 = props.bar1.xLabels.filter((e,n) => n%2==0)
+      xLabels2 = props.bar2.xLabels.filter((e,n) => n%2==0)
+    }else{
+      xLabels1 = props.bar1.xLabels;
+      xLabels2 = props.bar2.xLabels;
+    }
+    console.log(xLabels1)
+    console.log(xLabels2)
     return <div className="Visualization__cameras">
         <__header text={"Логи СКУД"} clazz="Common__header Common__header_red"/>
         <div className='table-wrapper'>
@@ -25,21 +44,26 @@ console.log(props)
               </tbody>
           </table>
         </div>
-        <Chart width={ document.body.clientWidth/2} height={300} series={props.bar1.series} minY={0}>
+        {/* props.bar1.series */}
+        <Chart width={ clientWidth/2} height={300} series={props.bar1.series} minY={0}>
           <Layer width='90%' height='90%' position='top center'>
             <Ticks
               axis='y'
               lineLength='100%'
+              // maxTicks = {clientWidth<1400? 12:24}
+              //ticks={{minDistance:1.6}}
               lineVisible={true}
               lineStyle={{stroke:'lightgray'}}
               labelStyle={{textAnchor:'end',dominantBaseline:'middle',fill:'lightgray',fontSize:'0.7em'}}
               labelAttributes={{x: -5}}
               labelFormat={label => label}
             />
-            {/* series.xLabels */}
+            {/* xLabels2 */}
             <Ticks
               axis='x'
-              labels = {props.bar1.xLabels}
+              ticks={{maxTicks:clientWidth<1400? 12:24}}
+              // maxTicks = {clientWidth<1400? 12:24}
+              labels = {xLabels1}
                   label={({index, props}) => props.labels[index]}
               labelStyle={{textAnchor:'middle',dominantBaseline:'text-before-edge',fill:'black',fontSize:'0.7em'}}
               labelAttributes={{y: 3}}
@@ -50,11 +74,13 @@ console.log(props)
             />
           </Layer>
         </Chart>
-        <Chart width={document.body.clientWidth/2} height={300} series={props.bar2.series} minY={0}>
+        <Chart width={clientWidth/2} height={300} series={props.bar2.series} minY={0}>
           <Layer width='90%' height='90%' position='top center'>
             <Ticks
               axis='y'
               lineLength='100%'
+              // ticks={{maxTicks:24}}
+              // maxTicks = {clientWidith<1400? 12:24}
               lineVisible={true}
               lineStyle={{stroke:'lightgray'}}
               labelStyle={{textAnchor:'end',dominantBaseline:'middle',fill:'lightgray',fontSize:'0.7em'}}
@@ -64,8 +90,10 @@ console.log(props)
             {/* series.xLabels */}
             <Ticks
               axis='x'
-              labels = {props.bar2.xLabels}
-                  label={({index, props}) => props.labels[index]}
+              ticks={{maxTicks:clientWidth<1400? 12:24}}
+              // maxTicks = {clientWidth<1400? 12:24}
+              labels = {xLabels2}
+                label={({index, props}) => props.labels[index]}
               labelStyle={{textAnchor:'middle',dominantBaseline:'text-before-edge',fill:'black',fontSize:'0.7em'}}
               labelAttributes={{y: 3}}
             />
