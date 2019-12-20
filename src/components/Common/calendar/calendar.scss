@@ -1,0 +1,38 @@
+.daterangepickercontainer{
+    display: inline-block;
+    margin-left: 45px;
+    #DateRangePickerChildren{
+        display: inline;
+        &>input{
+            width: 400px; 
+            border: none;
+            padding-left: 15px;
+        }
+    }
+    #daterangepicker{
+        input{
+            background: inherit;
+            border: none;
+            width: 240px;
+            font-size: 14px;
+            color: white;
+        }
+
+        .inputDate {
+            height: 18px;
+        }
+        .timeSelectContainer{
+            margin: 4px 0 4px 0;
+            display: flex;
+        }
+        .monthYearContainer{
+            margin: 5px 5px 5px;
+        }
+        .multipleContentOnLine.leftChevron{
+            width: 0;
+        }
+        .monthYearContainer {
+            margin: 7px 0 7px 0;
+        }
+    }
+}

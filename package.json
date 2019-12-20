@@ -5,7 +5,9 @@
   "dependencies": {
     "axios": "^0.18.1",
     "classnames": "^2.2.6",
+    "copy-dir": "^1.2.0",
     "react": "^16.8.6",
+    "react-advanced-datetimerange-picker": "^1.0.10",
     "react-dom": "^16.8.6",
     "react-redux": "^6.0.1",
     "react-router-dom": "^4.3.1",

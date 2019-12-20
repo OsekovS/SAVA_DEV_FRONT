@@ -2,7 +2,6 @@
 
 input[type=text], input[type=password],select{
     border-radius: 4px;
-    padding: 2px 5px;
     border: 2px solid $grey-form-color;
 }
    
@@ -12,9 +11,7 @@ input[type=text]:focus,input[type=password]:focus,select:focus{
     outline: none;
 }
 
-label,input[type=text], input[type=password],select{
-    font-size: 20px;;
-}
+
 // 22px
 
 .modal-form{
@@ -35,6 +32,10 @@ label,input[type=text], input[type=password],select{
    div{
     justify-content: space-evenly;
    }
+   label,input[type=text], input[type=password],select{
+    padding: 2px 5px;
+    font-size: 20px;;
+    }
 }
 .modal-form-keeper{
     z-index: 3;
