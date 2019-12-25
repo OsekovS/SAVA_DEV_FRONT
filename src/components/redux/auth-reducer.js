@@ -24,10 +24,11 @@ const authReducer = (state = initialState, action) => {
             setCookie("login",action.login)
            return stateCopy;
         case UPDATE_PAGE:
+        
             stateCopy = {...state}
             stateCopy.isAuth = true
             stateCopy.briefUserInfo.name = getCookie('login')
-            stateCopy.briefUserInfo.admin = action.admin === "1" ? 'администратор' : 'оператор'
+            stateCopy.briefUserInfo.admin = getCookie('admin') === "1" ? 'администратор' : 'оператор'
             return stateCopy;
         case LOG_OUT:
             stateCopy = {...state}
@@ -49,7 +50,7 @@ const updatePage = () => ({type: UPDATE_PAGE})
 
 export const logInThunk = (logObj) => {
     return (dispatch) => {
-        console.log(logObj)
+        // console.log(logObj)
         
         axios.post("php/users-form-processor.php",{"auth":logObj}).then(response => {
             console.log(response.request)
@@ -72,7 +73,7 @@ export const logInThunk = (logObj) => {
 export const checkCookies = () => {
     return (dispatch) => {
        
-        console.log( getCookie("hash"))
+        // console.log( getCookie("hash"))
         
         axios.post("php/users-form-processor.php",{"upload":{
             login: getCookie("login"),
@@ -80,7 +81,7 @@ export const checkCookies = () => {
         }}).then(response => {
             console.log(response.request)
             let json = JSON.parse(response.request.response);
-            console.log(json)
+            // console.log(json)
             if(json.result)
             dispatch(updatePage())
         

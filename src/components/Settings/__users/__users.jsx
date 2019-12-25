@@ -50,9 +50,6 @@ class __users extends React.Component {
     constructor(props) {
         super(props);
         this.state = {mode: '', edited: ''}
-            // Эта привязка обязательна для работы `this` в колбэке. .bind(this,'addUser')
-        //this.onChangeMode = this.onChangeMode.bind(this, 'addUser');
-        // this.onLogOut = this.onLogOut.bind(this);
       }
 
     onDellUser = (id) => {

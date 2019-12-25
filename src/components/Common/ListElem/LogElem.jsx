@@ -16,7 +16,7 @@ const LogElem = (props) => {
         <td>{props.items.device}</td>
         <td>{props.items.event}</td>
         <td>{props.items.route}</td>
-        <td>'Персонал'</td>
+        <td>{props.items.person}</td>
     </tr>
 }
 

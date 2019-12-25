@@ -1,4 +1,5 @@
 import * as axios from 'axios'
+import moment from "moment"
 
 const DEL_ENDP = 'DEL_ACS_ENDP';
 const DEL_OBJ = 'DEL_ACS_OBJ';
@@ -6,69 +7,81 @@ const ADD_ENDP = 'ADD_ACS_ENDP'
 const ADD_OBJ = 'ADD_ACS_OBJ';
 const CHANGE_MODE = 'CHANGE_ACS_MODE'
 const UPLOAD_ACS = 'UPLOAD_ACS'
+const CHANGE_TIME = 'CHANGE_TIME'
 
-let initialState = {
-    settings: {
-    mode: 'view',//'view',
-    objects: [
-        {id: '0', name: 'Санаторий Звенигород'},
-        {id: '1', name: 'Больница №46'},
-        {id: '2', name: 'Детский сад "Яблочко"'},
-        {id: '3', name: 'Офис'}
-    ],
-    endpoints:  [{
-        id: '0',
-        object: 'Санаторий Звенигород',
-        ip: '111.111.11.11',
-        name: 'Заезд для машин',
-        port: '3000',
-        login: '3ojA'
-    },
-    {
-        id: '1',
-        object: 'Больница №46',
-        ip: '222.222.22.22',
-        name: 'Главный вход',
-        port: '3000',
-        login: '2miZ'
-    },
-    {
-        id: '2',
-        object: 'Детский сад "Яблочко"',
-        ip: '444.444.444.444',
-        name: 'Северный вход',
-        port: '3000',
-        login: 'aiZ'
-    }]
-    },
-    logs: {
-        logs:  [{
-            "time":"2019\/11\/06 12:53:11",
-            "ip_cam":"192.168.3.109",
-            "type":"Event",
-            "comment":"Motion detect",
-            "param":"2019-11-06 12:50:40"
+let initialState = function(){
+    let now = new Date()
+    let toDate = moment((new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(),now.getMinutes(),now.getSeconds(),0)))
+    let fromDate = moment((new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(),now.getMinutes(),now.getSeconds(),0))).subtract(1, "days")
+//    console.log(toDate)
+//    console.log(fromDate)
+    return {
+        settings: {
+        mode: 'view',//'view',
+        objects: [
+            {id: '0', name: 'Санаторий Звенигород'},
+            {id: '1', name: 'Больница №46'},
+            {id: '2', name: 'Детский сад "Яблочко"'},
+            {id: '3', name: 'Офис'}
+        ],
+        endpoints:  [{
+            id: '0',
+            object: 'Санаторий Звенигород',
+            ip: '111.111.11.11',
+            name: 'Заезд для машин',
+            port: '3000',
+            login: '3ojA'
         },
         {
-            "time":"2019\/11\/06 12:53:11",
-            "ip_cam":"192.168.3.109",
-            "type":"Event",
-            "comment":"Motion detect",
-            "param":"2019-11-06 12:51:37"
-        }],
-        bar1: {series: [{
-            data: [13, 17, 19]           
-            }],
-            xLabels : ['xz','e','x']
+            id: '1',
+            object: 'Больница №46',
+            ip: '222.222.22.22',
+            name: 'Главный вход',
+            port: '3000',
+            login: '2miZ'
         },
-        bar2: {series: [{
-            data: [13, 17, 19]           
+        {
+            id: '2',
+            object: 'Детский сад "Яблочко"',
+            ip: '444.444.444.444',
+            name: 'Северный вход',
+            port: '3000',
+            login: 'aiZ'
+        }]
+        },
+        logs: {
+            logs:  [{
+                "time":"2019\/11\/06 12:53:11",
+                "ip_cam":"192.168.3.109",
+                "type":"Event",
+                "comment":"Motion detect",
+                "param":"2019-11-06 12:50:40"
+            },
+            {
+                "time":"2019\/11\/06 12:53:11",
+                "ip_cam":"192.168.3.109",
+                "type":"Event",
+                "comment":"Motion detect",
+                "param":"2019-11-06 12:51:37"
             }],
-            xLabels : ['xz','e','x']
+            bar1: {series: [{
+                data: [13, 17, 19]           
+                }],
+                xLabels : ['xz','e','x']
+            },
+            bar2: {series: [{
+                data: [13, 17, 19]           
+                }],
+                xLabels : ['xz','e','x']
+            },
+            timeFilter: {
+                from: fromDate,
+                to: toDate
+            }
         }
+       
     }
-   
-};
+}()
 
 let translator = {
     'addObj': {
@@ -89,7 +102,7 @@ const acsReducer = (state = initialState, action) => {
     let stateCopy
    switch (action.type) {
        case ADD_ENDP:
-            console.log(action)
+            // console.log(action)
             if(action.obj_num === undefined) action.obj_num = 1;
             let new_endp = {
                 id: state.settings.endpoints.length,
@@ -127,7 +140,7 @@ const acsReducer = (state = initialState, action) => {
             stateCopy = {...state};
             stateCopy.settings = {...state.settings};
             stateCopy.settings.mode = action.mode
-            console.log(stateCopy)
+            // console.log(stateCopy)
             return stateCopy
         case UPLOAD_ACS:
             stateCopy = {...state};
@@ -153,6 +166,16 @@ const acsReducer = (state = initialState, action) => {
                 // console.log(stateCopy.logs.bar.series)
             }
                 return stateCopy
+        case CHANGE_TIME:
+            console.log(moment(action.startDate).format('YYYY/MM/DD HH:MM:SS')) //"2019/12/16 14:00:00 YYYY/MM/DD HH:MM:SS
+            stateCopy = {...state};
+            stateCopy.logs.timeFilter.from = moment(action.startDate)
+            stateCopy.logs.timeFilter.to = moment(action.endDate)
+            getAcs({"need": "logs",
+            "timeFilter": {from: stateCopy.logs.timeFilter.from.format('YYYY/MM/DD HH:MM:SS'),
+            to:   stateCopy.logs.timeFilter.to.format('YYYY/MM/DD HH:MM:SS')
+            }})
+            return stateCopy
        default:
            return state;
    }
@@ -172,16 +195,21 @@ export const addObj = ({id, name}) =>
 export const changeMode = (mode) =>
 ({ type: CHANGE_MODE, mode: mode })
 
+export const TimeFilter = (startDate, endDate) =>
+({type: CHANGE_TIME, startDate, endDate})
 
 export const uploadAcs = (json,reqObj) =>
 ({ type: UPLOAD_ACS, json, need: reqObj.need })
 
 export const getAcs = (reqObj) => {
     console.log(reqObj)
+    // if(reqObj.need==='logs'){
+    //     reqObj = {...reqObj, timeFilter: {} } 
+    // }
     return (dispatch) => {
-        console.log('acs-form-processor.php')
+        // console.log('acs-form-processor.php')
         axios.post("php/acs-form-processor.php", reqObj).then(response => {
-            console.log(response)
+            // console.log(response)
             let json = JSON.parse(response.request.response);
             console.log(json)
             dispatch(uploadAcs(json,reqObj));
@@ -239,23 +267,30 @@ export const addFieldThunk = (reqObj) => {
     }
 }
 
-// export const delThunk = (id) => {
-//     console.log(id)
-//     return (dispatch) => {
-//     axios.post("php/users-form-processor.php",{delField: id}).then(response => {
-//         console.log(response)
-//         let json = JSON.parse(response.request.response);
-//         if(json.result==="done")
-//             dispatch(delUser(id));
-//         else alert("Не удалось удалить пользователя")
-//     }).catch(function (error) {
-//         // handle error
-//         console.log(error);
-//       })
-//       .finally(function () {
-//         // always executed
-//       });
-//     }
-// }
+export const SetTimeFilter = (startDate, endDate) => {
+
+        console.log('!!!!!!!!!!')
+     
+    return (dispatch) => {
+        dispatch(TimeFilter(startDate, endDate));
+        let reqObj = {"need": "logs",
+        "timeFilter": {from:  moment(startDate).format('YYYY/MM/DD HH:MM:SS'),
+        to: moment(endDate).format('YYYY/MM/DD HH:MM:SS')
+        }
+    }
+        axios.post("php/acs-form-processor.php", reqObj).then(response => {
+            console.log(response)
+            let json = JSON.parse(response.request.response);
+            console.log(json)
+            dispatch(uploadAcs(json,reqObj));
+        }).catch(function (error) {
+            // handle error
+            console.log(error);
+          })
+          .finally(function () {
+            // always executed
+          });;
+    }
+}
 
 export default acsReducer;

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@khanacademy/react-multi-select": "^0.3.3",
     "axios": "^0.18.1",
     "classnames": "^2.2.6",
     "copy-dir": "^1.2.0",
