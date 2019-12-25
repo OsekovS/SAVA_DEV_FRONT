@@ -6,8 +6,8 @@ import {connect} from "react-redux";
 import {Redirect} from "react-router-dom"
 const objects_form = (props) => {
    
-       return <div className="modal-form-keeper modal-form-keeper__small" >
-            <header className="Common__header Common__header_red">Добавить объект</header>
+       return <div className='login'>
+            <header className="Common__header Common__header_red">Авторизация</header>
             <form className="modal-form" onSubmit={props.handleSubmit}>
             <label>Логин: <Field name="login" placeholder={"Логин"} component={"input"} type="text"/></label>
             <label>Пароль: <Field name="pass" placeholder={"Пароль"} type="password" component={"input"}/></label>        
@@ -15,7 +15,7 @@ const objects_form = (props) => {
                     <button>Авторизоваться</button> 
                 </div>
             </form>
-        </div>
+            </div>
 // onClick={props.callback.bind(this,'view')}
 }
 
