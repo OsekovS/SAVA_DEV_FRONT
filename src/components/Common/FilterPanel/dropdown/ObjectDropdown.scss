@@ -1,0 +1,40 @@
+.filter__devices{
+    position: relative;
+    width: fit-content;
+    .filter__objects-list{
+        position: absolute;
+    z-index: 2;
+    background: white;
+    right: -170px;
+    top: 0;
+        li{
+            position: relative;
+            padding-left: 20px;
+        }
+        div{
+            position: absolute;
+            border-radius: 50%;
+            width: 10px;
+            height: 10px;
+            left: 5px;
+            top: 3px;
+        }
+    }
+    .multi-select{
+        .dropdown-content .item-renderer{
+            position: relative;
+            span{
+                padding: 2px 20px;
+               
+            }
+            div{
+                position: absolute;
+                border-radius: 50%;
+                width: 10px;
+                height: 10px;
+                left: 20px;
+                top: 7px;
+            }
+        }
+    }
+}
