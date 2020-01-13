@@ -1,0 +1,13 @@
+.Modules-table__empty{
+    width: 190px;
+    margin: 20px;
+    position: relative;
+}
+.Modules-table__empty::after{
+    content: "События с данными параметрами не найдены...";
+    position: absolute;
+    font-size: 24px;
+    width: 500px;
+    left: 225px;
+    top: 18px;
+}

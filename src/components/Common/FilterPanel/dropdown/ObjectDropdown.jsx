@@ -9,9 +9,11 @@ const ObjectsTable = (props) => {
                     <div style={{backgroundColor: props.objects[e].color}}></div>
                     {e}
                 </li>})
-            return <ul className="filter__objects-list">
+            return <><ul className="filter__objects-list">
                 {objects}
             </ul>
+            <div className={'filter__stupidWindow'}></div>
+            </>
     }
     else return null
     
@@ -23,8 +25,10 @@ class ObjectDropdown extends React.Component {
       closed: true
     }
     changeView = (e)=>{
-        console.log(e.target.tagName)
-     if(e.target.tagName==='SPAN'){ this.setState(state => ({
+        console.log(e.target.className)
+     if(e.target.className==='dropdown-heading'||e.target.className==='dropdown-heading-value'||e.target.className==='filter__stupidWindow'
+     ||e.target.className===''||e.target.className==='dropdown-heading-dropdown-arrow'){
+        this.setState(state => ({
           closed:  !this.state.closed
         }));}
     }
@@ -50,7 +54,8 @@ class ObjectDropdown extends React.Component {
       }
      
       return <div onClick={this.changeView.bind(this)} className="filter__devices">
-        <Dropdown options={options} preview={'!'}/>
+          
+        <Dropdown name={this.props.name} preview={this.props.preview} options={options}   onChangeCallBack={this.props.onChangeCallBack}/>
         <ObjectsTable display={!this.state.closed} objects={this.props.obj}/>
       </div>
     }

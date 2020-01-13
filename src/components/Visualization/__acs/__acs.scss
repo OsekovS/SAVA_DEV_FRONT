@@ -1,7 +1,71 @@
+@import '../../colors.scss';
 .Visualization__cameras{
+    .devices-logs{
+        margin-bottom: 25px;
+    }
     .table-wrapper{
         height: 210px;
-        overflow: scroll;
+        overflow-x: hidden;
+        overflow-y: scroll;
         margin-bottom: 10px;
+    }
+    .filter{
+        margin-bottom: 25px;
+    }
+    .Common__header{
+        input[type=radio]{
+            margin-left: 30px;
+            margin-right: 5px;
+        }
+        
+    }
+    .pages-bar, .showed-logs{
+        display: inline-flex;
+        li{
+            width: 25px;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .pages-bar__ellipsis{
+            cursor: auto;
+        }
+        // .pages-bar__curr-page{
+        //     margin-right: 12px;
+        // }
+        .pages-bar__curr-page, .showed-logs__current{
+            color: $white-color;
+        }
+        .pages-bar__curr-page::before, .showed-logs__current::before{
+            content: '';
+            position: absolute;
+            display: block;
+            background-color: $red-color;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            right: -4%;
+            top: -20%;
+            z-index: -1;
+        }
+    }
+    .pages-bar{
+        margin-left: auto;
+    }
+    .showed-logs{
+        margin-left: 85px;
+        li:nth-child(3),li:nth-child(4){
+            margin-right: 8px;
+        }
+    }
+    footer{
+        display: flex;
+        justify-content: space-between;
+        padding: 0 20px;
+        .showed-logs::before{
+            content: 'Количество логов на странице: ';
+            margin-right: 10px;
+        }
     }
 }

@@ -8,11 +8,16 @@ const ADD_OBJ = 'ADD_ACS_OBJ';
 const CHANGE_MODE = 'CHANGE_ACS_MODE'
 const UPLOAD_ACS = 'UPLOAD_ACS'
 const CHANGE_TIME = 'CHANGE_TIME'
+const CHANGE_UPLOAD = 'CHANGE_UPLOAD'
+const CHANGE_PARAM_FILTER = 'CHANGE_PARAM_FILTER'
+const CHANGE_UPLOAD_PARAMS = 'CHANGE_UPLOAD_PARAMS'
+const CHANGE_PAGE = 'CHANGE_PAGE'
+const CHANGE_SHOWED_LOGS = 'CHANGE_SHOWED_LOGS'
 
 let initialState = function(){
     let now = new Date()
     let toDate = moment((new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(),now.getMinutes(),now.getSeconds(),0)))
-    let fromDate = moment((new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(),now.getMinutes(),now.getSeconds(),0))).subtract(1, "days")
+    let fromDate = moment((new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(),now.getMinutes(),now.getSeconds(),0))).subtract(60, "days")
 //    console.log(toDate)
 //    console.log(fromDate)
     return {
@@ -67,7 +72,7 @@ let initialState = function(){
             bar1: {series: [{
                 data: [13, 17, 19]           
                 }],
-                xLabels : ['xz','e','x']
+                xLabels : ['-','e','x']
             },
             bar2: {series: [{
                 data: [13, 17, 19]           
@@ -77,6 +82,24 @@ let initialState = function(){
             timeFilter: {
                 from: fromDate,
                 to: toDate
+            },
+            uploads: {
+              uploads: true,
+              timeKind: 1,
+              timeNum: 10000,
+              from_number: '2',
+              from_time_type: 'M',
+              to: "now/d"
+            },
+            paramFilter: {route: ["Вход"]},
+            pagination: {
+                total: '',
+                currentPage: 1,
+                fromPage: 1,
+                showedPages: 5,
+                lastPage: '',
+                showedLogs: 5,
+                showedLogsList: [5, 20, 50, 100, 200]
             }
         }
        
@@ -163,18 +186,91 @@ const acsReducer = (state = initialState, action) => {
                 stateCopy.logs.bar1.xLabels = Object.values(action.json.bar1.xLabels);
                 stateCopy.logs.bar2.series = [{data: Object.values(action.json.bar2.series.data)}]
                 stateCopy.logs.bar2.xLabels = Object.values(action.json.bar2.xLabels);
+                stateCopy.logs.pagination.total = action.json.total
+                stateCopy.logs.pagination.lastPage = Math.ceil(action.json.total/stateCopy.logs.pagination.showedLogs)
                 // console.log(stateCopy.logs.bar.series)
             }
                 return stateCopy
         case CHANGE_TIME:
             console.log(moment(action.startDate).format('YYYY/MM/DD HH:MM:SS')) //"2019/12/16 14:00:00 YYYY/MM/DD HH:MM:SS
             stateCopy = {...state};
+            stateCopy.logs = {...state.logs}
+            stateCopy.logs.timeFilter = {...state.logs.timeFilter}
             stateCopy.logs.timeFilter.from = moment(action.startDate)
             stateCopy.logs.timeFilter.to = moment(action.endDate)
-            getAcs({"need": "logs",
-            "timeFilter": {from: stateCopy.logs.timeFilter.from.format('YYYY/MM/DD HH:MM:SS'),
-            to:   stateCopy.logs.timeFilter.to.format('YYYY/MM/DD HH:MM:SS')
-            }})
+            
+            return stateCopy
+        case CHANGE_PARAM_FILTER:
+            stateCopy = {...state};
+            stateCopy.logs = {...state.logs}
+            
+            let copyData = {...action.filter}
+            console.log(copyData)
+            if(copyData.devices!==undefined){
+                copyData.device = []
+                copyData.ip_device = []
+            for (const device of copyData.devices) {
+                copyData.device.push(
+                device.split(' ')[0]
+                )
+                copyData.ip_device.push(
+                device.split(' ')[1].slice(1,-1)
+                )
+            }
+            delete copyData.devices
+            }
+            stateCopy.logs.paramFilter = copyData
+            return stateCopy
+        case CHANGE_UPLOAD:
+            stateCopy = {...state}
+            stateCopy.logs = {...state.logs}
+            stateCopy.logs.uploads = {...state.logs.uploads}
+            stateCopy.logs.uploads.uploads = action.uploads
+            return stateCopy
+        case CHANGE_UPLOAD_PARAMS:
+            stateCopy = {...state}
+            stateCopy.logs = {...state.logs}
+            stateCopy.logs.uploads = {...state.logs.uploads}
+            stateCopy.logs.uploads.timeNum = action.params.timeNum
+            stateCopy.logs.uploads.timeKind = parseInt(action.params.timeKind)
+            stateCopy.logs.uploads.from_number = action.params.from_number
+            stateCopy.logs.uploads.from_time_type = action.params.from_time_type
+            console.log(action)
+            return stateCopy
+        case CHANGE_PAGE:
+            console.log(action.page)
+            stateCopy = {...state}
+            stateCopy.logs = {...state.logs}
+            stateCopy.logs.pagination = {...state.logs.pagination}
+            // if(action.page===state.logs.pagination.lastPage)
+            if(action.page===1) stateCopy.logs.pagination.fromPage = 1
+            else{
+                if(action.page===state.logs.pagination.fromPage+state.logs.pagination.showedPages-1 && action.page !== state.logs.pagination.lastPage){
+                    stateCopy.logs.pagination.fromPage = state.logs.pagination.fromPage + state.logs.pagination.showedPages - 2
+                }else if(action.page===state.logs.pagination.lastPage){
+                    if(Math.ceil(state.logs.pagination.total/state.logs.pagination.showedLogs)<state.logs.pagination.showedPages)
+                        stateCopy.logs.pagination.fromPage = state.logs.pagination.lastPage - Math.ceil(state.logs.pagination.total/state.logs.pagination.showedLogs) + 1
+                    else stateCopy.logs.pagination.fromPage = state.logs.pagination.lastPage - state.logs.pagination.showedPages + 1
+                }else if(action.page===state.logs.pagination.fromPage){
+                    stateCopy.logs.pagination.fromPage = state.logs.pagination.fromPage - state.logs.pagination.showedPages + 2
+                }
+            }
+            stateCopy.logs.pagination.currentPage = action.page
+            return stateCopy
+        case CHANGE_SHOWED_LOGS:
+            stateCopy = {...state}
+            stateCopy.logs = {...state.logs}
+            stateCopy.logs.pagination = {...state.logs.pagination}
+            for (let element of  state.logs.pagination.showedLogsList) {
+                if (element===action.showedLogs) {
+                    stateCopy.logs.pagination.showedLogs = action.showedLogs
+                    stateCopy.logs.pagination.lastPage = Math.ceil(state.logs.pagination.total/action.showedLogs)
+                    stateCopy.logs.pagination.currentPage = 1
+                    stateCopy.logs.pagination.fromPage = 1
+                    break;
+                }
+            }
+            
             return stateCopy
        default:
            return state;
@@ -201,15 +297,28 @@ export const TimeFilter = (startDate, endDate) =>
 export const uploadAcs = (json,reqObj) =>
 ({ type: UPLOAD_ACS, json, need: reqObj.need })
 
+export const ParamFilter = (filter) =>
+({type: CHANGE_PARAM_FILTER, filter})
+
+
+export const changePage = (page) =>
+({type: CHANGE_PAGE, page})
+
+export const changeUploads = (uploads) => ({ type: CHANGE_UPLOAD, uploads})
+
+export const changeUpdatesParams = (params) => ({ type: CHANGE_UPLOAD_PARAMS, params})
+
+export const changeShowedLogs = (showedLogs) => ({ type: CHANGE_SHOWED_LOGS, showedLogs})
+
 export const getAcs = (reqObj) => {
-    console.log(reqObj)
+    console.log('send!')
     // if(reqObj.need==='logs'){
     //     reqObj = {...reqObj, timeFilter: {} } 
     // }
     return (dispatch) => {
         // console.log('acs-form-processor.php')
         axios.post("php/acs-form-processor.php", reqObj).then(response => {
-            // console.log(response)
+            console.log(response)
             let json = JSON.parse(response.request.response);
             console.log(json)
             dispatch(uploadAcs(json,reqObj));
@@ -222,6 +331,7 @@ export const getAcs = (reqObj) => {
           });;
     }
 }
+
 
 export const addFieldThunk = (reqObj) => {
     console.log(reqObj)
@@ -267,22 +377,39 @@ export const addFieldThunk = (reqObj) => {
     }
 }
 
-export const SetTimeFilter = (startDate, endDate) => {
+export const changeShowedLogsThunk = (showedLogs) => {
 
-        console.log('!!!!!!!!!!')
-     
-    return (dispatch) => {
-        dispatch(TimeFilter(startDate, endDate));
-        let reqObj = {"need": "logs",
-        "timeFilter": {from:  moment(startDate).format('YYYY/MM/DD HH:MM:SS'),
-        to: moment(endDate).format('YYYY/MM/DD HH:MM:SS')
+    
+    return (dispatch,getState) => {
+        let state = getState().acs.logs
+        let timeFilter = {}
+        if(state.uploads.uploads){
+            timeFilter = {
+                from: 'now-'+state.uploads.from_number+state.uploads.from_time_type+'/'+state.uploads.from_time_type,
+                 to:  state.uploads.to
+            }
         }
-    }
+        else{
+            timeFilter = {
+                from: state.timeFilter.from.format('YYYY/MM/DD HH:mm:ss'),
+                to:  state.timeFilter.to.format('YYYY/MM/DD HH:mm:ss'),
+            }
+        }
+        let reqObj = {
+            "need": "logs",
+            "timeFilter": timeFilter,
+            "paramsFilter": state.paramFilter,
+            logsCount: showedLogs,
+            curPage: state.pagination.currentPage
+            // curPage: state.pagination.currentPage
+        }
+        console.log(reqObj)
         axios.post("php/acs-form-processor.php", reqObj).then(response => {
-            console.log(response)
+            // console.log(response)
             let json = JSON.parse(response.request.response);
             console.log(json)
-            dispatch(uploadAcs(json,reqObj));
+            dispatch(uploadAcs(json, reqObj));
+            dispatch(changeShowedLogs(showedLogs));
         }).catch(function (error) {
             // handle error
             console.log(error);
@@ -290,6 +417,125 @@ export const SetTimeFilter = (startDate, endDate) => {
           .finally(function () {
             // always executed
           });;
+    }
+}
+// timeFilter, paramFilter, showedLogs, 
+export const changePageThunk = (page) => {
+    // console.log(reqObj)
+    return (dispatch,getState) => {
+        let state = getState().acs.logs
+        let timeFilter = {}
+        if(state.uploads.uploads){
+            timeFilter = {
+                from: 'now-'+state.uploads.from_number+state.uploads.from_time_type+'/'+state.uploads.from_time_type,
+                 to:  state.uploads.to
+            }
+        }
+        else{
+            timeFilter = {
+                from: state.timeFilter.from.format('YYYY/MM/DD HH:mm:ss'),
+                to:  state.timeFilter.to.format('YYYY/MM/DD HH:mm:ss'),
+            }
+        }
+        let reqObj = {
+            "need": "logs",
+            "timeFilter": timeFilter,
+            "paramsFilter": state.paramFilter,
+            logsCount: state.pagination.showedLogs,
+            curPage: page
+        }
+        
+        axios.post("php/acs-form-processor.php", reqObj).then(response => {
+            // console.log(response)
+            let json = JSON.parse(response.request.response);
+            console.log(json)
+            dispatch(uploadAcs(json, reqObj));
+            dispatch(changePage(page));
+        }).catch(function (error) {
+            // handle error
+            console.log(error);
+          })
+          .finally(function () {
+            // always executed
+          });;
+    }
+}
+//filter, showedLogs, page, 
+export const setTimeFilterThunk = (startDate, endDate) => {
+        // let filterCopy = {...filter}
+        // delete filterCopy.opened
+        
+        return (dispatch,getState) => {
+            let state = getState().acs.logs
+            let reqObj = {
+                "need": "logs",
+                "timeFilter": {
+                    from: startDate.format('YYYY/MM/DD HH:MM:SS'),
+                    to:  endDate.format('YYYY/MM/DD HH:MM:SS'),
+                },
+                "paramsFilter": state.paramFilter,
+                logsCount: state.pagination.showedLogs,
+                curPage: state.pagination.currentPage       
+            }
+            // console.log('acs-form-processor.php')
+            axios.post("php/acs-form-processor.php", reqObj).then(response => {
+                // console.log(response)
+                let json = JSON.parse(response.request.response);
+                console.log(json)
+                dispatch(uploadAcs(json, reqObj));
+                dispatch(TimeFilter(startDate, endDate))
+                dispatch(changeUploads(false))
+            }).catch(function (error) {
+                // handle error
+                console.log(error);
+              })
+              .finally(function () {
+                // always executed
+              });;
+        }
+        // dispatch(TimeFilter(startDate, endDate));
+
+}
+
+// uploads,timeFilter,filter,showedLogs,page
+export const setParamFilterThunk = (filter) => {
+    console.log(filter)
+    let filterCopy = {}
+    for (let param in filter) {
+        if(filter[param].length!==0) filterCopy[param] = filter[param]
+    }
+    
+    delete filterCopy.opened
+    return (dispatch,getState) => {
+        let state = getState().acs.logs
+        // console.log('nonuploads')
+        if(!state.uploads.uploads){
+            // console.log('nonuploads')
+           let  reqObj={
+                    "need": "logs",
+                    "timeFilter": {
+                        from: state.timeFilter.from.format('YYYY/MM/DD HH:mm:ss'),
+                        to:  state.timeFilter.to.format('YYYY/MM/DD HH:mm:ss'),
+                    },
+                    "paramsFilter": filterCopy,
+                    logsCount: state.pagination.showedLogs,
+                    curPage: state.pagination.currentPage           
+             };
+             axios.post("php/acs-form-processor.php", reqObj).then(response => {
+                console.log(response)
+                let json = JSON.parse(response.request.response);
+                console.log(json)
+                dispatch(uploadAcs(json,reqObj));
+                dispatch(ParamFilter(filterCopy))
+            }).catch(function (error) {
+                // handle error
+                console.log(error);
+              })
+              .finally(function () {
+                // always executed
+              });;
+        }
+            
     }
 }
 

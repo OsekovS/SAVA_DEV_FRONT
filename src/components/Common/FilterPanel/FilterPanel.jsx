@@ -14,14 +14,22 @@ const options = [
   ]
   
   class FilterPanel extends React.Component{
-    state = {
-      opened: true
-  };
+    constructor(props){
+        super(props)
+        
+        this.state = {
+            ...props.iniState,
+            opened: true
+        };
+        console.log(this.state)
+      }
+    
   onChangeField = (keyState,key)=>{
     //   console.log(key)
     //   console.log(keyState)
       this.setState(state => ({
         [key]: keyState
+        
     }));
     // console.log(this.state)
     
@@ -45,10 +53,11 @@ const options = [
                     }
                     )
                     // this.state[key]=[]
+                    // console.log(configObj.translate)
                     filter.push(
-                        <Dropdown options={options} preview={key} onChangeCallBack={(this.onChangeField.bind(this))}/>
+                        <Dropdown iniState={this.state[key]===undefined?[]:this.state[key]} name={key} options={options} preview={configObj.translate[key]} onChangeCallBack={(this.onChangeField.bind(this))}/>
                     )
-                }else if(key==='Объекты'){
+                }else if(key==='object'){
 
                     options = Object.keys(configObj[key]).map((e)=>{
                         return {
@@ -58,30 +67,28 @@ const options = [
                     })
                     // this.state[key]=[]
                     let needObj = {}
-                    if(this.state['Объекты']!==undefined){
-                        for (const object of this.state['Объекты']) {
-                            needObj[object]= configObj['Объекты'][object];
+                    if(this.state['object']!==undefined){
+                        for (const object of this.state['object']) {
+                            needObj[object]= configObj['object'][object];
                         }
                     }
                     
-                    // for (const object in configObj['Объекты']) {
-                        
-                    //     if (configObj['Объекты'].hasOwnProperty(object)) {
-                    //         console.log(this.state['Объекты'][object]!==undefined)
-                    //         // console.log(this.state['Объекты'][object])
-                    //         if(this.state['Объекты']!==undefined&&this.state['Объекты'][object]!==undefined)
-                    //         needObj[object] = configObj['Объекты'][object];
-                            
-                    //     }
-                    // }
+
                     console.log(needObj)
-                    objects = <Dropdown options={options} preview={'Объекты'}  onChangeCallBack={(this.onChangeField.bind(this))}/>
-                    devices = <ObjectDropdown obj={needObj}/>
+                    objects = <Dropdown  iniState={this.state[key]===undefined?[]:this.state[key]}  name={key} options={options} preview={configObj.translate[key]}  onChangeCallBack={(this.onChangeField.bind(this))}/>
+                    // devices = <ObjectDropdown  iniState={this.state[key]===undefined?[]:this.state[key]}  name={'devices'}  preview={'конечные точки'}  obj={needObj}  onChangeCallBack={(this.onChangeField.bind(this))}/>
 
                 }  
         }
         }
-    return <div className='filter'>{objects}{devices}{filter}</div>
+    return <div className='filter'>
+        <div className="wrapper">
+            {objects}
+            {devices}
+            {filter}
+        </div>
+        <button onClick={this.props.submitCallBack.bind(this,this.state)}>Применить настройки для фильтра</button>
+        </div>
     }
     else return null
 }

@@ -53,9 +53,9 @@ export const logInThunk = (logObj) => {
         // console.log(logObj)
         
         axios.post("php/users-form-processor.php",{"auth":logObj}).then(response => {
-            console.log(response.request)
+            // console.log(response.request)
             let json = JSON.parse(response.request.response);
-            console.log(json)
+            // console.log(json)
             if(json.result)
             dispatch(logIn(json.cookies));
             else alert('Ошибка авторизации, неверно введен пароль или логин')
@@ -79,7 +79,7 @@ export const checkCookies = () => {
             login: getCookie("login"),
             hash: getCookie("hash")
         }}).then(response => {
-            console.log(response.request)
+            // console.log(response.request)
             let json = JSON.parse(response.request.response);
             // console.log(json)
             if(json.result)

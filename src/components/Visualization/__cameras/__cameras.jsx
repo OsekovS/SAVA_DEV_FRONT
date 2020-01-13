@@ -1,6 +1,5 @@
 import React from 'react';
 import './__cameras.scss';
-import LogElem from '../../Common/ListElem/LogElem'
 import __header from '../../Common/__header/__header'
 import Chart from '../../Graphs/Chart'
 import Pies from '../../Graphs/Pies'
@@ -32,8 +31,8 @@ const __cameras = (props) => {
     //   data: [13, 17, 19]
     // }];
     
-    // console.log(props)
-    let usersElements = props.logs.map(e => <LogElem name='' items={e} />)
+    let usersElements = []
+    // let usersElements = props.logs.map(e => <LogElem name='' items={e} />)
     return <div className="Visualization__cameras">
         <header className="Common__header Common__header_red">Логи камер</header>
             {usersElements}

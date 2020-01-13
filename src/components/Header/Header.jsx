@@ -7,18 +7,7 @@ import __Ref from './__Ref/__Ref';
 import {connect} from "react-redux";
 import {withAuthRedirect} from '../utils/HOCs/AutoRedirect/AutoRedirect'
 import Navbar from '../Navbar/Navbar'
-// import {checkCookies} from '../redux/auth-reducer'
-// const rawHeader = (props) => {
 
-//     return <header className="Header">
-//         <img className="header__logo" src={require("./header__logo.PNG")} atl="Наш логотип"></img>
-//         <div className="Header__infoPanel">
-//             <__AverEvents allEvents={props.allEvents}/>
-//             <__UserPanel briefUserInfo={props.briefUserInfo}/>
-//             <__Ref></__Ref>
-//         </div>
-//     </header>
-// }
 class rawHeader extends React.Component{
     
     render() {
@@ -44,13 +33,13 @@ let mapStateToProps = (state) => {
     }
   }
   
-  let mapDispatchToProps = {
-    
-  }
-  const Header = compose(
-      connect(mapStateToProps, mapDispatchToProps),
-      withAuthRedirect
-    )(rawHeader)
+let mapDispatchToProps = {
+
+}
+const Header = compose(
+    connect(mapStateToProps, mapDispatchToProps),
+    withAuthRedirect
+)(rawHeader)
   
 
 export default Header;

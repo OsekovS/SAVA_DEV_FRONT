@@ -2,11 +2,16 @@ import React from 'react';
 import './dropdown.scss'
 import MultiSelect from "@khanacademy/react-multi-select";
 class Consumer extends React.Component {
-    state = {
-      selected: [],
+    constructor(props){
+      super(props)
+      console.log(this.props.iniState)
+      this.state = {
+        // selected: this.props.state,
+        selected: this.props.iniState,
+      }
     }
     onSelectedChanged = (selected)=>{
-      this.props.onChangeCallBack(selected,this.props.preview)
+      this.props.onChangeCallBack(selected,this.props.name)
       this.setState({selected})
     }
     render() {

@@ -27,5 +27,8 @@
   }
   .multi-select .select-item .item-renderer input{
    position: relative;
-   top: 6px;
+   top: 4px;
+  }
+  .multi-select .select-item .item-renderer span{
+    padding-left: 5px;
   }

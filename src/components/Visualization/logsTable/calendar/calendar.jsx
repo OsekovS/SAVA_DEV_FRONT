@@ -9,8 +9,8 @@ class Wrapper extends React.Component {
     constructor(props){
         super(props);
         let now = new Date();
-        let start = moment(this.props.timeFilter.from);
-        let end =  moment(this.props.timeFilter.to);
+        let start = this.props.timeFilter.from;
+        let end =  this.props.timeFilter.to;
         // let start = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0,0,0,0));
         // let end =  moment(new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(),now.getMinutes(),0,0));
         this.dateOptions = {
@@ -90,7 +90,8 @@ class Wrapper extends React.Component {
             let maxDate = moment(new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(),now.getMinutes()+1,0,0));//moment(start).add(23, "hour")
             let redTheme= 'rgb(236, 28, 36)'
             let whiteTheme= 'rgb(255, 255, 255)'
-            let greyTheme = 'rgba(38, 49, 55, 0.5)'
+            let greyTheme = '#e0e0e0'
+
             return(
                     <DateTimeRangeContainer 
                         ranges={ranges}
@@ -116,13 +117,14 @@ class Wrapper extends React.Component {
                         }}
                     >    
                         <FormControl
+                        // onClick={()=>console.log('!')}
                         id="formControlsTextB"
                         type="text"
                         label="Text"
                         placeholder="Enter text"
-                        // value={'C ' +start.format('dd MM DD YY') + ' по '+end.format('dd MM DD YY')}
+                        value={'C ' +start.format('DD.MM.YYYY HH:mm') + ' по '+end.format('DD.MM.YYYY HH:mm')}// .format('YYYY/MM/DD HH:mm:ss')
                         // value={'C ' +new Date(start).toLocaleString("ru", this.dateOptions) + ' по '+new Date(end).toLocaleString("ru", this.dateOptions)}
-                        value={'C ' +new Date(this.state.start).toLocaleString("ru", this.dateOptions) + ' по '+new Date(this.state.end).toLocaleString("ru", this.dateOptions)}
+                        // value={'C ' +new Date(this.state.start).toLocaleString("ru", this.dateOptions) + ' по '+new Date(this.state.end).toLocaleString("ru", this.dateOptions)}
                         /> 
                     </DateTimeRangeContainer>
             );

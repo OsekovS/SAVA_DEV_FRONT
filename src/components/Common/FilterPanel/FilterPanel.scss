@@ -1,4 +1,24 @@
-// .filter{
-//     position: absolute;
-//     right: 0;
-// }
+.filter{
+    
+    .wrapper{
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        flex-direction: column;
+        height: 140px;
+        padding: 10px;
+        margin-bottom: 20px;
+        div{
+            margin-bottom: 10px;
+        }
+        .multi-select,.filter__devices{
+            height: 30px;
+            font-size: 16px;
+            width: 48%;
+        }
+        .filter__devices .multi-select{
+            width: 100%;
+        }
+    }
+    // background-color: #aaaaaa;;
+}
