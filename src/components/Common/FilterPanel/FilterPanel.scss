@@ -1,13 +1,25 @@
 .filter{
-    
+
+    // }
+    &>form{
+        position: absolute;
+        background: white;
+        width: 100%;
+        top: 34px;
+        left: 0px;
+        border: 1px solid grey;
+    }
     .wrapper{
         display: flex;
         flex-wrap: wrap;
         align-items: center;
         flex-direction: column;
         height: 140px;
-        padding: 10px;
-        margin-bottom: 20px;
+        width: 100%;
+        height: 125px;
+        width: 100%;
+        padding: 10px 10px 0 10px;
+      
         div{
             margin-bottom: 10px;
         }
@@ -21,4 +33,34 @@
         }
     }
     // background-color: #aaaaaa;;
+}
+button.filter,.filter>span{
+ 
+        position: relative;
+        // &>button{
+        border: none;
+        background: inherit;
+        position: absolute;
+        right: 140px;
+        display: flex;
+        top: 10px;
+        outline: none;
+        cursor: pointer;
+        font-size: 14px;
+        font-family: Arial, Helvetica, sans-serif;
+    
+    &::after{
+        content: "";
+        height: 10px;
+        position: absolute;
+        right: -25px;
+        top: -1px;
+        border: 3px solid white;
+        border-bottom: none;
+        border-right: none;
+        -webkit-transform: rotate(90deg);
+        transform: rotate(-135deg);
+        width: 10px;
+
+    }
 }

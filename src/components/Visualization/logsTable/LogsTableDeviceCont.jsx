@@ -1,6 +1,6 @@
 import {connect} from "react-redux";
 import rawLogsTable from './LogsTable'
-import  {getAcs,setTimeFilterThunk,changeUploads,setParamFilterThunk,changeUpdatesParams,changePageThunk,changeShowedLogsThunk} from "../../../components/redux/acs-reducer";
+import  {getAcs,setTimeFilterThunk,changeUploads,setParamFilterThunk,changeUpdatesParams,changePageThunk,changeShowedLogsThunk,changeSortThunk} from "../../../components/redux/acs-reducer";
 
       
 let mapStateToProps = (state) => {
@@ -9,7 +9,8 @@ let mapStateToProps = (state) => {
         timeFilter: state.acs.logs.timeFilter,
         uploads: state.acs.logs.uploads,
         paramFilter: state.acs.logs.paramFilter,
-        pagination: state.acs.logs.pagination
+        pagination: state.acs.logs.pagination,
+        sortParam: state.acs.logs.sortParam
     }
 }
 
@@ -21,7 +22,8 @@ let mapDispatchToProps = {
     changeUploads,
     changeUpdatesParams,
     changePageThunk,
-    changeShowedLogsThunk
+    changeShowedLogsThunk,
+    changeSortThunk
 }
 
 const LogsTableDeviceCont = (connect(mapStateToProps,mapDispatchToProps)(rawLogsTable));

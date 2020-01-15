@@ -1,0 +1,31 @@
+@import '../../colors.scss';
+.logs-table__header{
+    td{
+        cursor: pointer;
+        
+    }
+    td:last-child{
+        padding-right: 15px;
+    }
+}
+.logs-table__arrow{
+    // background-image: url(./multimedia.svg);
+    // height: 5px;
+    // border: 3px solid $red-color;
+    // border-bottom: none;
+    // border-right: none;
+    // -webkit-transform: rotate(90deg);
+    // transform: rotate(-135deg);
+    // width: 5px;
+    z-index: -1;
+    position: relative;
+    top: 2px;
+    width: 10px;
+}
+
+.logs-table__arrow_up{
+    transform: rotate(-90deg);
+}
+.logs-table__arrow_down{
+    transform: rotate(90deg);
+}

@@ -13,6 +13,7 @@ const CHANGE_PARAM_FILTER = 'CHANGE_PARAM_FILTER'
 const CHANGE_UPLOAD_PARAMS = 'CHANGE_UPLOAD_PARAMS'
 const CHANGE_PAGE = 'CHANGE_PAGE'
 const CHANGE_SHOWED_LOGS = 'CHANGE_SHOWED_LOGS'
+const CHANGE_SORT_PARAM = 'CHANGE_SORT_PARAM'
 
 let initialState = function(){
     let now = new Date()
@@ -91,15 +92,20 @@ let initialState = function(){
               from_time_type: 'M',
               to: "now/d"
             },
-            paramFilter: {route: ["Вход"]},
+            paramFilter: {},
             pagination: {
                 total: '',
                 currentPage: 1,
                 fromPage: 1,
                 showedPages: 5,
                 lastPage: '',
-                showedLogs: 5,
-                showedLogsList: [5, 20, 50, 100, 200]
+                showedLogs: 100,
+                showedLogsList: [50, 100, 250, 500]
+            },
+            sortParam: {
+                type:'date',
+                field:'time',
+                direction: 'asc'
             }
         }
        
@@ -272,6 +278,22 @@ const acsReducer = (state = initialState, action) => {
             }
             
             return stateCopy
+        case CHANGE_SORT_PARAM:
+            stateCopy = {...state}
+            stateCopy.logs = {...state.logs}
+
+            if(action.sortParam.field===state.logs.sortParam.field){
+                stateCopy.logs.sortParam = {...state.logs.sortParam}
+                stateCopy.logs.sortParam.direction=stateCopy.logs.sortParam.direction==='asc'?'desc':'asc'
+            }
+            else{
+                stateCopy.logs.sortParam = {
+                    type: action.sortParam.type,
+                    field: action.sortParam.field,
+                    direction: 'asc'
+                }
+            }
+            return stateCopy
        default:
            return state;
    }
@@ -305,10 +327,9 @@ export const changePage = (page) =>
 ({type: CHANGE_PAGE, page})
 
 export const changeUploads = (uploads) => ({ type: CHANGE_UPLOAD, uploads})
-
 export const changeUpdatesParams = (params) => ({ type: CHANGE_UPLOAD_PARAMS, params})
-
 export const changeShowedLogs = (showedLogs) => ({ type: CHANGE_SHOWED_LOGS, showedLogs})
+export const changeSortParam = (sortParam) => ({ type: CHANGE_SORT_PARAM, sortParam})
 
 export const getAcs = (reqObj) => {
     console.log('send!')
@@ -400,7 +421,8 @@ export const changeShowedLogsThunk = (showedLogs) => {
             "timeFilter": timeFilter,
             "paramsFilter": state.paramFilter,
             logsCount: showedLogs,
-            curPage: state.pagination.currentPage
+            curPage: state.pagination.currentPage,
+            sortParam: state.sortParam
             // curPage: state.pagination.currentPage
         }
         console.log(reqObj)
@@ -442,7 +464,8 @@ export const changePageThunk = (page) => {
             "timeFilter": timeFilter,
             "paramsFilter": state.paramFilter,
             logsCount: state.pagination.showedLogs,
-            curPage: page
+            curPage: page,
+            sortParam: state.sortParam
         }
         
         axios.post("php/acs-form-processor.php", reqObj).then(response => {
@@ -462,9 +485,7 @@ export const changePageThunk = (page) => {
 }
 //filter, showedLogs, page, 
 export const setTimeFilterThunk = (startDate, endDate) => {
-        // let filterCopy = {...filter}
-        // delete filterCopy.opened
-        
+       
         return (dispatch,getState) => {
             let state = getState().acs.logs
             let reqObj = {
@@ -475,7 +496,8 @@ export const setTimeFilterThunk = (startDate, endDate) => {
                 },
                 "paramsFilter": state.paramFilter,
                 logsCount: state.pagination.showedLogs,
-                curPage: state.pagination.currentPage       
+                curPage: state.pagination.currentPage,
+                sortParam: state.sortParam       
             }
             // console.log('acs-form-processor.php')
             axios.post("php/acs-form-processor.php", reqObj).then(response => {
@@ -508,35 +530,95 @@ export const setParamFilterThunk = (filter) => {
     delete filterCopy.opened
     return (dispatch,getState) => {
         let state = getState().acs.logs
-        // console.log('nonuploads')
-        if(!state.uploads.uploads){
-            // console.log('nonuploads')
-           let  reqObj={
-                    "need": "logs",
-                    "timeFilter": {
-                        from: state.timeFilter.from.format('YYYY/MM/DD HH:mm:ss'),
-                        to:  state.timeFilter.to.format('YYYY/MM/DD HH:mm:ss'),
-                    },
-                    "paramsFilter": filterCopy,
-                    logsCount: state.pagination.showedLogs,
-                    curPage: state.pagination.currentPage           
-             };
-             axios.post("php/acs-form-processor.php", reqObj).then(response => {
-                console.log(response)
-                let json = JSON.parse(response.request.response);
-                console.log(json)
-                dispatch(uploadAcs(json,reqObj));
-                dispatch(ParamFilter(filterCopy))
-            }).catch(function (error) {
-                // handle error
-                console.log(error);
-              })
-              .finally(function () {
-                // always executed
-              });;
+        let timeFilter = {}
+        if(state.uploads.uploads){
+            timeFilter = {
+                from: 'now-'+state.uploads.from_number+state.uploads.from_time_type+'/'+state.uploads.from_time_type,
+                to:  state.uploads.to
+            }
         }
+        else{
+            timeFilter = {
+                from: state.timeFilter.from.format('YYYY/MM/DD HH:mm:ss'),
+                to:  state.timeFilter.to.format('YYYY/MM/DD HH:mm:ss'),
+            }
+        }
+        let  reqObj={
+                "need": "logs",
+                "timeFilter": timeFilter,
+                "paramsFilter": filterCopy,
+                logsCount: state.pagination.showedLogs,
+                curPage: state.pagination.currentPage,
+                sortParam: state.sortParam           
+            };
+            axios.post("php/acs-form-processor.php", reqObj).then(response => {
+            console.log(response)
+            let json = JSON.parse(response.request.response);
+            console.log(json)
+            dispatch(uploadAcs(json,reqObj));
+            dispatch(ParamFilter(filterCopy))
+        }).catch(function (error) {
+            // handle error
+            console.log(error);
+            })
+            .finally(function () {
+            // always executed
+            });;
+        // }
             
     }
 }
+
+export const changeSortThunk = (sortParam) => {
+    console.log(sortParam)
+    return (dispatch,getState) => {
+        let state = getState().acs.logs
+        let timeFilter,NewSortParam = {}
+        if(state.uploads.uploads){
+            timeFilter = {
+                from: 'now-'+state.uploads.from_number+state.uploads.from_time_type+'/'+state.uploads.from_time_type,
+                 to:  state.uploads.to
+            }
+        }else{
+            timeFilter = {
+                from: state.timeFilter.from.format('YYYY/MM/DD HH:mm:ss'),
+                to:  state.timeFilter.to.format('YYYY/MM/DD HH:mm:ss'),
+            }
+        }
+        if(sortParam.field===state.sortParam.field){
+            NewSortParam = {...state.sortParam}
+            NewSortParam.direction=NewSortParam.direction==='asc'?'desc':'asc'
+        }else{
+            NewSortParam = {
+                type: sortParam.type,
+                field: sortParam.field,
+                direction: 'asc'
+            }
+        }
+        let reqObj = {
+            "need": "logs",
+            "timeFilter": timeFilter,
+            "paramsFilter": state.paramFilter,
+            logsCount: state.pagination.showedLogs,
+            curPage: state.pagination.currentPage,
+            sortParam: NewSortParam
+        }
+        
+        axios.post("php/acs-form-processor.php", reqObj).then(response => {
+            // console.log(response)
+            let json = JSON.parse(response.request.response);
+            console.log(json)
+            dispatch(uploadAcs(json, reqObj));
+            dispatch(changeSortParam(sortParam))
+        }).catch(function (error) {
+            // handle error
+            console.log(error);
+          })
+          .finally(function () {
+            // always executed
+          });;
+    }
+}
+
 
 export default acsReducer;

@@ -12,32 +12,7 @@
         color: $white-color;
     }
 }
-.Common__header_with-filter{
-    &>button{
-        border: none;
-        background: inherit;
-        position: absolute;
-        right: 140px;
-        display: flex;
-        top: 10px;
-        outline: none;
-        cursor: pointer;
-        &::after{
-            content: "";
-            height: 10px;
-            position: absolute;
-            right: -25px;
-            top: -1px;
-            border: 3px solid white;
-            border-bottom: none;
-            border-right: none;
-            -webkit-transform: rotate(90deg);
-            transform: rotate(-135deg);
-            width: 10px;
-        }
-    }
-    
-}
+
 .Common__header_red{
     background-color: $red-color;
 }

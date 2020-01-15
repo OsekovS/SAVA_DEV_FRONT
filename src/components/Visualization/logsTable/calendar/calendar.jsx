@@ -38,7 +38,9 @@ class Wrapper extends React.Component {
         })
         this.props.applyParentCallback(startDate, endDate);
     }
- 
+    // this.setState(state => ({
+    //     uploadsSetter:'collapsed' 
+    //     }))
     render(){
             // console.log(this.props)
             // console.log(this.props.timeFilter.from)
