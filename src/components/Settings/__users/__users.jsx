@@ -1,6 +1,6 @@
 import React from 'react';
 import './__users.scss';
-import ListElem from '../../Common/ListElem/ListElem'
+import ListElem from './ListElem/ListElem'
 import {Field, reduxForm} from "redux-form";
 import {required, maxLengthCreator} from '../../utils/fieldValidators/fieldValidators'
 import {Input} from '../../Common/Input/Input'

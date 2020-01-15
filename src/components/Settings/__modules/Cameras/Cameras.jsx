@@ -1,7 +1,7 @@
 import React from 'react';
 import './Cameras.scss'
 import __header from '../../../Common/__header/__header'
-import ListElem from '../../../Common/ListElem/ListElem'
+import ListElem from '../ListElem/ListElem'
 import {Field, reduxForm} from "redux-form";
 
 

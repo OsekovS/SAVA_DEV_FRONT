@@ -14,6 +14,7 @@ const CHANGE_UPLOAD_PARAMS = 'CHANGE_UPLOAD_PARAMS'
 const CHANGE_PAGE = 'CHANGE_PAGE'
 const CHANGE_SHOWED_LOGS = 'CHANGE_SHOWED_LOGS'
 const CHANGE_SORT_PARAM = 'CHANGE_SORT_PARAM'
+const CHANGE_CURRENT_LOG = 'CHANGE_CURRENT_LOG'
 
 let initialState = function(){
     let now = new Date()
@@ -85,7 +86,7 @@ let initialState = function(){
                 to: toDate
             },
             uploads: {
-              uploads: true,
+              uploads: false,
               timeKind: 1,
               timeNum: 10000,
               from_number: '2',
@@ -106,7 +107,8 @@ let initialState = function(){
                 type:'date',
                 field:'time',
                 direction: 'asc'
-            }
+            },
+            curLog: null
         }
        
     }
@@ -258,7 +260,9 @@ const acsReducer = (state = initialState, action) => {
                         stateCopy.logs.pagination.fromPage = state.logs.pagination.lastPage - Math.ceil(state.logs.pagination.total/state.logs.pagination.showedLogs) + 1
                     else stateCopy.logs.pagination.fromPage = state.logs.pagination.lastPage - state.logs.pagination.showedPages + 1
                 }else if(action.page===state.logs.pagination.fromPage){
-                    stateCopy.logs.pagination.fromPage = state.logs.pagination.fromPage - state.logs.pagination.showedPages + 2
+                    let fromPage =state.logs.pagination.fromPage - state.logs.pagination.showedPages + 2
+                    if(fromPage===0) stateCopy.logs.pagination.fromPage = 1
+                    else  stateCopy.logs.pagination.fromPage = fromPage
                 }
             }
             stateCopy.logs.pagination.currentPage = action.page
@@ -294,6 +298,11 @@ const acsReducer = (state = initialState, action) => {
                 }
             }
             return stateCopy
+        case CHANGE_CURRENT_LOG:
+            stateCopy = {...state}
+            stateCopy.logs = {...state.logs}
+            stateCopy.logs.curLog = action.number
+            return stateCopy
        default:
            return state;
    }
@@ -322,6 +331,8 @@ export const uploadAcs = (json,reqObj) =>
 export const ParamFilter = (filter) =>
 ({type: CHANGE_PARAM_FILTER, filter})
 
+export const onChangeCurrentLog = (number) =>
+({type: CHANGE_CURRENT_LOG, number})
 
 export const changePage = (page) =>
 ({type: CHANGE_PAGE, page})
@@ -421,7 +432,7 @@ export const changeShowedLogsThunk = (showedLogs) => {
             "timeFilter": timeFilter,
             "paramsFilter": state.paramFilter,
             logsCount: showedLogs,
-            curPage: state.pagination.currentPage,
+            curPage: '1',//state.pagination.currentPage
             sortParam: state.sortParam
             // curPage: state.pagination.currentPage
         }

@@ -7,7 +7,7 @@ const LogElem = (props) => {
         return  <td key={n} >{props.items[e.field]}</td>
     })
 
-    return  <tr className={props.name}  >
+    return  <tr onClick={props.onClickCallback} className={props.name}  >
                 {Elements}
             </tr>
 }

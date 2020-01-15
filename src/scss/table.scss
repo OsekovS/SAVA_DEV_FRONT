@@ -8,3 +8,13 @@ table{
     }
     
 }
+.Modules_table{
+    width: 100%;
+    border-spacing: 0;
+    tr:nth-child(2n){
+        background-color: $lightGrey-color;
+    }
+    img{
+        cursor: pointer;
+    }
+}

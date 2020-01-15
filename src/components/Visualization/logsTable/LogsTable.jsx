@@ -16,22 +16,25 @@ class rawLogsTable extends React.Component {
             uploadsSetter: 'collapsed'
         }
         console.log(this.props)
-        this.intervalId = setInterval(
-          ()=>{console.log('---------------GETACS------------------') 
-          this.props.getAcs({
-            "need": "logs",
-            "timeFilter": {
-              from: 'now-'+this.props.uploads.from_number+this.props.uploads.from_time_type+'/'+this.props.uploads.from_time_type,
-              to:  this.props.uploads.to
-            },
-            "paramsFilter": this.props.paramFilter,
-            logsCount: this.props.pagination.showedLogs,
-            curPage: this.props.pagination.currentPage,
-            sortParam: this.props.sortParam
-        })},
-        this.props.uploads.timeKind*this.props.uploads.timeNum);
+        if(this.props.uploads.uploads){
+          this.intervalId = setInterval(
+            ()=>{console.log('---------------GETACS------------------') 
+            this.props.getAcs({
+              "need": "logs",
+              "timeFilter": {
+                from: 'now-'+this.props.uploads.from_number+this.props.uploads.from_time_type+'/'+this.props.uploads.from_time_type,
+                to:  this.props.uploads.to
+              },
+              "paramsFilter": this.props.paramFilter,
+              logsCount: this.props.pagination.showedLogs,
+              curPage: this.props.pagination.currentPage,
+              sortParam: this.props.sortParam
+          })},
+          this.props.uploads.timeKind*this.props.uploads.timeNum);
+        }
         this.onChangeFilterMode = this.onChangeFilterMode.bind(this);
         this.ChangeUploadsDisplay = this.ChangeUploadsDisplay.bind(this)
+
     }
 
     componentDidMount() {
@@ -77,8 +80,7 @@ class rawLogsTable extends React.Component {
     componentWillReceiveProps(nextProps){
       // Проверяем изменился ли фильтр и временные рамки
       let equal = this.isObjEqual(nextProps.uploads,this.props.uploads) && this.isObjEqual(nextProps.paramFilter,this.props.paramFilter)  && this.isObjEqual(this.props.paramFilter,nextProps.paramFilter) 
-      if(!equal){//this.state.intervalId!==undefined
-        console.log('CHANGE!!!!!!!!!!!!!!')  
+      if(!equal){
         if(this.intervalId!==undefined){
           clearInterval(this.intervalId);
         }
@@ -134,18 +136,29 @@ class rawLogsTable extends React.Component {
                       {text:'Направление', type:'text', field:'route'},
                       {text:'Владелец', type:'text', field:'person'}
                     ]
-    
+    footerElements = [
+                      {text:'Номер карты: ', field:'pass_number'},
+                      {text:'ip конечной точки: ', field:'ip_device'},      
+    ]
     tableHeader(){
       let elements = this.headerElements.map((e,numb) => <td key={numb}>{e}</td>)
       return <tr>{elements}</tr>
     }
     render() {  
-        let Elements = this.props.logs.map(e => <LogElem viewed={this.headerElements} name='' items={e} />)
-        // Elements.unshift(<TableHeader className={'logs-table__header'} items={this.headerElements} current={this.props.sortParam} clickCallBack={this.props.changeSortThunk}/>)
+        let Elements = this.props.logs.map((e,number) => <LogElem viewed={this.headerElements} name={this.props.curLog===number?'Modules_table__current':''} items={e} onClickCallback={()=>{this.props.onChangeCurrentLog(number)}}/>)
         let showedLogsList = this.props.pagination.showedLogsList.map((e,index) => {
         if(e===this.props.pagination.showedLogs) return <li onClick={this.props.changeShowedLogsThunk.bind(this, e)} className="showed-logs__current" key={index} >{e}</li>
         else return <li onClick={this.props.changeShowedLogsThunk.bind(this, e)} key={index} >{e}</li>
         })
+        let curLog,footerElements
+        if(this.props.curLog!==null){
+            curLog = this.props.logs[this.props.curLog]
+            footerElements = this.footerElements.map((e) => {
+            return <li>
+              {e.text+curLog[e.field]}
+            </li>
+        })}
+
         return <div className="devices-logs">
                   <header className="Common__header Common__header_red Common__header_with-filter">
                   События СКУД
@@ -160,7 +173,6 @@ class rawLogsTable extends React.Component {
                       from_number={this.props.uploads.from_number} from_time_type={this.props.uploads.from_time_type}/>
                   <FilterPanel iniState={this.props.paramFilter} submitCallBack={(filter)=>{this.props.setParamFilterThunk(filter)}}/>
                   </header>    
-                  {/* Modules_table Modules_table__cam-dev */}
                   {Elements.length  > 0 ?<TableHeader className={'logs-table__header'} items={this.headerElements} current={this.props.sortParam} clickCallBack={this.props.changeSortThunk}/>:null}
                   <div className='table-wrapper'>
                     <table className="Modules_table Modules_table-logs">
@@ -177,6 +189,7 @@ class rawLogsTable extends React.Component {
                         {showedLogsList}
                     </ul>
                     <PagesBar callBack={this.props.changePageThunk.bind(this)} pagination={this.props.pagination}/>
+                    {this.props.curLog !== null ?<div className="additional-info"><h2>Дополнительная информация о выбранном событии:</h2><ul>{footerElements}</ul></div>:null}
                   </footer>
             </div>
     }

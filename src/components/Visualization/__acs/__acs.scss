@@ -63,9 +63,13 @@
         display: flex;
         justify-content: space-between;
         padding: 0 20px;
+        flex-wrap: wrap;
         .showed-logs::before{
             content: 'Количество логов на странице: ';
             margin-right: 10px;
+        }
+        .additional-info{
+            width: 100%;
         }
     }
 }
