@@ -1,5 +1,6 @@
 import * as axios from 'axios'
 import moment from "moment"
+import {acsIni} from './IniStates.js'
 
 const DEL_ENDP = 'DEL_ACS_ENDP';
 const DEL_OBJ = 'DEL_ACS_OBJ';
@@ -15,104 +16,10 @@ const CHANGE_PAGE = 'CHANGE_PAGE'
 const CHANGE_SHOWED_LOGS = 'CHANGE_SHOWED_LOGS'
 const CHANGE_SORT_PARAM = 'CHANGE_SORT_PARAM'
 const CHANGE_CURRENT_LOG = 'CHANGE_CURRENT_LOG'
+const UPLOAD_DASHBOARDS = 'UPLOAD_DASHBOARDS'
 
-let initialState = function(){
-    let now = new Date()
-    let toDate = moment((new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(),now.getMinutes(),now.getSeconds(),0)))
-    let fromDate = moment((new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(),now.getMinutes(),now.getSeconds(),0))).subtract(60, "days")
-//    console.log(toDate)
-//    console.log(fromDate)
-    return {
-        settings: {
-        mode: 'view',//'view',
-        objects: [
-            {id: '0', name: 'Санаторий Звенигород'},
-            {id: '1', name: 'Больница №46'},
-            {id: '2', name: 'Детский сад "Яблочко"'},
-            {id: '3', name: 'Офис'}
-        ],
-        endpoints:  [{
-            id: '0',
-            object: 'Санаторий Звенигород',
-            ip: '111.111.11.11',
-            name: 'Заезд для машин',
-            port: '3000',
-            login: '3ojA'
-        },
-        {
-            id: '1',
-            object: 'Больница №46',
-            ip: '222.222.22.22',
-            name: 'Главный вход',
-            port: '3000',
-            login: '2miZ'
-        },
-        {
-            id: '2',
-            object: 'Детский сад "Яблочко"',
-            ip: '444.444.444.444',
-            name: 'Северный вход',
-            port: '3000',
-            login: 'aiZ'
-        }]
-        },
-        logs: {
-            logs:  [{
-                "time":"2019\/11\/06 12:53:11",
-                "ip_cam":"192.168.3.109",
-                "type":"Event",
-                "comment":"Motion detect",
-                "param":"2019-11-06 12:50:40"
-            },
-            {
-                "time":"2019\/11\/06 12:53:11",
-                "ip_cam":"192.168.3.109",
-                "type":"Event",
-                "comment":"Motion detect",
-                "param":"2019-11-06 12:51:37"
-            }],
-            bar1: {series: [{
-                data: [13, 17, 19]           
-                }],
-                xLabels : ['-','e','x']
-            },
-            bar2: {series: [{
-                data: [13, 17, 19]           
-                }],
-                xLabels : ['xz','e','x']
-            },
-            timeFilter: {
-                from: fromDate,
-                to: toDate
-            },
-            uploads: {
-              uploads: false,
-              timeKind: 1,
-              timeNum: 10000,
-              from_number: '2',
-              from_time_type: 'M',
-              to: "now/d"
-            },
-            paramFilter: {},
-            pagination: {
-                total: '',
-                currentPage: 1,
-                fromPage: 1,
-                showedPages: 5,
-                lastPage: '',
-                showedLogs: 100,
-                showedLogsList: [50, 100, 250, 500]
-            },
-            sortParam: {
-                type:'date',
-                field:'time',
-                direction: 'asc'
-            },
-            curLog: null
-        }
-       
-    }
-}()
+let initialState = acsIni()
+
 
 let translator = {
     'addObj': {
@@ -132,8 +39,33 @@ let translator = {
 const acsReducer = (state = initialState, action) => {
     let stateCopy
    switch (action.type) {
+       case UPLOAD_DASHBOARDS:
+        //    console.log
+        //    console.log(JSON.parse(action.json.dashboards[0][3]))
+        //    console.log(JSON.parse(action.json.dashboards[1][3]))
+        stateCopy = {...state};
+        let now = new Date()
+        stateCopy.dashboards = action.json.dashboards.map((dash) => {
+        console.log(dash)
+        let body = JSON.parse(dash[3])   
+        let toDate = moment((new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(),now.getMinutes(),now.getSeconds(),0)))
+        let fromDate = moment((new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(),now.getMinutes(),now.getSeconds(),0))).subtract(body.timeFilter.from.number, body.timeFilter.from.type)
+            
+            body.timeFilter= {
+                from: fromDate,
+                to: toDate
+            }
+            
+            return {
+                id: dash[0],
+                name: dash[1],
+                type: dash[2],
+                body: body,
+                // logs: []
+            }
+        });
+           return stateCopy
        case ADD_ENDP:
-            // console.log(action)
             if(action.obj_num === undefined) action.obj_num = 1;
             let new_endp = {
                 id: state.settings.endpoints.length,
@@ -148,7 +80,6 @@ const acsReducer = (state = initialState, action) => {
             stateCopy.settings.endpoints = state.settings.endpoints.map((e) => e);
             stateCopy.settings.endpoints.push(new_endp);
             stateCopy.settings.mode = 'view'
-            // return state;
             return stateCopy;
        case DEL_ENDP:
             stateCopy = {...state};
@@ -171,7 +102,6 @@ const acsReducer = (state = initialState, action) => {
             stateCopy = {...state};
             stateCopy.settings = {...state.settings};
             stateCopy.settings.mode = action.mode
-            // console.log(stateCopy)
             return stateCopy
         case UPLOAD_ACS:
             stateCopy = {...state};
@@ -188,30 +118,39 @@ const acsReducer = (state = initialState, action) => {
                 }))
             }
             else{
-                // console.log(state.logs.bar.series)
-                stateCopy.logs.logs = action.json.logs.map( (e) => e._source)
-                stateCopy.logs.bar1.series = [{data: Object.values(action.json.bar1.series.data)}]
-                stateCopy.logs.bar1.xLabels = Object.values(action.json.bar1.xLabels);
-                stateCopy.logs.bar2.series = [{data: Object.values(action.json.bar2.series.data)}]
-                stateCopy.logs.bar2.xLabels = Object.values(action.json.bar2.xLabels);
-                stateCopy.logs.pagination.total = action.json.total
-                stateCopy.logs.pagination.lastPage = Math.ceil(action.json.total/stateCopy.logs.pagination.showedLogs)
-                // console.log(stateCopy.logs.bar.series)
+                // stateCopy.logs.logs = action.json.logs.map( (e) => e._source)
+                // stateCopy.logs.pagination.total = action.json.total
+                // stateCopy.logs.pagination.lastPage = Math.ceil(action.json.total/stateCopy.logs.pagination.showedLogs)
+                stateCopy.dashboards = {...state.dashboards}
+                stateCopy.dashboards[action.id] = {...state.dashboards[action.id]}
+                stateCopy.dashboards[action.id].body = {...state.dashboards[action.id].body}
+                stateCopy.dashboards[action.id].body.logs = action.json.logs.map( (e) => e._source)
+
+                stateCopy.dashboards[action.id].body.LAGZ = action.json.logs.map( (e) => e._source)
+                stateCopy.dashboards[action.id].body.pagination.total = action.json.total
+                stateCopy.dashboards[action.id].body.pagination.lastPage = Math.ceil(action.json.total/stateCopy.logs.pagination.showedLogs)
             }
+            // console.log(stateCopy)
                 return stateCopy
         case CHANGE_TIME:
-            console.log(moment(action.startDate).format('YYYY/MM/DD HH:MM:SS')) //"2019/12/16 14:00:00 YYYY/MM/DD HH:MM:SS
             stateCopy = {...state};
-            stateCopy.logs = {...state.logs}
-            stateCopy.logs.timeFilter = {...state.logs.timeFilter}
-            stateCopy.logs.timeFilter.from = moment(action.startDate)
-            stateCopy.logs.timeFilter.to = moment(action.endDate)
-            
+            stateCopy.dashboards = {...state.dashboards}
+            stateCopy.dashboards[action.id] = {...state.dashboards[action.id]}
+            stateCopy.dashboards[action.id].body = {...state.dashboards[action.id].body}
+  
+            stateCopy.dashboards[action.id].body.timeFilter = {...state.dashboards[action.id].body.timeFilter}
+            stateCopy.dashboards[action.id].body.timeFilter.from = (action.startDate)
+            stateCopy.dashboards[action.id].body.timeFilter.to = (action.endDate)
+            // stateCopy.logs = {...state.logs}
+            // stateCopy.logs.timeFilter = {...state.logs.timeFilter}
+            // stateCopy.logs.timeFilter.from = (action.startDate)
+            // stateCopy.logs.timeFilter.to = (action.endDate)
             return stateCopy
         case CHANGE_PARAM_FILTER:
+
             stateCopy = {...state};
-            stateCopy.logs = {...state.logs}
-            
+            stateCopy.dashboards = {...state.dashboards}
+            stateCopy.dashboards[action.id].body = {...state.dashboards[action.id].body}
             let copyData = {...action.filter}
             console.log(copyData)
             if(copyData.devices!==undefined){
@@ -227,76 +166,164 @@ const acsReducer = (state = initialState, action) => {
             }
             delete copyData.devices
             }
-            stateCopy.logs.paramFilter = copyData
+            stateCopy.dashboards[action.id].body.paramFilter = copyData
             return stateCopy
+
+            // stateCopy = {...state};
+            // stateCopy.logs = {...state.logs}
+            
+            // let copyData = {...action.filter}
+            // console.log(copyData)
+            // if(copyData.devices!==undefined){
+            //     copyData.device = []
+            //     copyData.ip_device = []
+            // for (const device of copyData.devices) {
+            //     copyData.device.push(
+            //     device.split(' ')[0]
+            //     )
+            //     copyData.ip_device.push(
+            //     device.split(' ')[1].slice(1,-1)
+            //     )
+            // }
+            // delete copyData.devices
+            // }
+            // stateCopy.logs.paramFilter = copyData
+            // return stateCopy
         case CHANGE_UPLOAD:
-            stateCopy = {...state}
-            stateCopy.logs = {...state.logs}
-            stateCopy.logs.uploads = {...state.logs.uploads}
-            stateCopy.logs.uploads.uploads = action.uploads
+            stateCopy = {...state};
+            stateCopy.dashboards = {...state.dashboards}
+            stateCopy.dashboards[action.id] = {...state.dashboards[action.id]}
+            stateCopy.dashboards[action.id].body = {...state.dashboards[action.id].body}
+            stateCopy.dashboards[action.id].body.uploads = action.uploads
+            // stateCopy = {...state}
+            // stateCopy.logs = {...state.logs}
+            // stateCopy.logs.uploads = {...state.logs.uploads}
+            // stateCopy.logs.uploads.uploads = action.uploads
             return stateCopy
         case CHANGE_UPLOAD_PARAMS:
-            stateCopy = {...state}
-            stateCopy.logs = {...state.logs}
-            stateCopy.logs.uploads = {...state.logs.uploads}
-            stateCopy.logs.uploads.timeNum = action.params.timeNum
-            stateCopy.logs.uploads.timeKind = parseInt(action.params.timeKind)
-            stateCopy.logs.uploads.from_number = action.params.from_number
-            stateCopy.logs.uploads.from_time_type = action.params.from_time_type
-            console.log(action)
+            stateCopy = {...state};
+            stateCopy.dashboards = {...state.dashboards}
+            stateCopy.dashboards[action.id] = {...state.dashboards[action.id]}
+            stateCopy.dashboards[action.id].body = {...state.dashboards[action.id].body}
+            stateCopy.dashboards[action.id].body.uploads = {...state.dashboards[action.id].body.uploads}
+
+            stateCopy.dashboards[action.id].body.uploads.timeNum = action.params.timeNum
+            stateCopy.dashboards[action.id].body.uploads.timeKind = parseInt(action.params.timeKind)
+            stateCopy.dashboards[action.id].body.uploads.from_number = action.params.from_number
+            stateCopy.dashboards[action.id].body.uploads.from_time_type = action.params.from_time_type
+
+            
+            // stateCopy = {...state}
+            // stateCopy.logs = {...state.logs}
+            // stateCopy.logs.uploads = {...state.logs.uploads}
+            // stateCopy.logs.uploads.timeNum = action.params.timeNum
+            // stateCopy.logs.uploads.timeKind = parseInt(action.params.timeKind)
+            // stateCopy.logs.uploads.from_number = action.params.from_number
+            // stateCopy.logs.uploads.from_time_type = action.params.from_time_type
             return stateCopy
         case CHANGE_PAGE:
             console.log(action.page)
-            stateCopy = {...state}
-            stateCopy.logs = {...state.logs}
-            stateCopy.logs.pagination = {...state.logs.pagination}
-            // if(action.page===state.logs.pagination.lastPage)
-            if(action.page===1) stateCopy.logs.pagination.fromPage = 1
+            stateCopy = {...state};
+            stateCopy.dashboards = {...state.dashboards}
+            stateCopy.dashboards[action.id] = {...state.dashboards[action.id]}
+            stateCopy.dashboards[action.id].body = {...state.dashboards[action.id].body}
+            stateCopy.dashboards[action.id].body.pagination = {...state.dashboards[action.id].body.pagination}
+            if(action.page===1) stateCopy.dashboards[action.id].body.pagination.fromPage = 1
             else{
-                if(action.page===state.logs.pagination.fromPage+state.logs.pagination.showedPages-1 && action.page !== state.logs.pagination.lastPage){
-                    stateCopy.logs.pagination.fromPage = state.logs.pagination.fromPage + state.logs.pagination.showedPages - 2
-                }else if(action.page===state.logs.pagination.lastPage){
-                    if(Math.ceil(state.logs.pagination.total/state.logs.pagination.showedLogs)<state.logs.pagination.showedPages)
-                        stateCopy.logs.pagination.fromPage = state.logs.pagination.lastPage - Math.ceil(state.logs.pagination.total/state.logs.pagination.showedLogs) + 1
-                    else stateCopy.logs.pagination.fromPage = state.logs.pagination.lastPage - state.logs.pagination.showedPages + 1
-                }else if(action.page===state.logs.pagination.fromPage){
-                    let fromPage =state.logs.pagination.fromPage - state.logs.pagination.showedPages + 2
-                    if(fromPage===0) stateCopy.logs.pagination.fromPage = 1
-                    else  stateCopy.logs.pagination.fromPage = fromPage
+                if(action.page===state.dashboards[action.id].body.pagination.fromPage+state.dashboards[action.id].body.pagination.showedPages-1 && action.page !== state.dashboards[action.id].body.pagination.lastPage){
+                    stateCopy.dashboards[action.id].body.pagination.fromPage = state.dashboards[action.id].body.pagination.fromPage + state.dashboards[action.id].body.pagination.showedPages - 2
+                }else if(action.page===state.dashboards[action.id].body.pagination.lastPage){
+                    if(Math.ceil(state.dashboards[action.id].body.pagination.total/state.dashboards[action.id].body.pagination.showedLogs)<state.dashboards[action.id].body.pagination.showedPages)
+                        stateCopy.dashboards[action.id].body.pagination.fromPage = state.dashboards[action.id].body.pagination.lastPage - Math.ceil(state.dashboards[action.id].body.pagination.total/state.dashboards[action.id].body.pagination.showedLogs) + 1
+                    else stateCopy.dashboards[action.id].body.pagination.fromPage = state.dashboards[action.id].body.pagination.lastPage - state.dashboards[action.id].body.pagination.showedPages + 1
+                }else if(action.page===state.dashboards[action.id].body.pagination.fromPage){
+                    let fromPage =state.dashboards[action.id].body.pagination.fromPage - state.dashboards[action.id].body.pagination.showedPages + 2
+                    if(fromPage===0) stateCopy.dashboards[action.id].body.pagination.fromPage = 1
+                    else  stateCopy.dashboards[action.id].body.pagination.fromPage = fromPage
                 }
             }
-            stateCopy.logs.pagination.currentPage = action.page
+            stateCopy.dashboards[action.id].body.pagination.currentPage = action.page
             return stateCopy
+            
+            // stateCopy = {...state}
+            // stateCopy.logs = {...state.logs}
+            // stateCopy.logs.pagination = {...state.logs.pagination}
+            // if(action.page===1) stateCopy.logs.pagination.fromPage = 1
+            // else{
+            //     if(action.page===state.logs.pagination.fromPage+state.logs.pagination.showedPages-1 && action.page !== state.logs.pagination.lastPage){
+            //         stateCopy.logs.pagination.fromPage = state.logs.pagination.fromPage + state.logs.pagination.showedPages - 2
+            //     }else if(action.page===state.logs.pagination.lastPage){
+            //         if(Math.ceil(state.logs.pagination.total/state.logs.pagination.showedLogs)<state.logs.pagination.showedPages)
+            //             stateCopy.logs.pagination.fromPage = state.logs.pagination.lastPage - Math.ceil(state.logs.pagination.total/state.logs.pagination.showedLogs) + 1
+            //         else stateCopy.logs.pagination.fromPage = state.logs.pagination.lastPage - state.logs.pagination.showedPages + 1
+            //     }else if(action.page===state.logs.pagination.fromPage){
+            //         let fromPage =state.logs.pagination.fromPage - state.logs.pagination.showedPages + 2
+            //         if(fromPage===0) stateCopy.logs.pagination.fromPage = 1
+            //         else  stateCopy.logs.pagination.fromPage = fromPage
+            //     }
+            // }
+            // stateCopy.logs.pagination.currentPage = action.page
+            // return stateCopy
         case CHANGE_SHOWED_LOGS:
-            stateCopy = {...state}
-            stateCopy.logs = {...state.logs}
-            stateCopy.logs.pagination = {...state.logs.pagination}
-            for (let element of  state.logs.pagination.showedLogsList) {
+            stateCopy = {...state};
+            stateCopy.dashboards = {...state.dashboards}
+            stateCopy.dashboards[action.id] = {...state.dashboards[action.id]}
+            stateCopy.dashboards[action.id].body = {...state.dashboards[action.id].body}
+            stateCopy.dashboards[action.id].body.pagination = {...state.dashboards[action.id].body.pagination}
+            for (let element of  state.dashboards[action.id].body.pagination.showedLogsList) {
                 if (element===action.showedLogs) {
-                    stateCopy.logs.pagination.showedLogs = action.showedLogs
-                    stateCopy.logs.pagination.lastPage = Math.ceil(state.logs.pagination.total/action.showedLogs)
-                    stateCopy.logs.pagination.currentPage = 1
-                    stateCopy.logs.pagination.fromPage = 1
+                    stateCopy.dashboards[action.id].body.pagination.showedLogs = action.showedLogs
+                    stateCopy.dashboards[action.id].body.pagination.lastPage = Math.ceil(state.dashboards[action.id].body.pagination.total/action.showedLogs)
+                    stateCopy.dashboards[action.id].body.pagination.currentPage = 1
+                    stateCopy.dashboards[action.id].body.pagination.fromPage = 1
                     break;
                 }
             }
+
+            // stateCopy = {...state}
+            // stateCopy.logs = {...state.logs}
+            // stateCopy.logs.pagination = {...state.logs.pagination}
+            // for (let element of  state.logs.pagination.showedLogsList) {
+            //     if (element===action.showedLogs) {
+            //         stateCopy.logs.pagination.showedLogs = action.showedLogs
+            //         stateCopy.logs.pagination.lastPage = Math.ceil(state.logs.pagination.total/action.showedLogs)
+            //         stateCopy.logs.pagination.currentPage = 1
+            //         stateCopy.logs.pagination.fromPage = 1
+            //         break;
+            //     }
+            // }
             
             return stateCopy
         case CHANGE_SORT_PARAM:
-            stateCopy = {...state}
-            stateCopy.logs = {...state.logs}
-
-            if(action.sortParam.field===state.logs.sortParam.field){
-                stateCopy.logs.sortParam = {...state.logs.sortParam}
-                stateCopy.logs.sortParam.direction=stateCopy.logs.sortParam.direction==='asc'?'desc':'asc'
+            stateCopy = {...state};
+            stateCopy.dashboards = {...state.dashboards}
+            stateCopy.dashboards[action.id] = {...state.dashboards[action.id]}
+            stateCopy.dashboards[action.id].body = {...state.dashboards[action.id].body}
+            if(action.sortParam.field===state.dashboards[action.id].body.sortParam.field){
+                stateCopy.dashboards[action.id].body.sortParam = {...state.dashboards[action.id].body.sortParam}
+                stateCopy.dashboards[action.id].body.sortParam.direction=stateCopy.dashboards[action.id].body.sortParam.direction==='asc'?'desc':'asc'
             }
             else{
-                stateCopy.logs.sortParam = {
+                stateCopy.dashboards[action.id].body.sortParam = {
                     type: action.sortParam.type,
                     field: action.sortParam.field,
                     direction: 'asc'
                 }
             }
+            // stateCopy = {...state}
+            // stateCopy.logs = {...state.logs}
+
+            // if(action.sortParam.field===state.logs.sortParam.field){
+            //     stateCopy.logs.sortParam = {...state.logs.sortParam}
+            //     stateCopy.logs.sortParam.direction=stateCopy.logs.sortParam.direction==='asc'?'desc':'asc'
+            // }
+            // else{
+            //     stateCopy.logs.sortParam = {
+            //         type: action.sortParam.type,
+            //         field: action.sortParam.field,
+            //         direction: 'asc'
+            //     }
+            // }
             return stateCopy
         case CHANGE_CURRENT_LOG:
             stateCopy = {...state}
@@ -322,48 +349,101 @@ export const addObj = ({id, name}) =>
 export const changeMode = (mode) =>
 ({ type: CHANGE_MODE, mode: mode })
 
-export const TimeFilter = (startDate, endDate) =>
-({type: CHANGE_TIME, startDate, endDate})
+export const TimeFilter = (startDate, endDate,id) =>
+({type: CHANGE_TIME, startDate, endDate,id})
 
-export const uploadAcs = (json,reqObj) =>
-({ type: UPLOAD_ACS, json, need: reqObj.need })
+export const uploadAcs = (json,reqObj,id) =>
+({ type: UPLOAD_ACS, json, need: reqObj.need, id })
 
-export const ParamFilter = (filter) =>
-({type: CHANGE_PARAM_FILTER, filter})
+export const ParamFilter = (filter,id) =>
+({type: CHANGE_PARAM_FILTER, filter,id})
 
 export const onChangeCurrentLog = (number) =>
 ({type: CHANGE_CURRENT_LOG, number})
 
-export const changePage = (page) =>
-({type: CHANGE_PAGE, page})
+export const changePage = (page,id) =>
+({type: CHANGE_PAGE, page,id})
 
-export const changeUploads = (uploads) => ({ type: CHANGE_UPLOAD, uploads})
-export const changeUpdatesParams = (params) => ({ type: CHANGE_UPLOAD_PARAMS, params})
-export const changeShowedLogs = (showedLogs) => ({ type: CHANGE_SHOWED_LOGS, showedLogs})
-export const changeSortParam = (sortParam) => ({ type: CHANGE_SORT_PARAM, sortParam})
+export const changeUploads = (uploads,id) => ({ type: CHANGE_UPLOAD, uploads,id})
+export const changeUpdatesParams = (params,id) => ({ type: CHANGE_UPLOAD_PARAMS, params,id})
+export const changeShowedLogs = (showedLogs,id) => ({ type: CHANGE_SHOWED_LOGS, showedLogs,id})
+export const changeSortParam = (sortParam,id) => ({ type: CHANGE_SORT_PARAM, sortParam,id})
+export const uploadDashboards = (json) => ({type: UPLOAD_DASHBOARDS, json})
 
-export const getAcs = (reqObj) => {
-    console.log('send!')
-    // if(reqObj.need==='logs'){
-    //     reqObj = {...reqObj, timeFilter: {} } 
-    // }
-    return (dispatch) => {
+export const getAcs = (indexName,id) => {
+    return (dispatch,getState) => {
+        let state = getState().acs.logs
         // console.log('acs-form-processor.php')
-        axios.post("php/acs-form-processor.php", reqObj).then(response => {
-            console.log(response)
-            let json = JSON.parse(response.request.response);
-            console.log(json)
-            dispatch(uploadAcs(json,reqObj));
-        }).catch(function (error) {
-            // handle error
-            console.log(error);
-          })
-          .finally(function () {
-            // always executed
-          });;
+        let timeFilter = {}
+        if(state.uploads.uploads){
+            timeFilter = {
+                from: getFromDate(state.uploads.from_number,state.uploads.from_time_type).format('YYYY/MM/DD HH:mm:ss'),
+                 to:  state.uploads.to
+            }
+        }
+        else{
+            timeFilter = {
+                from: state.timeFilter.from.format('YYYY/MM/DD HH:mm:ss'),
+                to:  state.timeFilter.to.format('YYYY/MM/DD HH:mm:ss'),
+            }
+        }
+        let reqObj={
+                "need": "logs",
+                indexName,
+                timeFilter,
+                paramsFilter: state.paramFilter,
+                logsCount: state.pagination.showedLogs,
+                curPage: state.pagination.currentPage,
+                sortParam: state.sortParam
+            }
+            uniThunk(reqObj,[],dispatch,id)
     }
 }
+//РЕДУСЕР ДЛЯ АКС ОБЪЕКТОВ
+// export const getAcs = (reqObj) => {
+//     console.log('send!')
+//     // if(reqObj.need==='logs'){
+//     //     reqObj = {...reqObj, timeFilter: {} } 
+//     // }
+//     return (dispatch) => {
+//         // console.log('acs-form-processor.php')
+//         axios.post("php/acs-form-processor.php", reqObj).then(response => {
+//             console.log(response)
+//             let json = JSON.parse(response.request.response);
+//             console.log(json)
+//             dispatch(uploadAcs(json,reqObj));
+//         }).catch(function (error) {
+//             // handle error
+//             console.log(error);
+//           })
+//           .finally(function () {
+//             // always executed
+//           });;
+//     }
+// }
 
+export const changeUploadsThunk = (uploads,indexName,id) => {//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    
+    return (dispatch,getState) => {
+        let state = getState().acs.dashboards[id].body
+        let timeFilter = {}
+            timeFilter = {
+                from: getFromDate(uploads.from_number,uploads.from_time_type).format('YYYY/MM/DD HH:mm:ss'),
+                 to:  state.uploads.to
+            }
+        let reqObj = {
+            "need": "logs",
+            indexName,
+            timeFilter,
+            "paramsFilter": state.paramFilter,
+            logsCount: state.pagination.showedLogs,
+            curPage: 1,//state.pagination.currentPage
+            sortParam: state.sortParam
+        }
+        uniThunk(reqObj,[changeUpdatesParams(uploads,id),changePage(1,id)],dispatch,id)
+    }
+}
 
 export const addFieldThunk = (reqObj) => {
     console.log(reqObj)
@@ -409,15 +489,16 @@ export const addFieldThunk = (reqObj) => {
     }
 }
 
-export const changeShowedLogsThunk = (showedLogs) => {
+
+export const changeShowedLogsThunk = (showedLogs,indexName,id) => {
 
     
     return (dispatch,getState) => {
-        let state = getState().acs.logs
+        let state = getState().acs.dashboards[id].body
         let timeFilter = {}
         if(state.uploads.uploads){
             timeFilter = {
-                from: 'now-'+state.uploads.from_number+state.uploads.from_time_type+'/'+state.uploads.from_time_type,
+                from: getFromDate(state.uploads.from_number,state.uploads.from_time_type).format('YYYY/MM/DD HH:mm:ss'),
                  to:  state.uploads.to
             }
         }
@@ -429,20 +510,25 @@ export const changeShowedLogsThunk = (showedLogs) => {
         }
         let reqObj = {
             "need": "logs",
-            "timeFilter": timeFilter,
+            indexName,
+            timeFilter,
             "paramsFilter": state.paramFilter,
             logsCount: showedLogs,
-            curPage: '1',//state.pagination.currentPage
+            curPage: 1,//state.pagination.currentPage
             sortParam: state.sortParam
-            // curPage: state.pagination.currentPage
         }
+        uniThunk(reqObj,[changeShowedLogs(showedLogs,id),changePage(1,id)],dispatch,id)
+    }
+}
+const uniThunk = (reqObj,dispatches,dispatch, id) => {
         console.log(reqObj)
         axios.post("php/acs-form-processor.php", reqObj).then(response => {
-            // console.log(response)
+            console.log(response)
             let json = JSON.parse(response.request.response);
             console.log(json)
-            dispatch(uploadAcs(json, reqObj));
-            dispatch(changeShowedLogs(showedLogs));
+            if(reqObj['need']==='logs') dispatch(uploadAcs(json, reqObj, id))
+            if(reqObj['need']==='dashboards') dispatch(uploadDashboards(json))
+            dispatches.forEach(obj => dispatch(obj))
         }).catch(function (error) {
             // handle error
             console.log(error);
@@ -450,17 +536,15 @@ export const changeShowedLogsThunk = (showedLogs) => {
           .finally(function () {
             // always executed
           });;
-    }
 }
-// timeFilter, paramFilter, showedLogs, 
-export const changePageThunk = (page) => {
+export const changePageThunk = (page,indexName,id) => {
     // console.log(reqObj)
-    return (dispatch,getState) => {
-        let state = getState().acs.logs
+    return (dispatch, getState) => {
+        let state = getState().acs.dashboards[id].body
         let timeFilter = {}
         if(state.uploads.uploads){
             timeFilter = {
-                from: 'now-'+state.uploads.from_number+state.uploads.from_time_type+'/'+state.uploads.from_time_type,
+                from: getFromDate(state.uploads.from_number,state.uploads.from_time_type).format('YYYY/MM/DD HH:mm:ss'),
                  to:  state.uploads.to
             }
         }
@@ -472,66 +556,41 @@ export const changePageThunk = (page) => {
         }
         let reqObj = {
             "need": "logs",
+            indexName,
             "timeFilter": timeFilter,
             "paramsFilter": state.paramFilter,
             logsCount: state.pagination.showedLogs,
             curPage: page,
             sortParam: state.sortParam
         }
-        
-        axios.post("php/acs-form-processor.php", reqObj).then(response => {
-            // console.log(response)
-            let json = JSON.parse(response.request.response);
-            console.log(json)
-            dispatch(uploadAcs(json, reqObj));
-            dispatch(changePage(page));
-        }).catch(function (error) {
-            // handle error
-            console.log(error);
-          })
-          .finally(function () {
-            // always executed
-          });;
+        uniThunk(reqObj,[changePage(page,id)],dispatch,id)
     }
-}
-//filter, showedLogs, page, 
-export const setTimeFilterThunk = (startDate, endDate) => {
-       
-        return (dispatch,getState) => {
-            let state = getState().acs.logs
+} 
+
+export const setTimeFilterThunk = (startDate, endDate,indexName,id) => {
+        return (dispatch, getState) => {
+            let state = getState().acs.dashboards[id].body
             let reqObj = {
                 "need": "logs",
+                indexName,
                 "timeFilter": {
-                    from: startDate.format('YYYY/MM/DD HH:MM:SS'),
-                    to:  endDate.format('YYYY/MM/DD HH:MM:SS'),
+                    from: startDate.format('YYYY/MM/DD HH:mm:ss'),
+                    to:  endDate.format('YYYY/MM/DD HH:mm:ss'),
                 },
                 "paramsFilter": state.paramFilter,
                 logsCount: state.pagination.showedLogs,
-                curPage: state.pagination.currentPage,
+                // curPage: state.pagination.currentPage,
+                curPage: 1,
                 sortParam: state.sortParam       
             }
             // console.log('acs-form-processor.php')
-            axios.post("php/acs-form-processor.php", reqObj).then(response => {
-                // console.log(response)
-                let json = JSON.parse(response.request.response);
-                console.log(json)
-                dispatch(uploadAcs(json, reqObj));
-                dispatch(TimeFilter(startDate, endDate))
-                dispatch(changeUploads(false))
-            }).catch(function (error) {
-                // handle error
-                console.log(error);
-              })
-              .finally(function () {
-                // always executed
-              });;
+            uniThunk(reqObj,[TimeFilter(startDate, endDate,id),changeUploads(false,id),changePage(1,id)],dispatch,id)
         }
-        // dispatch(TimeFilter(startDate, endDate));
 
 }
 
 // uploads,timeFilter,filter,showedLogs,page
-export const setParamFilterThunk = (filter) => {
+export const setParamFilterThunk = (filter,indexName,id) => {
     console.log(filter)
     let filterCopy = {}
     for (let param in filter) {
@@ -540,11 +599,12 @@ export const setParamFilterThunk = (filter) => {
     
     delete filterCopy.opened
     return (dispatch,getState) => {
-        let state = getState().acs.logs
+        let state = getState().acs.dashboards[id].body
         let timeFilter = {}
         if(state.uploads.uploads){
             timeFilter = {
-                from: 'now-'+state.uploads.from_number+state.uploads.from_time_type+'/'+state.uploads.from_time_type,
+                // from: 'now-'+state.uploads.from_number+state.uploads.from_time_type+'/'+state.uploads.from_time_type,
+                from: getFromDate(state.uploads.from_number,state.uploads.from_time_type).format('YYYY/MM/DD HH:mm:ss'),
                 to:  state.uploads.to
             }
         }
@@ -556,39 +616,27 @@ export const setParamFilterThunk = (filter) => {
         }
         let  reqObj={
                 "need": "logs",
-                "timeFilter": timeFilter,
+                indexName,
+                timeFilter,
                 "paramsFilter": filterCopy,
                 logsCount: state.pagination.showedLogs,
-                curPage: state.pagination.currentPage,
+                // curPage: state.pagination.currentPage,
+                curPage: 1,
                 sortParam: state.sortParam           
             };
-            axios.post("php/acs-form-processor.php", reqObj).then(response => {
-            console.log(response)
-            let json = JSON.parse(response.request.response);
-            console.log(json)
-            dispatch(uploadAcs(json,reqObj));
-            dispatch(ParamFilter(filterCopy))
-        }).catch(function (error) {
-            // handle error
-            console.log(error);
-            })
-            .finally(function () {
-            // always executed
-            });;
-        // }
-            
+            uniThunk(reqObj,[ParamFilter(filterCopy,id),changePage(1,id)],dispatch,id)          
     }
 }
 
-export const changeSortThunk = (sortParam) => {
-    console.log(sortParam)
+export const changeSortThunk = (sortParam,indexName,id) => {
     return (dispatch,getState) => {
-        let state = getState().acs.logs
+        let state = getState().acs.dashboards[id].body
         let timeFilter,NewSortParam = {}
         if(state.uploads.uploads){
             timeFilter = {
-                from: 'now-'+state.uploads.from_number+state.uploads.from_time_type+'/'+state.uploads.from_time_type,
-                 to:  state.uploads.to
+                // from: 'now-'+state.uploads.from_number+state.uploads.from_time_type+'/'+state.uploads.from_time_type,
+                from: getFromDate(state.uploads.from_number,state.uploads.from_time_type).format('YYYY/MM/DD HH:mm:ss'),
+                to:  state.uploads.to
             }
         }else{
             timeFilter = {
@@ -608,28 +656,40 @@ export const changeSortThunk = (sortParam) => {
         }
         let reqObj = {
             "need": "logs",
-            "timeFilter": timeFilter,
+            indexName,
+            timeFilter,
             "paramsFilter": state.paramFilter,
             logsCount: state.pagination.showedLogs,
             curPage: state.pagination.currentPage,
             sortParam: NewSortParam
         }
-        
-        axios.post("php/acs-form-processor.php", reqObj).then(response => {
-            // console.log(response)
-            let json = JSON.parse(response.request.response);
-            console.log(json)
-            dispatch(uploadAcs(json, reqObj));
-            dispatch(changeSortParam(sortParam))
-        }).catch(function (error) {
-            // handle error
-            console.log(error);
-          })
-          .finally(function () {
-            // always executed
-          });;
+        uniThunk(reqObj,[dispatch(changeSortParam(sortParam,id))],dispatch,id)
     }
 }
 
+export const  getFromDate = (from_number,from_time_type)=>{
+    let a = moment(Date.now())//.subtract(60, "days")
+      switch(from_time_type){
+        case 's':
+          return a.subtract(from_number, "seconds")
+        case 'm':
+          return a.subtract(from_number, "minutes")
+        case 'h':
+          return a.subtract(from_number, "hours")
+        case 'd':
+          return a.subtract(from_number, "days")
+        case 'M':
+          return a.subtract(from_number, "months")
+      }
+  }
+
+export const  getDashboardsThunk = () => {
+    return (dispatch) => {
+    let reqObj = {
+        "need": "dashboards",
+        }
+        uniThunk(reqObj,[],dispatch)
+    }
+}
 
 export default acsReducer;

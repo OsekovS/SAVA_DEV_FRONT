@@ -98,7 +98,7 @@ elemChangeCallBack={onDelObj} elemDellCallBack={onDellEndpoint}/>)
             <header className="Common__header Common__header_red">Список конечных точек</header>
                 <table className="Modules_table Modules_table__cam-dev">
                     <tbody>
-                        <ListElem  name='list-elem list-elem__cameras list-elem__title' items={['', 'ip', 'объект', 'логин']  }/>
+                        {/* <ListElem  name='list-elem list-elem__cameras list-elem__title' items={['', 'ip', 'объект', 'логин']  }/> */}
                         {endpointsElemens}  
                     </tbody>
                 </table>

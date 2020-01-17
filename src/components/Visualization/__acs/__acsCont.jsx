@@ -1,16 +1,15 @@
-import  {getAcs,setTimeFilterThunk,changeUploads,setParamFilterThunk,changeUpdatesParams} from "../../../components/redux/acs-reducer";
+import  {getDashboardsThunk} from "../../../components/redux/acs-reducer";
 import {connect} from "react-redux";
 import __acs from './__acs'
 
 
 let mapStateToProps = (state) => {
     return {
-        bar1:  state.acs.logs.bar1,
-        bar2:  state.acs.logs.bar2,
+        dashboards: state.acs.dashboards
     }
 }
 let mapDispatchToProps = {
-
+    getDashboardsThunk
 }
 
 const AcsLogs = connect(mapStateToProps, mapDispatchToProps)(__acs);

@@ -1,4 +1,4 @@
-@import '../../colors.scss';
+@import '../../../../../colors.scss';
 .logs-table__header{
     td{
         cursor: pointer;
@@ -9,14 +9,6 @@
     }
 }
 .logs-table__arrow{
-    // background-image: url(./multimedia.svg);
-    // height: 5px;
-    // border: 3px solid $red-color;
-    // border-bottom: none;
-    // border-right: none;
-    // -webkit-transform: rotate(90deg);
-    // transform: rotate(-135deg);
-    // width: 5px;
     z-index: -1;
     position: relative;
     top: 2px;

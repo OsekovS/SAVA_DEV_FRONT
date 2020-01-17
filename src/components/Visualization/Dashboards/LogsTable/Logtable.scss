@@ -1,4 +1,4 @@
-@import '../../colors.scss';
+@import '../../../colors.scss';
 .Modules_table{
     
     tr.Modules_table__current{
@@ -11,7 +11,7 @@
     width: 190px;
     margin: 20px;
     position: relative;
-   
+    z-index: -1;
 }
 
 .Modules-table__empty::after{

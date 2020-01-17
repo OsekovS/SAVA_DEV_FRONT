@@ -23,7 +23,7 @@ const options = [
         };
         this.onSubmit = this.onSubmit.bind(this);
         this.onCancel = this.onCancel.bind(this);
-        console.log(this.state)
+       
       }
     
   onChangeField = (keyState,key)=>{
@@ -61,10 +61,12 @@ onCancel(){
 // Отлавливаем клик на любую область
 handleClickOutside(e) {
   // Получаем ссылку на элемент, при клике на который, скрытие не будет происходить
-  const emojiBlock = document.getElementsByClassName('filter')[0]
+  const emojiBlock = document.getElementsByClassName('filter'+this.props.id)[0]
+  
   // console.log(emojiBlock)
   // Проверяем, есть ли в списке родительских или дочерних элементов, вышеуказанный компонент
   if (!e.path.includes(emojiBlock)) {
+    console.log(e.path)
     // Если в области кликнутого элемента нету "emojiBlock", то проверяем ниже
     // Не произведен ли клик на кнопку, открывающую окно смайлов
     // const svgSmileBtn = document.querySelector('.chat-input__smile-btn');
@@ -113,14 +115,14 @@ handleClickOutside(e) {
                     }
                     
 
-                    console.log(needObj)
+                   
                     objects = <Dropdown  iniState={this.state.params[key]===undefined?[]:this.state.params[key]}  name={key} options={options} preview={configObj.translate[key]}  onChangeCallBack={(this.onChangeField.bind(this))}/>
                     // devices = <ObjectDropdown  iniState={this.state[key]===undefined?[]:this.state[key]}  name={'devices'}  preview={'конечные точки'}  obj={needObj}  onChangeCallBack={(this.onChangeField.bind(this))}/>
 
                 }  
         }
         }
-    return <div className='filter'>
+    return <div className={'filter filter'+this.props.id}>
         <span>Настроить фильтр</span>
         <form onSubmit={this.onSubmit} >
         <div className="wrapper">
@@ -134,7 +136,7 @@ handleClickOutside(e) {
         {/* <button onClick={this.onSubmit.bind(this)}>Применить настройки для фильтра</button> */}
         </div>
     }
-    else return <button className='filter'>Настроить фильтр</button>
+    else return <button className={'filter filter'+this.props.id}>Настроить фильтр</button>
 }
 }
 //   const FilterPanel = (props) => {

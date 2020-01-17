@@ -1,0 +1,99 @@
+import React from 'react';
+import Calendar from '../Components/calendar/calendar'
+import FilterPanel from '../Components/FilterPanel/FilterPanel'
+import UploadTimeSetter from '../Components/uploadTimeSetter/UploadTimeSetter.jsx'
+import LogElem from './LogElem/LogElem'
+import PagesBar from './pagesBar/PagesBar'
+import Table from '../Components/Table/Table'
+// import TableHeader from '../../../Common/TableHeader/TableHeader.jsx'
+import ShowedLogsBar from './ShowedLogsBar/ShowedLogsBar'
+import './Logtable.scss'
+import moment from "moment"
+// import  {getFromDate} from "../../../../components/redux/acs-reducer";
+class rawLogsTable extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state={
+            filterMode: false,
+            uploadsSetter: 'collapsed'
+        }
+ 
+        // if(this.props.uploads.uploads){
+        //   this.intervalId = setInterval(()=>{this.props.getAcs(this.props.indexName,this.props.id)},
+        //   this.props.uploads.timeKind*this.props.uploads.timeNum);
+        // }
+
+    }
+
+    componentDidMount() {
+      this.props.getAcs(this.props.indexName,this.props.id)
+    }
+    componentWillUnmount(){
+        // if(this.intervalId!==undefined) clearInterval(this.intervalId);
+    }
+
+    //Проверка одинаковости объектов
+    isObjEqual(obj1,obj2){
+      if(Object.keys(obj1).length!==Object.keys(obj2).length) return false //Объекты не совпадат если у них разное количество свойств
+      for(var propName in obj1){
+        if (!obj2.hasOwnProperty(propName)||obj1[propName].valueOf() !== obj2[propName].valueOf()) { // Есть ли свойства в обоих объектах и Одинаковы ли значения свойст  
+          return false;
+        }
+      }
+      return true
+    }
+    // Изменяется интервал
+    componentWillReceiveProps(nextProps){
+      // console.log(nextProps)
+      // if(this.intervalId!==undefined&&nextProps.uploads.uploads===false){
+      //   clearInterval(this.intervalId);
+      // }else if(nextProps.uploads.uploads&&nextProps.uploads.uploads!==this.props.uploads.uploads){
+      //   this.intervalId = setInterval(()=>{this.props.getAcs(this.props.indexName,this.props.id)}, this.props.uploads.timeKind*this.props.uploads.timeNum);
+      // }
+  }
+
+   
+    tableHeader(){
+      let elements = this.props.headerElements.map((e,numb) => <td key={numb}>{e}</td>)
+      return <tr>{elements}</tr>
+    }
+    render() {  
+        let curLog,footerElements
+        if(this.props.curLog!==null&&this.props.logs.length!==0){
+            curLog = this.props.logs[this.props.curLog]
+            footerElements = this.props.footerElements.map((e) => {
+            return <li>
+              {e.text+curLog[e.field]}
+            </li>
+        })}
+        // console.log(this.props)
+        return <div className="logs-table-wrapper">
+                  <header className="Common__header Common__header_red Common__header_with-filter">
+                    {this.props.title}
+                    <input onChange={()=>this.props.changeUploads(false,this.props.indexName,this.props.id)} type="radio" name="time_period" value="configured_time" checked={!this.props.uploads.uploads}/>
+                    {/* <Calendar applyParentCallback={this.props.setTimeFilterThunk} timeFilter={{from:this.props.timeFilter.from, to:this.props.timeFilter.to}}/> */}
+                    <input onChange={()=>this.props.changeUploads(true,this.props.indexName,this.props.id)} type="radio" name="time_period" value="bynow_time" checked={this.props.uploads.uploads}/>
+                    <UploadTimeSetter  handleSubmit={(updateForm,event)=>{
+                      this.props.changeUploadsThunk(updateForm,this.props.indexName,this.props.id);
+                      this.props.changeUploads(true,this.props.indexName,this.props.id)
+                    }}
+                        timeKind={this.props.uploads.timeKind} timeNum={this.props.uploads.timeNum}
+                        from_number={this.props.uploads.from_number} from_time_type={this.props.uploads.from_time_type}/>
+                    <FilterPanel iniState={this.props.paramFilter} submitCallBack={(filter)=>{this.props.setParamFilterThunk(filter,this.props.indexName,this.props.id)}} id={this.props.id}/>
+                  </header>    
+                  <Table logs={this.props.logs} headerElements={this.props.headerElements} curLog={this.props.curLog} onClickCallback={this.props.onChangeCurrentLog} sortParam={this.props.sortParam} changeSortThunk={this.props.changeSortThunk} indexName={this.props.indexName} id={this.props.id}/>
+                  <footer>
+                    <span>Всего событий: {this.props.pagination.total}</span>
+                    <ShowedLogsBar showedLogs={this.props.pagination.showedLogs} showedLogsList={this.props.pagination.showedLogsList} onClickCallback={this.props.changeShowedLogsThunk} indexName={this.props.indexName} id={this.props.id}/>
+                    <PagesBar callBack={this.props.changePageThunk} pagination={this.props.pagination} indexName={this.props.indexName} id={this.props.id}/>
+                    {this.props.curLog !== null ?<div className="additional-info"><h2>Дополнительная информация о выбранном событии:</h2><ul>{footerElements}</ul></div>:null}
+                  </footer>
+            </div>
+    }
+  }
+
+
+
+
+export default rawLogsTable;

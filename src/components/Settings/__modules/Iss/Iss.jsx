@@ -89,7 +89,7 @@ const Iss = (props) => {
             <header className="Common__header Common__header_red">Список конечных точек</header>
             <table className="Modules_table Modules_table__cam-dev">
                 <tbody>
-                    <ListElem  name='list-elem list-elem__cameras list-elem__title' items={['', 'объект' , 'порт', 'ip адрес']  }/>
+                    {/* <ListElem  name='list-elem list-elem__cameras list-elem__title' items={['', 'объект' , 'порт', 'ip адрес']  }/> */}
                     {endpointsElemens}  
                 </tbody>
             </table>

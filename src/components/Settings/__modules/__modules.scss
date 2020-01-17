@@ -2,6 +2,11 @@
 @import '../../../scss/button.scss';
 .Settings__modules{
     display: flex;
+    .Modules_table {
+        td.icon{
+            width: 40px;
+        }
+    }
     button{
         @include button($red-color,120px,30px);
     }

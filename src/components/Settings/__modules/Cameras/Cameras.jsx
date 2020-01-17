@@ -120,7 +120,7 @@ class Cameras extends React.Component {
         <header className="Common__header Common__header_red">Список камер</header>
         <table className="Modules_table Modules_table__cam-dev">
             <tbody>
-                <ListElem  name='list-elem list-elem__cameras list-elem__title' items={['','объект', 'имя' , 'ip адрес', 'логин']  }/>
+                {/* <ListElem  name='list-elem list-elem__cameras list-elem__title' items={['','объект', 'имя' , 'ip адрес', 'логин']  }/> */}
                 {camerasElements}   
             </tbody>
         </table>
@@ -130,7 +130,7 @@ class Cameras extends React.Component {
         <header className="Common__header Common__header_red">Список регистраторов</header>
         <table className="Modules_table Modules_table__cam-dev">
             <tbody>
-            <ListElem  name='list-elem list-elem__cameras list-elem__title' items={['','объект', 'имя' , 'ip адрес', 'логин']  }/>
+            {/* <ListElem  name='list-elem list-elem__cameras list-elem__title' items={['','объект', 'имя' , 'ip адрес', 'логин']  }/> */}
                 {registratorsElements}
             </tbody>
         </table>
