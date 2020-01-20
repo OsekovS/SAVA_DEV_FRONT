@@ -16,8 +16,8 @@ class __acs extends React.Component {
     this.props.getDashboardsThunk()
   }
   componentWillReceiveProps(nextProps){
-    console.log(this.props)
-    console.log(nextProps)
+    // console.log(this.props)
+    // console.log(nextProps)
 }
   render() {
     // console.log(this.props.logs.length)

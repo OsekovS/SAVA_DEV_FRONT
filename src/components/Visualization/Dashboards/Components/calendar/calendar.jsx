@@ -35,6 +35,7 @@ class Wrapper extends React.Component {
     }
 
     render(){  
+        // console.log(this.props)
             let now = new Date();
             let start = this.props.timeFilter.from;
             let end =  this.props.timeFilter.to;
@@ -78,9 +79,9 @@ class Wrapper extends React.Component {
             let redTheme= 'rgb(236, 28, 36)'
             let whiteTheme= 'rgb(255, 255, 255)'
             let greyTheme = '#e0e0e0'
-
+//DateTimeRangeContainer 
             return(
-                    <DateTimeRangeContainer 
+                    <DateTimeRangeContainer
                         ranges={ranges}
                         start={start}
                         end={end}
@@ -96,9 +97,10 @@ class Wrapper extends React.Component {
                             customRangeSelected: {backgroundColor: redTheme},
                             standaloneLayout:{display:'flex', maxWidth:'fit-content'},
                             hoverColourApply: {backgroundColor: redTheme},
-                        }}>    
+                        }}
+                        >    
                         <FormControl
-                        id="formControlsTextB"
+                        id={"formControlsTextB"+this.props.id}
                         type="text"
                         label="Text"
                         placeholder="Enter text"

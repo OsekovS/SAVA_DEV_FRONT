@@ -19,18 +19,19 @@ class rawLogsTable extends React.Component {
             uploadsSetter: 'collapsed'
         }
  
-        // if(this.props.uploads.uploads){
-        //   this.intervalId = setInterval(()=>{this.props.getAcs(this.props.indexName,this.props.id)},
-        //   this.props.uploads.timeKind*this.props.uploads.timeNum);
-        // }
+        if(this.props.uploads.uploads){
+          this.intervalId = setInterval(()=>{this.props.getAcs(this.props.indexName,this.props.id)},
+          this.props.uploads.timeKind*this.props.uploads.timeNum);
+        }
 
     }
 
     componentDidMount() {
+      console.log('MOUNT')
       this.props.getAcs(this.props.indexName,this.props.id)
     }
     componentWillUnmount(){
-        // if(this.intervalId!==undefined) clearInterval(this.intervalId);
+      if(this.intervalId!==undefined) clearInterval(this.intervalId);
     }
 
     //Проверка одинаковости объектов
@@ -45,12 +46,17 @@ class rawLogsTable extends React.Component {
     }
     // Изменяется интервал
     componentWillReceiveProps(nextProps){
-      // console.log(nextProps)
-      // if(this.intervalId!==undefined&&nextProps.uploads.uploads===false){
-      //   clearInterval(this.intervalId);
-      // }else if(nextProps.uploads.uploads&&nextProps.uploads.uploads!==this.props.uploads.uploads){
-      //   this.intervalId = setInterval(()=>{this.props.getAcs(this.props.indexName,this.props.id)}, this.props.uploads.timeKind*this.props.uploads.timeNum);
-      // }
+      //если существует таймер и отключены обновл
+      if(this.intervalId!==undefined&&nextProps.uploads.uploads===false){
+        clearInterval(this.intervalId);
+      }
+      //включены обновления а были выключены
+      else if(nextProps.uploads.uploads&&nextProps.uploads.uploads!==this.props.uploads.uploads){
+        this.intervalId = setInterval(()=>{this.props.getAcs(this.props.indexName,this.props.id)}, this.props.uploads.timeKind*this.props.uploads.timeNum);
+      }else if(nextProps.uploads.uploads&&!this.isObjEqual(nextProps.uploads,this.props.uploads)){
+        clearInterval(this.intervalId);
+        this.intervalId = setInterval(()=>{this.props.getAcs(this.props.indexName,this.props.id)}, nextProps.uploads.timeKind*nextProps.uploads.timeNum);
+      }
   }
 
    
@@ -67,19 +73,19 @@ class rawLogsTable extends React.Component {
               {e.text+curLog[e.field]}
             </li>
         })}
-        // console.log(this.props)
+        // console.log(this.props)                  
         return <div className="logs-table-wrapper">
                   <header className="Common__header Common__header_red Common__header_with-filter">
                     {this.props.title}
-                    <input onChange={()=>this.props.changeUploads(false,this.props.indexName,this.props.id)} type="radio" name="time_period" value="configured_time" checked={!this.props.uploads.uploads}/>
-                    {/* <Calendar applyParentCallback={this.props.setTimeFilterThunk} timeFilter={{from:this.props.timeFilter.from, to:this.props.timeFilter.to}}/> */}
-                    <input onChange={()=>this.props.changeUploads(true,this.props.indexName,this.props.id)} type="radio" name="time_period" value="bynow_time" checked={this.props.uploads.uploads}/>
+                    <input onChange={()=>this.props.changeUploadModeThunk(false,this.props.indexName,this.props.id)} type="radio" name={"time_period"+this.props.id} value="configured_time" checked={!this.props.uploads.uploads}/>
+                    <Calendar id={this.props.id} applyParentCallback={(startDate, endDate)=>{this.props.setTimeFilterThunk(startDate, endDate, this.props.indexName, this.props.id)}} timeFilter={{from:this.props.timeFilter.from, to:this.props.timeFilter.to}}/>
+                    <input onChange={()=>this.props.changeUploadModeThunk(true,this.props.indexName,this.props.id)} type="radio" name={"time_period"+this.props.id} value="bynow_time" checked={this.props.uploads.uploads} />
                     <UploadTimeSetter  handleSubmit={(updateForm,event)=>{
                       this.props.changeUploadsThunk(updateForm,this.props.indexName,this.props.id);
-                      this.props.changeUploads(true,this.props.indexName,this.props.id)
+                      // this.props.changeUploadModeThunk(true,this.props.indexName,this.props.id)
                     }}
                         timeKind={this.props.uploads.timeKind} timeNum={this.props.uploads.timeNum}
-                        from_number={this.props.uploads.from_number} from_time_type={this.props.uploads.from_time_type}/>
+                        from_number={this.props.uploads.from_number} from_time_type={this.props.uploads.from_time_type}  id={this.props.id}/>
                     <FilterPanel iniState={this.props.paramFilter} submitCallBack={(filter)=>{this.props.setParamFilterThunk(filter,this.props.indexName,this.props.id)}} id={this.props.id}/>
                   </header>    
                   <Table logs={this.props.logs} headerElements={this.props.headerElements} curLog={this.props.curLog} onClickCallback={this.props.onChangeCurrentLog} sortParam={this.props.sortParam} changeSortThunk={this.props.changeSortThunk} indexName={this.props.indexName} id={this.props.id}/>

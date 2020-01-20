@@ -2,7 +2,8 @@ import React from 'react';
 import './TableHeader.scss'
 
 const TableHeader = (props) => {
-
+    //onClick={()=>{console.log('click')}}
+//onClick={()=>{props.clickCallBack(e,props.indexName,props.id)}}
     let Elements = Object.values(props.items).map((e,n) => {
         if(e.field===props.current.field) {
             let clazzName = props.current.direction === 'asc'?"logs-table__arrow logs-table__arrow_up":"logs-table__arrow logs-table__arrow_down"

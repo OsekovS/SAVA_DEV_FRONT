@@ -4,7 +4,7 @@ import LogElem from './LogElem/LogElem.jsx'
 
 const Table = (props) => {
 
-let Elements = props.logs.map((e,number) => <LogElem viewed={props.headerElements} name={props.curLog===number?'Modules_table__current':''} items={e} onClickCallback={()=>{this.props.onClickCallback(number,props.indexName,props.id)}}/>)
+let Elements = props.logs.map((e,number) => <LogElem viewed={props.headerElements} name={props.curLog===number?'Modules_table__current':''} items={e} onClickCallback={()=>{props.onClickCallback(number,props.id)}}/>)
 
 
 return <>

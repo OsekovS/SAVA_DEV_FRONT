@@ -194,7 +194,8 @@ const acsReducer = (state = initialState, action) => {
             stateCopy.dashboards = {...state.dashboards}
             stateCopy.dashboards[action.id] = {...state.dashboards[action.id]}
             stateCopy.dashboards[action.id].body = {...state.dashboards[action.id].body}
-            stateCopy.dashboards[action.id].body.uploads = action.uploads
+            stateCopy.dashboards[action.id].body.uploads = {...state.dashboards[action.id].body.uploads}
+            stateCopy.dashboards[action.id].body.uploads.uploads = action.uploads
             // stateCopy = {...state}
             // stateCopy.logs = {...state.logs}
             // stateCopy.logs.uploads = {...state.logs.uploads}
@@ -222,7 +223,6 @@ const acsReducer = (state = initialState, action) => {
             // stateCopy.logs.uploads.from_time_type = action.params.from_time_type
             return stateCopy
         case CHANGE_PAGE:
-            console.log(action.page)
             stateCopy = {...state};
             stateCopy.dashboards = {...state.dashboards}
             stateCopy.dashboards[action.id] = {...state.dashboards[action.id]}
@@ -295,15 +295,21 @@ const acsReducer = (state = initialState, action) => {
             
             return stateCopy
         case CHANGE_SORT_PARAM:
+            
             stateCopy = {...state};
             stateCopy.dashboards = {...state.dashboards}
             stateCopy.dashboards[action.id] = {...state.dashboards[action.id]}
             stateCopy.dashboards[action.id].body = {...state.dashboards[action.id].body}
+            console.log(state.dashboards[action.id].body.sortParam.field)
+            console.log(action.sortParam.field)
+            // stateCopy.dashboards[action.id].body.sortParam = {...state.dashboards[action.id].body.sortParam}
             if(action.sortParam.field===state.dashboards[action.id].body.sortParam.field){
+                console.log('change')
                 stateCopy.dashboards[action.id].body.sortParam = {...state.dashboards[action.id].body.sortParam}
                 stateCopy.dashboards[action.id].body.sortParam.direction=stateCopy.dashboards[action.id].body.sortParam.direction==='asc'?'desc':'asc'
             }
             else{
+                console.log('new')
                 stateCopy.dashboards[action.id].body.sortParam = {
                     type: action.sortParam.type,
                     field: action.sortParam.field,
@@ -326,9 +332,11 @@ const acsReducer = (state = initialState, action) => {
             // }
             return stateCopy
         case CHANGE_CURRENT_LOG:
-            stateCopy = {...state}
-            stateCopy.logs = {...state.logs}
-            stateCopy.logs.curLog = action.number
+            stateCopy = {...state};
+            stateCopy.dashboards = {...state.dashboards}
+            stateCopy.dashboards[action.id] = {...state.dashboards[action.id]}
+            stateCopy.dashboards[action.id].body = {...state.dashboards[action.id].body}
+            stateCopy.dashboards[action.id].body.curLog = action.number
             return stateCopy
        default:
            return state;
@@ -358,8 +366,8 @@ export const uploadAcs = (json,reqObj,id) =>
 export const ParamFilter = (filter,id) =>
 ({type: CHANGE_PARAM_FILTER, filter,id})
 
-export const onChangeCurrentLog = (number) =>
-({type: CHANGE_CURRENT_LOG, number})
+export const onChangeCurrentLog = (number,id) =>
+({type: CHANGE_CURRENT_LOG, number,id})
 
 export const changePage = (page,id) =>
 ({type: CHANGE_PAGE, page,id})
@@ -372,7 +380,8 @@ export const uploadDashboards = (json) => ({type: UPLOAD_DASHBOARDS, json})
 
 export const getAcs = (indexName,id) => {
     return (dispatch,getState) => {
-        let state = getState().acs.logs
+        let state = getState().acs.dashboards[id].body
+        
         // console.log('acs-form-processor.php')
         let timeFilter = {}
         if(state.uploads.uploads){
@@ -422,9 +431,39 @@ export const getAcs = (indexName,id) => {
 //     }
 // }
 
-export const changeUploadsThunk = (uploads,indexName,id) => {//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+export const changeUploadModeThunk = (uploadMode,indexName,id) => {//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     
+    return (dispatch,getState) => {
+        let state = getState().acs.dashboards[id].body
+        let timeFilter = {}
+        if(uploadMode){
+            timeFilter = {
+                from: getFromDate(state.uploads.from_number,state.uploads.from_time_type).format('YYYY/MM/DD HH:mm:ss'),
+                 to:  state.uploads.to
+            }
+        }
+        else{
+            timeFilter = {
+                from: state.timeFilter.from.format('YYYY/MM/DD HH:mm:ss'),
+                to:  state.timeFilter.to.format('YYYY/MM/DD HH:mm:ss'),
+            }
+        }
+        let reqObj = {
+            "need": "logs",
+            indexName,
+            timeFilter,
+            "paramsFilter": state.paramFilter,
+            logsCount: state.pagination.showedLogs,
+            curPage: 1,//state.pagination.currentPage
+            sortParam: state.sortParam
+        }
+        uniThunk(reqObj,[changeUploads(uploadMode,id),changePage(1,id)],dispatch,id)
+    }
+}
+export const changeUploadsThunk = (uploads,indexName,id) => {//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // console.log(uploads)
     return (dispatch,getState) => {
         let state = getState().acs.dashboards[id].body
         let timeFilter = {}
@@ -441,7 +480,7 @@ export const changeUploadsThunk = (uploads,indexName,id) => {///////////////////
             curPage: 1,//state.pagination.currentPage
             sortParam: state.sortParam
         }
-        uniThunk(reqObj,[changeUpdatesParams(uploads,id),changePage(1,id)],dispatch,id)
+        uniThunk(reqObj,[changeUpdatesParams(uploads,id),changePage(1,id),changeUploads(true,id)],dispatch,id)
     }
 }
 
@@ -521,7 +560,7 @@ export const changeShowedLogsThunk = (showedLogs,indexName,id) => {
     }
 }
 const uniThunk = (reqObj,dispatches,dispatch, id) => {
-        console.log(reqObj)
+        // console.log(reqObj)
         axios.post("php/acs-form-processor.php", reqObj).then(response => {
             console.log(response)
             let json = JSON.parse(response.request.response);
@@ -591,7 +630,7 @@ export const setTimeFilterThunk = (startDate, endDate,indexName,id) => {
 
 // uploads,timeFilter,filter,showedLogs,page
 export const setParamFilterThunk = (filter,indexName,id) => {
-    console.log(filter)
+    // console.log(filter)
     let filterCopy = {}
     for (let param in filter) {
         if(filter[param].length!==0) filterCopy[param] = filter[param]
@@ -663,7 +702,7 @@ export const changeSortThunk = (sortParam,indexName,id) => {
             curPage: state.pagination.currentPage,
             sortParam: NewSortParam
         }
-        uniThunk(reqObj,[dispatch(changeSortParam(sortParam,id))],dispatch,id)
+        uniThunk(reqObj,[changeSortParam(sortParam,id)],dispatch,id)
     }
 }
 

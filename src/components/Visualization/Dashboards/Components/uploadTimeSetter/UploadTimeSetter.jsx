@@ -42,7 +42,8 @@ class UploadTimeSetter extends Component {
 // Отлавливаем клик на любую область
 handleClickOutside(e) {
   // Получаем ссылку на элемент, при клике на который, скрытие не будет происходить
-  const emojiBlock = document.getElementsByClassName('upload-time-setter')[0];
+  
+  const emojiBlock = document.getElementsByClassName('upload-time-setter'+this.props.id)[0];
   // console.log(emojiBlock)
   // Проверяем, есть ли в списке родительских или дочерних элементов, вышеуказанный компонент
   if (!e.path.includes(emojiBlock)) {
@@ -138,7 +139,7 @@ handleClickOutside(e) {
       
 
       return (
-        <div className='upload-time-setter'>
+        <div className={'upload-time-setter upload-time-setter'+this.props.id}>
           <span  >{str1} {str2}</span>
           <form  className="upload-time-setter__settings" onSubmit={this.onSubmit} >
               <label>Интервал обновления: <br/> 
@@ -160,7 +161,7 @@ handleClickOutside(e) {
       );
       }else {
         //__collapsed
-        return <span className={'upload-time-setter'} >{str1}  {str2}</span>
+        return <span className={'upload-time-setter upload-time-setter'+this.props.id} >{str1}  {str2}</span>
       }
       // else return <span className={'upload-time-setter__collapsed'} onClick={this.props.ChangeDisplay}>Последние {this.props.timeNum/1000} {this.props.timeKind === 1?'секунд':'минут'}</span>
 

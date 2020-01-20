@@ -66,7 +66,7 @@ handleClickOutside(e) {
   // console.log(emojiBlock)
   // Проверяем, есть ли в списке родительских или дочерних элементов, вышеуказанный компонент
   if (!e.path.includes(emojiBlock)) {
-    console.log(e.path)
+    // console.log(e.path)
     // Если в области кликнутого элемента нету "emojiBlock", то проверяем ниже
     // Не произведен ли клик на кнопку, открывающую окно смайлов
     // const svgSmileBtn = document.querySelector('.chat-input__smile-btn');

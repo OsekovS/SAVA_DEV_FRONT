@@ -2,7 +2,6 @@ import React from 'react';
 const PagesBar = (props) => {
     let paginationList = []
     let index = props.pagination.fromPage
-    console.log(props.pagination.currentPage)
     if(index > 1){
         paginationList.push(<li onClick={props.callBack.bind(this,1,props.indexName,props.id)}  key={1}>1</li>)
         paginationList.push(<li  className="pages-bar__ellipsis" key={2}>...</li>)    
