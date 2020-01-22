@@ -8,22 +8,40 @@ const SIDEBAR_CHANGE = 'SIDEBAR_CHANGE';
 //     ],
 // };
 
-let initialState = [
+let initialState = {
+    settings: [
         {active: false,text: "SAVA камеры",to: '/setting module cameras' },
         {active: true,text: "SAVA СКУД",to: '/setting module acs' },
         {active: false,text: "SAVA СЗИ",to: '/setting module iss' }
-    ]
+    ],
+    dashboards: {
+        acs: [
+            {active: false,text: "События устройств",to: '/visualization acs devicesLogs' },
+            {active: true,text: "События пользователей",to: '/visualization acs usersLogs' }
+        ]
+    }
+}
 
 // state = initialState, action
 const navBarReducer = (state = initialState, action) => {
     let stateCopy
    switch (action.type) {
        case SIDEBAR_CHANGE:
-            stateCopy = state.map((e,n) => {
+        stateCopy={...state}
+           if(action.type==='settings'){
+            // stateCopy.settings={...stateCopy.settings}
+            stateCopy.settings = state.settings.map((e,n) => {
                 if(n===action.numb) return {active: true, text: e.text, to: e.to}
                 else return {active: false, text: e.text, to: e.to}
             })
-
+        }else{
+            stateCopy.dashboards = {...state.dashboards}
+            stateCopy.dashboards.acs = initialState.dashboards.acs.map((e,n) => {
+                if(n===action.numb) return {active: true, text: e.text, to: e.to}
+                else return {active: false, text: e.text, to: e.to}
+            })
+        }
+console.log(stateCopy)
             return stateCopy;
        default:
            return state;

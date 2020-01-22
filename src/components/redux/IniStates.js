@@ -353,7 +353,10 @@ export const acsIni = function(){
             login: '3ojA'
         }]
         },
-        dashboards: null,
+        dashboards: {
+            dashboards:null,
+            filters: null
+        },
         logs: {
             logs:  [{
                 "time":"2019\/11\/06 12:53:11",

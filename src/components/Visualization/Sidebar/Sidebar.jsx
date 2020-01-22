@@ -1,8 +1,8 @@
 import React from 'react';
 import './Sidebar.scss'
 import Elem from './Elem'
-import {changeSideBarCreator} from "../../../redux/mod-sidebar-reducer";
-import {changeLinkCreator} from '../../../redux/nav-bar-reducer'
+import {changeSideBarCreator} from "../../redux/mod-sidebar-reducer";
+import {changeLinkCreator} from '../../redux/nav-bar-reducer'
 import {connect} from "react-redux";
 
 const rawSidebar = (props) => {
@@ -24,7 +24,7 @@ const rawSidebar = (props) => {
 }
 
 let mapStateToProps = (state) => {
-    return {state: state.modSidebar.settings, type: 'settings'}
+    return {state: state.modSidebar.dashboards.acs, type: 'dashboards'}
 }
 // let mapDispatchToProps = (dispatch) => {
 //     return {
@@ -37,7 +37,6 @@ let mapDispatchToProps = {
     changeSideBarCreator,
     changeLinkCreator
 }
-
 const Sidebar = connect(mapStateToProps, mapDispatchToProps)(rawSidebar);
 
 export default Sidebar;

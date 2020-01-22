@@ -1,12 +1,12 @@
-import  {getDashboardsThunk} from "../../../components/redux/acs-reducer";
+import  {getDashboardsThunk} from "../../../components/redux/acs-dashboards-reducer";
 import {connect} from "react-redux";
 import __acs from './__acs'
 
 
 let mapStateToProps = (state) => {
     return {
-        dashboards: state.acs.dashboards
-    }
+        dashboards: state.acs.dashboards.dashboards,
+   }
 }
 let mapDispatchToProps = {
     getDashboardsThunk

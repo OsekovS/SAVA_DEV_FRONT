@@ -1,11 +1,11 @@
 import {connect} from "react-redux";
 import CircleDiagram from './CircleDiagram'
-import  {getAcs,setTimeFilterThunk,changeUploadModeThunk,setParamFilterThunk,changeUploadsThunk,ChangeMainFieldThunk,changeMainField,changeMainFieldList} from "../../../../components/redux/acs-reducer";
+import  {getAcs,setTimeFilterThunk,changeUploadModeThunk,setParamFilterThunk,changeUploadsThunk,changeMainField,changeMainFieldList} from "../../../../components/redux/acs-dashboards-reducer";
 
       
 let mapStateToProps = (state) => {
     return {
-        filters: state.acs.filters
+        filters: state.acs.dashboards.filters
     }
 }
 
@@ -16,7 +16,6 @@ let mapDispatchToProps = {
     setParamFilterThunk,
     changeUploadsThunk,
     changeUploadModeThunk,
-    // ChangeMainFieldThunk,
     changeMainField,
     changeMainFieldList
 }

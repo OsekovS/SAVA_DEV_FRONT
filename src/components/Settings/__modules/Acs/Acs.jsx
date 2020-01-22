@@ -79,7 +79,7 @@ const Acs = (props) => {
     const onChangeMode = (mode) =>{
         props.changeMode(mode)
     }
-
+console.log(props)
     let objectsElements = props.objects.map((e,n) => <ListElem name='list-elem' items={e} key={n.toString()}
 elemChangeCallBack={onDelObj} elemDellCallBack={onDelObj}/>)
 

@@ -14,6 +14,8 @@ let initialState = {
         users: 'пользователей',
         common: 'общая',
         lic: 'лицензии',
+        'usersLogs': 'логи пользователей',
+        'devicesLogs': 'логи устройств',
         '': 'Главная'
     }
 };
@@ -26,21 +28,24 @@ const navBarReducer = (state = initialState, action) => {
        case NAV_BAR_CHANGE:
             stateCopy = {...state};
             stateCopy.state = {...state.state}
-
-              let arr = (window.location.pathname+action.to).split("/").slice(1).map(e => {
+            //window.location.pathname
+              let arr = ('/'+action.to).split("/").slice(1).map(e => {
                 return e.split(' ').reduce((acc,cur) => acc+' '+state.translate[cur],'')
               })
-
-              let links = (window.location.pathname+action.to).split("/").slice(1)
+              
+              let links = ('/'+action.to).split("/").slice(1)
               stateCopy.state = arr.map((e,numb) => {
                   return {link: links[numb], text: e}
               })
+              console.log((window.location.pathname+action.to))
+              console.log(arr)
+              console.log(links)
             return stateCopy;
-            case NAV_BAR_DIR_CHANGE:
-                    stateCopy = {...state};
-                    stateCopy.state = [{link: action.to, text: state.translate[action.to]}]
+        case NAV_BAR_DIR_CHANGE:
+                stateCopy = {...state};
+                stateCopy.state = [{link: action.to, text: state.translate[action.to]}]
 
-                return stateCopy
+            return stateCopy
        default:
            return state;
    }

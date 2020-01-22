@@ -29,7 +29,7 @@ const Visio = (props) => {
                 </NavLink>
             </li>
             <li>  
-                <NavLink to='/visualization acs'>
+                <NavLink to='/visualization acs devicesLogs'>
                 <__mainMenuItem 
                         head={
                             {
@@ -45,7 +45,7 @@ const Visio = (props) => {
                                 src: ""
                             }
                         }
-                        to='/visualization acs'/>
+                        to='/visualization acs devicesLogs'/>
                 </NavLink>
             </li>
             <li>

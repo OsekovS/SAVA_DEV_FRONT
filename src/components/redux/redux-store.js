@@ -5,7 +5,8 @@ import navBarReducer from './nav-bar-reducer'
 import allEventsReducer from './all-events-reducer'
 import camerasReducer from './cameras-reducer'
 import issReducer from './iss-reducer'
-import acsReducer from './acs-reducer'
+import acsLogsReducer from './acs-dashboards-reducer'
+import acsSettingsReducer from './acs-settings-reducer'
 import usersReducer from './users-reducer'
 import netSettingsReducer from './net-settings-reducer'
 import licReducer from './lic-reducer'
@@ -22,9 +23,11 @@ let reducers = combineReducers({
     users: usersReducer,
     auth: authReducer,
     cameras: camerasReducer,
-    acs: acsReducer,
+    acs: combineReducers({
+        dashboards: acsLogsReducer,
+        settings: acsSettingsReducer
+    }),
     iss: issReducer,
-
     headerInfo: headerReducer,
     navBar: navBarReducer,
     allEvents: allEventsReducer,

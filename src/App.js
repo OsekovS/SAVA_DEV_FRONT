@@ -21,7 +21,7 @@ class App extends React.Component {
     {/* <NavBar /> */}
     <Route exact path='/' render={()=><Main    />}></Route>
     <Route path='/visualization cameras' render={()=><Visualization__cameras  />}></Route>
-    <Route path='/visualization acs' render={()=><Visualization__acs  />}></Route>
+    <Route path='/visualization acs devicesLogs' render={()=><Visualization__acs  />}></Route>
     <Route path='/visualization iss' render={()=><Visualization__iss   />}></Route> 
     <Route path='/setting module acs' render={()=><Settings__modules  />}></Route>
     <Route path='/setting users' render={()=><Settings__users />}></Route>

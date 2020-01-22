@@ -1,11 +1,11 @@
 import {connect} from "react-redux";
 import rawLogsTable from './LogsTable'
-import  {getAcs,setTimeFilterThunk,changeUploadModeThunk,setParamFilterThunk,changeUpdatesParams,changePageThunk,changeShowedLogsThunk,changeSortThunk,onChangeCurrentLog,getFromDate,changeUploadsThunk} from "../../../../components/redux/acs-reducer";
+import  {getAcs,setTimeFilterThunk,changeUploadModeThunk,setParamFilterThunk,changeUpdatesParams,changePageThunk,changeShowedLogsThunk,changeSortThunk,onChangeCurrentLog,changeUploadsThunk} from "../../../../components/redux/acs-dashboards-reducer";
 
       
 let mapStateToProps = (state) => {
     return {
-        filters: state.acs.filters
+        filters: state.acs.dashboards.filters
     }
 }
 

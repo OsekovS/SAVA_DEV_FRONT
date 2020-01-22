@@ -1,5 +1,5 @@
 import  {addFieldThunk, delEndp, 
-    delObj, changeMode, getAcs} from "../../../redux/acs-reducer";
+    delObj, changeMode, getAcs} from "../../../redux/acs-settings-reducer";
 import Acs from "./Acs";
 import {connect} from "react-redux";
 import React from 'react';
