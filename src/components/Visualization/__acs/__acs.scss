@@ -24,10 +24,14 @@
         width: 150px;
     }
 }
-.Visualization__cameras{
-    .devices-logs{
-        margin-bottom: 25px;
+.Visualization__acs{
+    padding: 10px 10px 50px 10px;
+    .logs-table-wrapper{
+        margin-bottom: 50px;
     }
+    // .devices-logs{
+    //     margin-bottom: 25px;
+    // }
     .table-wrapper{
         max-height: 210px;
         overflow-x: hidden;
@@ -42,7 +46,6 @@
             margin-left: 30px;
             margin-right: 5px;
         }
-        
     }
 
 

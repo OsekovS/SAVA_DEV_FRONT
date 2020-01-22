@@ -27,19 +27,10 @@ const options = [
       }
     
   onChangeField = (keyState,key)=>{
-    //   console.log(key)
-    //   console.log(keyState)
-    //   this.setState(state => ({
-    //     params[key] = keyState
-        
-    // }));
     this.setState(state => {
         state.params[key] = keyState 
         return state
-      })
-    // console.log(this.state)
-    
-    
+      })  
   }
 
   componentWillUnmount() {
@@ -82,45 +73,23 @@ handleClickOutside(e) {
         let options
         let devices
         let objects
-        for (const key in configObj) {
-            if (configObj.hasOwnProperty(key)) {
-                if(Array.isArray(configObj[key])){
-                    // console.log(configObj[key])
-                    options = configObj[key].map((e,n) => {
+        for (const key in this.props.configObj) {
+            if (this.props.configObj.hasOwnProperty(key)) {
+                if(Array.isArray(this.props.configObj[key])){
+                    // console.log(this.props.configObj[key])
+                    options = this.props.configObj[key].map((e,n) => {
                         return {
                             value: e,
                             label: e,
                         } 
                     }
                     )
-                    // this.state[key]=[]
-                    // console.log(configObj.translate)
                     filter.push(
-                        <Dropdown iniState={this.state.params[key]===undefined?[]:this.state.params[key]} name={key} options={options} preview={configObj.translate[key]} onChangeCallBack={(this.onChangeField.bind(this))}/>
+                        <Dropdown selected={this.state.params[key]===undefined?[]:this.state.params[key]} iniState={this.state.params[key]===undefined?[]:this.state.params[key]} name={key} options={options} 
+                        preview={this.props.configObj.translate[key]} onChangeCallBack={(this.onChangeField.bind(this))}/>
                     )
-                }else if(key==='object'){
-
-                    options = Object.keys(configObj[key]).map((e)=>{
-                        return {
-                            value: e,
-                            label: e,
-                        }
-                    })
-                    // this.state[key]=[]
-                    let needObj = {}
-                    if(this.state.params['object']!==undefined){
-                        for (const object of this.state.params['object']) {
-                            needObj[object]= configObj['object'][object];
-                        }
-                    }
-                    
-
-                   
-                    objects = <Dropdown  iniState={this.state.params[key]===undefined?[]:this.state.params[key]}  name={key} options={options} preview={configObj.translate[key]}  onChangeCallBack={(this.onChangeField.bind(this))}/>
-                    // devices = <ObjectDropdown  iniState={this.state[key]===undefined?[]:this.state[key]}  name={'devices'}  preview={'конечные точки'}  obj={needObj}  onChangeCallBack={(this.onChangeField.bind(this))}/>
-
-                }  
-        }
+                }
+            }
         }
     return <div className={'filter filter'+this.props.id}>
         <span>Настроить фильтр</span>
@@ -133,14 +102,10 @@ handleClickOutside(e) {
         </div>
         <input type="submit" value="Применить"/><button onClick={this.onCancel}>Отменить</button>
         </form>
-        {/* <button onClick={this.onSubmit.bind(this)}>Применить настройки для фильтра</button> */}
         </div>
     }
     else return <button className={'filter filter'+this.props.id}>Настроить фильтр</button>
 }
 }
-//   const FilterPanel = (props) => {
-    
-// }
 
 export default FilterPanel;

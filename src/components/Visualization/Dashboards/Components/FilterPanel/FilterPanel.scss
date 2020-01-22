@@ -18,15 +18,15 @@
         width: 100%;
         height: 125px;
         width: 100%;
-        padding: 10px 10px 0 10px;
+        padding: 10px 0px 0 10px;
       
         div{
             margin-bottom: 10px;
         }
-        .multi-select,.filter__devices{
+        //,.filter__devices
+        .multi-select{
             height: 30px;
             font-size: 16px;
-            width: 48%;
         }
         .filter__devices .multi-select{
             width: 100%;
