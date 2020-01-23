@@ -1,7 +1,6 @@
 import React from 'react';
-import Calendar from '../Components/calendar/calendar'
 import FilterPanel from '../Components/FilterPanel/FilterPanel'
-import UploadTimeSetter from '../Components/uploadTimeSetter/UploadTimeSetter.jsx'
+import TimeFilterPanel from '../Components/TimeFilterPanel/TimeFilterPanel'
 import { Chart, Pies, Transform } from 'rumble-charts';
 import './CircleDiagram.scss';
 import Dropdown from '../Components/FilterPanel/dropdown/dropdown'
@@ -113,14 +112,25 @@ class CircleDiagram extends React.Component {
                     <header className="Common__header Common__header_red Common__header_with-filter">
                         {this.props.title}
                         <input onChange={()=>this.props.changeUploadModeThunk(false,this.props.indexName,this.props.id)} type="radio" name={"time_period"+this.props.id} value="configured_time" checked={!this.props.uploads.uploads}/>
-                        <Calendar id={this.props.id} applyParentCallback={(startDate, endDate)=>{this.props.setTimeFilterThunk(startDate, endDate, this.props.indexName, this.props.id)}} timeFilter={{from:this.props.timeFilter.from, to:this.props.timeFilter.to}}/>
+                        <TimeFilterPanel id={this.props.id}  uploads={this.props.uploads} indexName={this.props.indexName} timeFilter={{from:this.props.timeFilter.from, to:this.props.timeFilter.to}}></TimeFilterPanel>
+                    {/* <Calendar id={this.props.id} applyParentCallback={(startDate, endDate)=>{this.props.setTimeFilterThunk(startDate, endDate, this.props.indexName, this.props.id)}} timeFilter={{from:this.props.timeFilter.from, to:this.props.timeFilter.to}}/> */}
+
+                    {/* <UploadTimeSetter  handleSubmit={(updateForm,event)=>{
+                      this.props.changeUploadsThunk(updateForm,this.props.indexName,this.props.id);
+                      // this.props.changeUploadModeThunk(true,this.props.indexName,this.props.id)
+                    }}
+                        timeKind={this.props.uploads.timeKind} timeNum={this.props.uploads.timeNum}
+                        from_number={this.props.uploads.from_number} from_time_type={this.props.uploads.from_time_type}  id={this.props.id}/> */}
+                    <FilterPanel configObj={this.props.filters[this.props.indexName]} iniState={this.props.paramFilter} submitCallBack={(filter)=>{this.props.setParamFilterThunk(filter,this.props.indexName,this.props.id)}} id={this.props.id}/>
+                        
+                        {/* <Calendar id={this.props.id} applyParentCallback={(startDate, endDate)=>{this.props.setTimeFilterThunk(startDate, endDate, this.props.indexName, this.props.id)}} timeFilter={{from:this.props.timeFilter.from, to:this.props.timeFilter.to}}/>
                         <input onChange={()=>this.props.changeUploadModeThunk(true,this.props.indexName,this.props.id)} type="radio" name={"time_period"+this.props.id} value="bynow_time" checked={this.props.uploads.uploads} />
                         <UploadTimeSetter  handleSubmit={(updateForm,event)=>{
                         this.props.changeUploadsThunk(updateForm,this.props.indexName,this.props.id);
                         // this.props.changeUploadModeThunk(true,this.props.indexName,this.props.id)
                         }}
                             timeKind={this.props.uploads.timeKind} timeNum={this.props.uploads.timeNum}
-                            from_number={this.props.uploads.from_number} from_time_type={this.props.uploads.from_time_type}  id={this.props.id}/>
+                            from_number={this.props.uploads.from_number} from_time_type={this.props.uploads.from_time_type}  id={this.props.id}/> */}
                             {/* iniState={this.state.mainField}  */}
                         {/* <Dropdown  iniState={[iniMain]} name='mainField' options={fields} preview={filter.translate[this.props.field]}  onChangeCallBack={(this.onChangeMainField.bind(this))}/> */}
                         

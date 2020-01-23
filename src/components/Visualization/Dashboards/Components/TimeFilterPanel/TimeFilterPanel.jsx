@@ -12,7 +12,7 @@ class TimeFilterPanel extends Component {
       this.makeSpecialString = this.makeSpecialString.bind(this)
       this.state = {
         display: 'collapsed',
-        preview: this.props.uploads.uploads?this.makeSpecialString():'C ' +this.props.timeFilter.from.format('DD.MM.YYYY HH:mm') + ' по '+this.props.timeFilter.to.format('DD.MM.YYYY HH:mm')
+        preview: this.props.uploads.uploads?this.makeSpecialString(props):'C ' +this.props.timeFilter.from.format('DD.MM.YYYY HH:mm') + ' по '+this.props.timeFilter.to.format('DD.MM.YYYY HH:mm')
       };
     }
     time_upload_letters = [
@@ -44,7 +44,7 @@ class TimeFilterPanel extends Component {
         }
     }
     makeSpecialString(props){
-      
+      // console.log(props)
       let str1,str2
       this.time_from_letters.forEach(element => {
         if(element.val===props.from_time_type){
@@ -63,6 +63,7 @@ class TimeFilterPanel extends Component {
       return str1+' '+str2
     }
     componentWillReceiveProps(newprops){
+      // console.log(newprops)
       this.setState({ preview: newprops.uploads.uploads?this.makeSpecialString(newprops.uploads):' c ' +newprops.timeFilter.from.format('DD.MM.YYYY HH:mm') + ' по '+newprops.timeFilter.to.format('DD.MM.YYYY HH:mm') });
     }
     onApply(){

@@ -1,10 +1,7 @@
 import React from 'react';
-// import Calendar from '../Components/calendar/calendar'
 import FilterPanel from '../Components/FilterPanel/FilterPanel'
-// import UploadTimeSetter from '../Components/uploadTimeSetter/UploadTimeSetter.jsx'
 import PagesBar from './pagesBar/PagesBar'
 import Table from '../Components/Table/Table'
-// import TableHeader from '../../../Common/TableHeader/TableHeader.jsx'
 import ShowedLogsBar from './ShowedLogsBar/ShowedLogsBar'
 import TimeFilterPanel from '../Components/TimeFilterPanel/TimeFilterPanel'
 import './Logtable.scss'
