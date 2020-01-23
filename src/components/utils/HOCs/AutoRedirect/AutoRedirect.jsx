@@ -2,11 +2,7 @@ import React from 'react'
 import {Redirect} from "react-router-dom"
 import {connect} from "react-redux";
 import {checkCookies} from '../../../redux/auth-reducer'
-let mapStateToProps = (state) => {
-    return {
-        auth: state.auth
-    }
-  }
+
   
 export const withAuthRedirect = (Component) => {
     class RedirectComponent extends React.Component{
@@ -19,6 +15,11 @@ export const withAuthRedirect = (Component) => {
             if(!this.props.auth.isAuth) {return <Redirect to = "/login" />}
             // console.log('COmponent')
             return <Component {...this.props} />
+        }
+    }
+    let mapStateToProps = (state) => {
+        return {
+            auth: state.auth
         }
     }
     let mapDispatchToProps = {

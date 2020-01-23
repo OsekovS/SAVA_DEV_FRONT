@@ -1,6 +1,6 @@
 import {connect} from "react-redux";
 import rawLogsTable from './LogsTable'
-import  {getAcs,setTimeFilterThunk,changeUploadModeThunk,setParamFilterThunk,changeUpdatesParams,changePageThunk,changeShowedLogsThunk,changeSortThunk,onChangeCurrentLog,changeUploadsThunk} from "../../../../components/redux/acs-dashboards-reducer";
+import  {getAcs,changeUploadModeThunk,setParamFilterThunk,changePageThunk,changeShowedLogsThunk,changeSortThunk,onChangeCurrentLog} from "../../../../components/redux/acs-dashboards-reducer";
 
       
 let mapStateToProps = (state) => {
@@ -12,9 +12,7 @@ let mapStateToProps = (state) => {
 
 let mapDispatchToProps = {
     getAcs,
-    setTimeFilterThunk,
     setParamFilterThunk,
-    changeUploadsThunk,
     changeUploadModeThunk,
     changePageThunk,
     changeShowedLogsThunk,

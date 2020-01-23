@@ -1,12 +1,12 @@
 import React from 'react';
-import Calendar from '../Components/calendar/calendar'
+// import Calendar from '../Components/calendar/calendar'
 import FilterPanel from '../Components/FilterPanel/FilterPanel'
-import UploadTimeSetter from '../Components/uploadTimeSetter/UploadTimeSetter.jsx'
-import LogElem from './LogElem/LogElem'
+// import UploadTimeSetter from '../Components/uploadTimeSetter/UploadTimeSetter.jsx'
 import PagesBar from './pagesBar/PagesBar'
 import Table from '../Components/Table/Table'
 // import TableHeader from '../../../Common/TableHeader/TableHeader.jsx'
 import ShowedLogsBar from './ShowedLogsBar/ShowedLogsBar'
+import TimeFilterPanel from '../Components/TimeFilterPanel/TimeFilterPanel'
 import './Logtable.scss'
 // import  {getFromDate} from "../../../../components/redux/acs-reducer";
 class rawLogsTable extends React.Component {
@@ -52,8 +52,8 @@ class rawLogsTable extends React.Component {
         this.intervalId = setInterval(()=>{this.props.getAcs(this.props.id)}, nextProps.uploads.timeKind*nextProps.uploads.timeNum);
       }
   }
-
-   
+/* <input onChange={()=>this.props.changeUploadModeThunk(false,this.props.indexName,this.props.id)} type="radio" name={"time_period"+this.props.id} value="configured_time" checked={!this.props.uploads.uploads}/>
+  <input onChange={()=>this.props.changeUploadModeThunk(true,this.props.indexName,this.props.id)} type="radio" name={"time_period"+this.props.id} value="bynow_time" checked={this.props.uploads.uploads} /> */
     render() {  
       console.log(this.props)
         let curLog,footerElements
@@ -67,16 +67,17 @@ class rawLogsTable extends React.Component {
         // console.log(this.props)                  
         return <div className={"logs-table-wrapper"+' '+this.props.className}>
                   <header className="Common__header Common__header_red Common__header_with-filter">
-                    {this.props.title}
-                    <input onChange={()=>this.props.changeUploadModeThunk(false,this.props.indexName,this.props.id)} type="radio" name={"time_period"+this.props.id} value="configured_time" checked={!this.props.uploads.uploads}/>
-                    <Calendar id={this.props.id} applyParentCallback={(startDate, endDate)=>{this.props.setTimeFilterThunk(startDate, endDate, this.props.indexName, this.props.id)}} timeFilter={{from:this.props.timeFilter.from, to:this.props.timeFilter.to}}/>
-                    <input onChange={()=>this.props.changeUploadModeThunk(true,this.props.indexName,this.props.id)} type="radio" name={"time_period"+this.props.id} value="bynow_time" checked={this.props.uploads.uploads} />
-                    <UploadTimeSetter  handleSubmit={(updateForm,event)=>{
+                    {this.props.title+ ''}
+                    
+                    <TimeFilterPanel id={this.props.id}  uploads={this.props.uploads} indexName={this.props.indexName} timeFilter={{from:this.props.timeFilter.from, to:this.props.timeFilter.to}}></TimeFilterPanel>
+                    {/* <Calendar id={this.props.id} applyParentCallback={(startDate, endDate)=>{this.props.setTimeFilterThunk(startDate, endDate, this.props.indexName, this.props.id)}} timeFilter={{from:this.props.timeFilter.from, to:this.props.timeFilter.to}}/> */}
+
+                    {/* <UploadTimeSetter  handleSubmit={(updateForm,event)=>{
                       this.props.changeUploadsThunk(updateForm,this.props.indexName,this.props.id);
                       // this.props.changeUploadModeThunk(true,this.props.indexName,this.props.id)
                     }}
                         timeKind={this.props.uploads.timeKind} timeNum={this.props.uploads.timeNum}
-                        from_number={this.props.uploads.from_number} from_time_type={this.props.uploads.from_time_type}  id={this.props.id}/>
+                        from_number={this.props.uploads.from_number} from_time_type={this.props.uploads.from_time_type}  id={this.props.id}/> */}
                     <FilterPanel configObj={this.props.filters[this.props.indexName]} iniState={this.props.paramFilter} submitCallBack={(filter)=>{this.props.setParamFilterThunk(filter,this.props.indexName,this.props.id)}} id={this.props.id}/>
                   </header>    
                   <Table logs={this.props.logs} headerElements={this.props.headerElements} curLog={this.props.curLog} onClickCallback={this.props.onChangeCurrentLog} sortParam={this.props.sortParam} changeSortThunk={this.props.changeSortThunk} indexName={this.props.indexName} id={this.props.id}/>

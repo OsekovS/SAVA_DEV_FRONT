@@ -19,7 +19,7 @@ const options = [
         
         this.state = {
             params: {...props.iniState},
-            opened: true
+            display: 'collapsed'
         };
         this.onSubmit = this.onSubmit.bind(this);
         this.onCancel = this.onCancel.bind(this);
@@ -33,14 +33,7 @@ const options = [
       })  
   }
 
-  componentWillUnmount() {
-    document.removeEventListener('click', this.handleClickOutside.bind(this), false);
-  }
 
-  // Вызывается до рендера
-  componentWillMount() {
-    document.addEventListener('click', this.handleClickOutside.bind(this), false);
-  }
 onSubmit(event){
     event.preventDefault()
     this.setState({ display: 'collapsed' });
@@ -49,26 +42,10 @@ onSubmit(event){
 onCancel(){
     this.setState({ display: 'collapsed' });
 }
-// Отлавливаем клик на любую область
-handleClickOutside(e) {
-  // Получаем ссылку на элемент, при клике на который, скрытие не будет происходить
-  const emojiBlock = document.getElementsByClassName('filter'+this.props.id)[0]
-  
-  // console.log(emojiBlock)
-  // Проверяем, есть ли в списке родительских или дочерних элементов, вышеуказанный компонент
-  if (!e.path.includes(emojiBlock)) {
-    // console.log(e.path)
-    // Если в области кликнутого элемента нету "emojiBlock", то проверяем ниже
-    // Не произведен ли клик на кнопку, открывающую окно смайлов
-    // const svgSmileBtn = document.querySelector('.chat-input__smile-btn');
-    // Если клик не производился и на кнопку открытия окна смайлов, то скрываем блок. if (!e.path.includes(svgSmileBtn))
-     this.setState({ display: 'collapsed' });
-  }else{
-    this.setState({ display: 'deployed' });
-  }
-}
+
     render() {
     if(this.state.display==='deployed'){
+        console.log('!')
         let filter = []
         let options
         let devices
@@ -91,20 +68,24 @@ handleClickOutside(e) {
                 }
             }
         }
-    return <div className={'filter filter'+this.props.id}>
-        <span>Настроить фильтр</span>
-        <form onSubmit={this.onSubmit} >
-        <div className="wrapper">
-            {objects}
-            {devices}
-            {filter}
-            
-        </div>
-        <input type="submit" value="Применить"/><button onClick={this.onCancel}>Отменить</button>
-        </form>
-        </div>
+    return <div className="modal-form-keeper param-filter-panel"  >
+    <div>
+        <header><span><img src={require('./filter.svg')}></img>Настройки параметрического фильтра</span><button onClick={()=>{this.setState({ display: 'collapsed' });}}><img src={require('../close.svg')}></img></button></header>
+            <form onSubmit={this.onSubmit} >
+            <div className="wrapper">
+                {objects}
+                {devices}
+                {filter}
+                
+            </div>
+            <input type="submit" value="Применить"/><button onClick={this.onCancel}>Отменить</button>
+        </form>  
+    </div>
+                   
+</div>
     }
-    else return <button className={'filter filter'+this.props.id}>Настроить фильтр</button>
+    else return <span className={'param-filter-panel param-filter-panel__collapsed'} onClick={()=>{this.setState({ display: 'deployed' });}}><img src={require('./filter.svg')}></img></span> 
+    // <button className={'filter filter'+this.props.id}>Настроить фильтр</button>
 }
 }
 

@@ -1,13 +1,70 @@
-.filter{
-
+@import '../../../../colors.scss';
+.param-filter-panel__collapsed{
+    position: absolute;
+    right: 10px;
+    top: 8px;
+}
+.param-filter-panel{
+    img{
+        width: 20px;
+    }
+    &>div{
+        background: white;
+        width: 80%;
+        margin: 0 auto;
+        color: $black;
+        header{
+            background: $red-color;
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 5px 5px 10px;
+            color: $white-color;
+            &>span{
+                display: flex;
+                img{margin-right: 7px;}
+                
+            }
+            &>button{
+                background-color: $red-color;
+                border: none;
+                img{
+                    background-color: $red-color;
+                }
+            }
+        }
+        //это календарик
+        &>div{
+            margin: 0 auto;
+        }
+    }
     // }
-    &>form{
-        position: absolute;
+    form{
+        padding: 10px 20px;
+        box-sizing: border-box;
         background: white;
         width: 100%;
         top: 34px;
         left: 0px;
-        border: 1px solid grey;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        input[type=submit],button{
+            border-radius: 3px;
+            
+            height: 27px;
+            font-size: 12px;
+            padding: 5px 10px;
+            cursor: pointer;
+            color: #fff;
+            border-radius: 3px;
+            border: none;
+        }
+        input[type=submit]{
+            background-color: rgb(236, 28, 36);
+        }
+        button{
+            background-color: rgb(117, 102, 102);
+        }
     }
     .wrapper{
         display: flex;
@@ -16,7 +73,7 @@
         flex-direction: column;
         height: 140px;
         width: 100%;
-        height: 125px;
+        height: 350px;
         width: 100%;
         padding: 10px 0px 0 10px;
       
@@ -34,33 +91,33 @@
     }
     // background-color: #aaaaaa;;
 }
-button.filter,.filter>span{
+// button.filter,.filter>span{
  
-        position: relative;
-        // &>button{
-        border: none;
-        background: inherit;
-        position: absolute;
-        right: 140px;
-        display: flex;
-        top: 10px;
-        outline: none;
-        cursor: pointer;
-        font-size: 14px;
-        font-family: Arial, Helvetica, sans-serif;
+//         position: relative;
+//         // &>button{
+//         border: none;
+//         background: inherit;
+//         position: absolute;
+//         right: 140px;
+//         display: flex;
+//         top: 10px;
+//         outline: none;
+//         cursor: pointer;
+//         font-size: 14px;
+//         font-family: Arial, Helvetica, sans-serif;
     
-    &::after{
-        content: "";
-        height: 10px;
-        position: absolute;
-        right: -25px;
-        top: -1px;
-        border: 3px solid white;
-        border-bottom: none;
-        border-right: none;
-        -webkit-transform: rotate(90deg);
-        transform: rotate(-135deg);
-        width: 10px;
+//     &::after{
+//         content: "";
+//         height: 10px;
+//         position: absolute;
+//         right: -25px;
+//         top: -1px;
+//         border: 3px solid white;
+//         border-bottom: none;
+//         border-right: none;
+//         -webkit-transform: rotate(90deg);
+//         transform: rotate(-135deg);
+//         width: 10px;
 
-    }
-}
+//     }
+// }

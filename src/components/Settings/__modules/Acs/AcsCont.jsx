@@ -10,10 +10,6 @@ class rawAcs extends React.Component {
         this.props.getAcs({"need": "settings"});
     }
 
-    onPageChanged = (pageNumber) => {
-        this.props.getUsers(pageNumber, this.props.pageSize);
-    }
-
     render() {
         return <Acs 
             mode={this.props.mode} 
@@ -30,9 +26,9 @@ class rawAcs extends React.Component {
 
 let mapStateToProps = (state) => {
     return {
-            objects: state.acs.settings.objects,
-            endpoints: state.acs.settings.endpoints,
-            mode: state.acs.settings.mode
+        objects: state.acs.settings.objects,
+        endpoints: state.acs.settings.endpoints,
+        mode: state.acs.settings.mode
     }
 }
 let mapDispatchToProps = {

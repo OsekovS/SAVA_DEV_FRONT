@@ -17,28 +17,19 @@ class Wrapper extends React.Component {
             hour: 'numeric',
             minute: 'numeric'
           };       
-
-        this.state = {
-            start : start,
-            end : end,
-        }
-        this.applyCallback = this.applyCallback.bind(this);
-        this.props.applyParentCallback = this.props.applyParentCallback.bind(this);
     }
- 
+    // makeSpecialString(){
+    //     return 'C ' +this.props.timeFilter.from.format('DD.MM.YYYY HH:mm') + ' по '+this.props.timeFilter.to.format('DD.MM.YYYY HH:mm')// .format('YYYY/MM/DD HH:mm:ss'
+    // }
     applyCallback(startDate, endDate){
-        this.setState({
-            start: startDate,
-            end : endDate,
-        })
-        this.props.applyParentCallback(startDate, endDate);
+        this.props.setTimeFilterThunk(startDate, endDate, this.props.indexName, this.props.id);
+        this.props.onApply()//'C ' +this.props.timeFilter.from.format('DD.MM.YYYY HH:mm') + ' по '+this.props.timeFilter.to.format('DD.MM.YYYY HH:mm')
     }
-
     render(){  
-        // console.log(this.props)
             let now = new Date();
             let start = this.props.timeFilter.from;
             let end =  this.props.timeFilter.to;
+            
             let ranges = {
                 "Сегодня": [moment(new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0,0,0,0)), moment(new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(),now.getMinutes(),0,0))],
                 "Вчера": [moment(new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0,0,0,0)).subtract(1, "days"), moment(new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23,59,0,0)).subtract(1, "days")],
@@ -87,8 +78,7 @@ class Wrapper extends React.Component {
                         end={end}
                         local={local}
                         maxDate={maxDate}
-                        applyCallback={this.applyCallback}
-                        
+                        applyCallback={this.applyCallback.bind(this)}
                        style={ {
                             fromDate: { backgroundColor: redTheme},
                             toDate: {backgroundColor: redTheme},
@@ -99,14 +89,15 @@ class Wrapper extends React.Component {
                             standaloneLayout:{display:'flex', maxWidth:'fit-content'},
                             hoverColourApply: {backgroundColor: redTheme},
                         }}
+                        standalone
                         >    
-                        <FormControl
+                        {/* <FormControl
                         id={"formControlsTextB"+this.props.id}
                         type="text"
                         label="Text"
                         placeholder="Enter text"
                         value={'C ' +start.format('DD.MM.YYYY HH:mm') + ' по '+end.format('DD.MM.YYYY HH:mm')}// .format('YYYY/MM/DD HH:mm:ss')
-                        /> 
+                        />  */}
                     </DateTimeRangeContainer>
             );
         }

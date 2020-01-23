@@ -1,0 +1,63 @@
+@import '../../../../colors.scss';
+.time-filter-panel{
+    .applyButton{
+        height: 15px;
+    }
+    // background: palevioletred;
+    &>div{
+        background: white;
+        width: 80%;
+        margin: 0 auto;
+        color: $black;
+        header{
+            background: $red-color;
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 5px 5px 10px;
+            color: $white-color;
+            span{
+                display: flex;
+                img{margin-right: 7px;}
+                
+            }
+            &>button{
+                background-color: $red-color;
+                border: none;
+                img{
+                    background-color: $red-color;
+                }
+            }
+        }
+        ul{
+            padding: 7px 5px;
+            display: flex;
+            
+            li{
+                border-radius: 5px;
+                width: 50%;
+                text-align: center;
+                padding: 3px 0;
+            }
+            li.active{
+                background-color: $red-color;
+                color: $white-color;
+            }
+        }
+        //это календарик
+        &>div{
+            margin: 0 auto;
+        }
+    }
+    img{
+        width: 20px;
+    }
+
+}
+.time-filter-panel__collapsed{
+    img{
+        width: 20px;
+        position: relative;
+        left: 10px;
+        bottom: -3px;
+    }
+}
