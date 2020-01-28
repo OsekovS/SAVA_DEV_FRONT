@@ -4,6 +4,7 @@ import PagesBar from './pagesBar/PagesBar'
 import Table from '../Components/Table/Table'
 import ShowedLogsBar from './ShowedLogsBar/ShowedLogsBar'
 import TimeFilterPanel from '../Components/TimeFilterPanel/TimeFilterPanel'
+import Saver from '../Components/Saver/Saver'
 import './Logtable.scss'
 // import  {getFromDate} from "../../../../components/redux/acs-reducer";
 class rawLogsTable extends React.Component {
@@ -52,7 +53,7 @@ class rawLogsTable extends React.Component {
 /* <input onChange={()=>this.props.changeUploadModeThunk(false,this.props.indexName,this.props.id)} type="radio" name={"time_period"+this.props.id} value="configured_time" checked={!this.props.uploads.uploads}/>
   <input onChange={()=>this.props.changeUploadModeThunk(true,this.props.indexName,this.props.id)} type="radio" name={"time_period"+this.props.id} value="bynow_time" checked={this.props.uploads.uploads} /> */
     render() {  
-      console.log(this.props)
+      // console.log(this.props)
         let curLog,footerElements
         if(this.props.curLog!==null&&this.props.logs.length!==0){
             curLog = this.props.logs[this.props.curLog]
@@ -76,6 +77,7 @@ class rawLogsTable extends React.Component {
                         timeKind={this.props.uploads.timeKind} timeNum={this.props.uploads.timeNum}
                         from_number={this.props.uploads.from_number} from_time_type={this.props.uploads.from_time_type}  id={this.props.id}/> */}
                     <FilterPanel configObj={this.props.filters[this.props.indexName]} iniState={this.props.paramFilter} submitCallBack={(filter)=>{this.props.setParamFilterThunk(filter,this.props.indexName,this.props.id)}} id={this.props.id}/>
+                    <Saver  id={this.props.id} display={this.props.saver}/>
                   </header>    
                   <Table logs={this.props.logs} headerElements={this.props.headerElements} curLog={this.props.curLog} onClickCallback={this.props.onChangeCurrentLog} sortParam={this.props.sortParam} changeSortThunk={this.props.changeSortThunk} indexName={this.props.indexName} id={this.props.id}/>
                   <footer>

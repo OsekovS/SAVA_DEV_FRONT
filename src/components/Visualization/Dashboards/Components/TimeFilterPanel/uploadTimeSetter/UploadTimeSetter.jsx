@@ -1,10 +1,6 @@
-import {Field, reduxForm} from "redux-form";
 import {Component} from 'react'
 import React from 'react';
-import ReactDOM  from 'react-dom'
 import './UploadTimeSetter.scss'
-
-
 
 class UploadTimeSetter extends Component {
   constructor(props) {
@@ -58,7 +54,6 @@ class UploadTimeSetter extends Component {
 
 
   render () { 
-    
       let timeTypes = this.time_upload_letters.map((e,n) =>{
         if(this.props.timeKind===e.val) return <option selected value={e.val} key={n.toString()}>{e.rus[this.state.uploadsLetter]}</option>
         else return <option value={e.val} key={n.toString()}>{e.rus[this.state.uploadsLetter]}</option>
@@ -86,8 +81,6 @@ class UploadTimeSetter extends Component {
                 </select>
               </label>
               <input type="submit" value="Применить"/>
-              {/* <button onClick={this.onCancel.bind(this)}>Отменить</button> */}
-              {/* onClick={this.props.handleSubmit.bind(this,this.state)} */}
           </form>
         </div>
       );

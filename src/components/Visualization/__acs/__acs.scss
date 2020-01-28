@@ -27,8 +27,22 @@
 .Visualization__acs{
     padding: 10px 10px 50px 10px;
     display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
     .logs-table-wrapper{
         margin-bottom: 50px;
+        width: 30%;
+    }
+    &>div:first-child{
+        display: flex;
+        width: 100%;
+        .aside-panel{
+            width: 200px;
+            height: fit-content;
+        }
+        .logs-table-wrapper{
+            flex: 2;
+        }
     }
     // .devices-logs{
     //     margin-bottom: 25px;
@@ -51,3 +65,8 @@
 
 
 }
+@media screen and (max-width: 1500px) {
+    .Visualization__acs .logs-table-wrapper{
+        width: 50%;
+        }
+   }

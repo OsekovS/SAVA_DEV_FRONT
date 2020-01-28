@@ -7,23 +7,48 @@ import LogsTableDeviceCont from '../Dashboards/LogsTable/LogsTableDeviceCont'
 import CircleDiagramCont from '../Dashboards/CircleDiagram/CircleDiagramCont'
 
 class __acs extends React.Component {
+  constructor(props){
+    super(props)
+    this.makeDashboards=this.makeDashboards.bind(this)
+  }
   componentDidMount() {
     this.props.getDashboardsThunk()
+  }
+  makeDashboards(indexName,clazz){
+    // console.log(this.props)
+    let a = []
+   Object.values(this.props.dashboards).forEach((e,n) => {
+      if(e.body.indexName===indexName && e.type==="Table")  a.push(<div><Sidebar></Sidebar><LogsTableDeviceCont {...e.body}  title={e.name} key={e.id} id={n} className={"Modules_table_"+clazz}/></div>)
+      })
+      Object.values(this.props.dashboards).forEach((e,n) => {
+        if(e.body.indexName===indexName && e.type==="Circle_Diagram") a.push(<CircleDiagramCont   {...e.body} key={e.id}  id={n}/>    )
+    
+    });
+
+  return a
   }
   render() {
         let dashboards = []
 
     let propsDashboards = this.props.dashboards
-    console.log(this.props)
+    // console.log(this.props)
     if(this.props.dashboards){
 
   return <BrowserRouter>
   <div className="Visualization__acs">
-      <Sidebar></Sidebar>
-      <div className="Settings__infoHandler">
-          <Route path='/visualization acs devicesLogs' render={()=><LogsTableDeviceCont {...propsDashboards[0].body}  title="События СКУД" key={propsDashboards[0].id} id={propsDashboards[0].id} className="Modules_table_devices-events"/>}></Route>
-          <Route path='/visualization acs usersLogs' render={()=><LogsTableDeviceCont {...propsDashboards[1].body} title="События Пользователей"  key={propsDashboards[1].id}  id={propsDashboards[1].id} className="Modules_table_user-events"/>}></Route>
-      </div>     
+      
+      {/* <div className="Settings__infoHandler"> */}
+          <Route path='/visualization acs devicesLogs' render={()=>
+            {return <>
+              {/* <LogsTableDeviceCont {...propsDashboards[0].body}  title="События СКУД" key={propsDashboards[0].id} id={propsDashboards[0].id} className="Modules_table_devices-events"/> */}
+              {this.makeDashboards("acs_castle_ep2_event","devices-events")}
+            </>}}
+          ></Route>
+          <Route path='/visualization acs usersLogs' render={()=>
+            {return <>{this.makeDashboards("acs_castle_ep2_userlog","user-events")}</>}
+          // <LogsTableDeviceCont {...propsDashboards[1].body} title="События Пользователей"  key={propsDashboards[1].id}  id={propsDashboards[1].id} className="Modules_table_user-events"/>
+          }></Route>
+      {/* </div>      */}
   </div>
   </BrowserRouter>
   }

@@ -16,8 +16,8 @@ let initialState = {
     ],
     dashboards: {
         acs: [
-            {active: false,text: "События устройств",to: '/visualization acs devicesLogs' },
-            {active: true,text: "События пользователей",to: '/visualization acs usersLogs' }
+            {active: true,text: "События устройств",to: '/visualization acs devicesLogs' },
+            {active: false,text: "События пользователей",to: '/visualization acs usersLogs' }
         ]
     }
 }

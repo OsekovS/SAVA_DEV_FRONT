@@ -1,7 +1,9 @@
 import React from 'react';
 import FilterPanel from '../Components/FilterPanel/FilterPanel'
 import TimeFilterPanel from '../Components/TimeFilterPanel/TimeFilterPanel'
-import { Chart, Pies, Transform } from 'rumble-charts';
+import Saver from '../Components/Saver/Saver'
+import Pdf from '../Components/Pdf/Pdf'
+import { Chart, Pies, Transform , Layer, Dots,Labels} from 'rumble-charts';
 import './CircleDiagram.scss';
 import Dropdown from '../Components/FilterPanel/dropdown/dropdown'
 import {Field, reduxForm} from "redux-form";
@@ -79,7 +81,7 @@ class CircleDiagram extends React.Component {
    
 
     render() {  
-
+      console.log(this.props)
     let secondField = {...this.props.filters[this.props.indexName]}
     let mainField =  (this.props.paramFilter===[]||this.props.paramFilter[this.props.field]===undefined)?
     this.props.filters[this.props.indexName][this.props.field]:
@@ -87,9 +89,9 @@ class CircleDiagram extends React.Component {
     //this.props.filters[this.props.indexName][this.props.field]
     // console.log(this.props)
     delete secondField[this.props.field]
-   
+        // let bigData = [1,2,3,4,5,6,7,8,9,10,11,12,13,12,11,10,9,8,7,6,5,4,3,2,1,1,2,3,4,5,6,7,8,9,10,11,12,13,12,11,10,9,8,7,6,5,4,3,2,1,2,3,4,5,6,7,8,9,10,11,12,13,12,11,10,9,8,7,6,5,4,3,2]
         const series = [{
-            data: this.props.logs
+            data: this.props.logs.count//bigData//
         }];
         let filter = this.props.filters[this.props.indexName]
 
@@ -103,60 +105,82 @@ class CircleDiagram extends React.Component {
         let fields = Object.keys(filter).map((e,n) => {
             //начальное значение - отдельная запара
             if(e===this.props.field) return <option selected value={e}>{filter.translate[e]}</option>
-            else return <option value={e}>{filter.translate[e]}</option>
+            else if(e!=='translate') return <option value={e}>{filter.translate[e]}</option>
         })
+        let ourColors = []
+      //   const series2 = [{
+      //     data: [1], label: 'Highcharts 1 '
+      // }, {
+      //     data: [5] , label: 'amCharts 2'
+      // }, {
+      //     data: [3], label: 'Google Charts 3'
+      // }];                    
+      const categories = this.props.logs.labels!==undefined?this.props.logs.labels.map((elem,numb)=>{
+        ourColors.push(this.colors[numb])
+        return <li key={numb}><div style={{backgroundColor: this.colors[numb]}}></div>{elem+' '+this.props.logs.count[numb]}</li>
+      }):[]
+      // const series3 = [{
+      //   data: [
+      //     {label: 'Highcharts 1 ', y: 1},
+      //     {label: 'amCharts 2', y: 5},
+      //     {label: 'Google Charts 3', y: 3},
+      //   ]
+      // }];
+      let blackColor = series.map(()=>{
+        return 'black'
+      })
+      // let series2 = series.map(()=>{
+
+      // })
         // console.log(this.props)   
         // console.log(fields)    
         // console.log(filter)                                              allowed={filter[this.props.field]}
-        return <div className="logs-table-wrapper">
+        // <input onChange={()=>this.props.changeUploadModeThunk(false,this.props.indexName,this.props.id)} type="radio" name={"time_period"+this.props.id} value="configured_time" checked={!this.props.uploads.uploads}/>
+        // width="180" height="180" viewBox="180 -20 260 290"
+       return <div className="logs-table-wrapper logs-table-wrapper_pie" >
                     <header className="Common__header Common__header_red Common__header_with-filter">
                         {this.props.title}
-                        <input onChange={()=>this.props.changeUploadModeThunk(false,this.props.indexName,this.props.id)} type="radio" name={"time_period"+this.props.id} value="configured_time" checked={!this.props.uploads.uploads}/>
                         <TimeFilterPanel id={this.props.id}  uploads={this.props.uploads} indexName={this.props.indexName} timeFilter={{from:this.props.timeFilter.from, to:this.props.timeFilter.to}}></TimeFilterPanel>
-                    {/* <Calendar id={this.props.id} applyParentCallback={(startDate, endDate)=>{this.props.setTimeFilterThunk(startDate, endDate, this.props.indexName, this.props.id)}} timeFilter={{from:this.props.timeFilter.from, to:this.props.timeFilter.to}}/> */}
-
-                    {/* <UploadTimeSetter  handleSubmit={(updateForm,event)=>{
-                      this.props.changeUploadsThunk(updateForm,this.props.indexName,this.props.id);
-                      // this.props.changeUploadModeThunk(true,this.props.indexName,this.props.id)
-                    }}
-                        timeKind={this.props.uploads.timeKind} timeNum={this.props.uploads.timeNum}
-                        from_number={this.props.uploads.from_number} from_time_type={this.props.uploads.from_time_type}  id={this.props.id}/> */}
-                    <FilterPanel configObj={this.props.filters[this.props.indexName]} iniState={this.props.paramFilter} submitCallBack={(filter)=>{this.props.setParamFilterThunk(filter,this.props.indexName,this.props.id)}} id={this.props.id}/>
-                        
-                        {/* <Calendar id={this.props.id} applyParentCallback={(startDate, endDate)=>{this.props.setTimeFilterThunk(startDate, endDate, this.props.indexName, this.props.id)}} timeFilter={{from:this.props.timeFilter.from, to:this.props.timeFilter.to}}/>
-                        <input onChange={()=>this.props.changeUploadModeThunk(true,this.props.indexName,this.props.id)} type="radio" name={"time_period"+this.props.id} value="bynow_time" checked={this.props.uploads.uploads} />
-                        <UploadTimeSetter  handleSubmit={(updateForm,event)=>{
-                        this.props.changeUploadsThunk(updateForm,this.props.indexName,this.props.id);
-                        // this.props.changeUploadModeThunk(true,this.props.indexName,this.props.id)
-                        }}
-                            timeKind={this.props.uploads.timeKind} timeNum={this.props.uploads.timeNum}
-                            from_number={this.props.uploads.from_number} from_time_type={this.props.uploads.from_time_type}  id={this.props.id}/> */}
-                            {/* iniState={this.state.mainField}  */}
-                        {/* <Dropdown  iniState={[iniMain]} name='mainField' options={fields} preview={filter.translate[this.props.field]}  onChangeCallBack={(this.onChangeMainField.bind(this))}/> */}
-                        
-                        {/* <MainObjForm filter ={filter} onSubmit={this.onChangeMainField}  /> */}
-                        <select onChange={(event)=>{this.props.changeMainField(event.target.value,this.props.id)}}>
-                            {fields}
-                        </select>
-                        <button onClick={()=>{this.props.getAcs(this.props.id)}}>Построить диаграмму</button>
-                        
-                        <Dropdown selected={this.props.paramFilter[this.props.field]===undefined?[]:this.props.paramFilter[this.props.field]} iniState={[]} name={this.props.field} options={mainFieldOptions} preview={filter.translate[this.props.field]}  onChangeCallBack={(keyState)=>{this.props.changeMainFieldList(this.props.id,keyState)}}/>
+                        {/* <FilterPanel configObj={this.props.filters[this.props.indexName]} iniState={this.props.paramFilter} submitCallBack={(filter)=>{this.props.setParamFilterThunk(filter,this.props.indexName,this.props.id)}} id={this.props.id}/> */}
                         <FilterPanel configObj={secondField} iniState={this.props.paramFilter} submitCallBack={(filter)=>{this.props.setParamFilterThunk(filter,this.props.indexName,this.props.id)}} id={this.props.id}/>
+                        <Saver  id={this.props.id} display={this.props.saver}/>
+                        <Pdf  id={this.props.id} display={this.props.saver}/>
                     </header>  
-                    <Chart width={600} height={250} series={series}>
+                   <div>
+                    <Chart width={180} height={180} series={series}>
                         <Transform method={['transpose', 'stack']}>
-                            <Pies combined={true} />
+                            <Pies combined={true} colors={ourColors}/>
                         </Transform>
-                    </Chart>  
-                  {/* <Table logs={this.props.logs} headerElements={this.props.headerElements} curLog={this.props.curLog} onClickCallback={this.props.onChangeCurrentLog} sortParam={this.props.sortParam} changeSortThunk={this.props.changeSortThunk} indexName={this.props.indexName} id={this.props.id}/>
-                  <footer>
-                    <span>Всего событий: {this.props.pagination.total}</span>
-                    <ShowedLogsBar showedLogs={this.props.pagination.showedLogs} showedLogsList={this.props.pagination.showedLogsList} onClickCallback={this.props.changeShowedLogsThunk} indexName={this.props.indexName} id={this.props.id}/>
-                    <PagesBar callBack={this.props.changePageThunk} pagination={this.props.pagination} indexName={this.props.indexName} id={this.props.id}/>
-                    {this.props.curLog !== null ?<div className="additional-info"><h2>Дополнительная информация о выбранном событии:</h2><ul>{footerElements}</ul></div>:null}
-                  </footer> */}
+                    </Chart>
+                    <ul>
+                      {categories}
+                    </ul>
+                   </div>
+                    <div className="logs-table-wrapper__pie-settings">
+                      <span>Параметр: </span>
+                        <select onChange={(event)=>{this.props.changeMainField(event.target.value,this.props.id)}}>
+                          {fields}
+                        </select>
+                        <span>Выбранные значения параметра: </span>
+                        <Dropdown selected={this.props.paramFilter[this.props.field]===undefined?[]:this.props.paramFilter[this.props.field]} iniState={[]} name={this.props.field} options={mainFieldOptions} preview={filter.translate[this.props.field]}  onChangeCallBack={(keyState)=>{this.props.changeMainFieldList(this.props.id,keyState)}}/>
+                        <button onClick={()=>{this.props.getAcs(this.props.id)}}>Построить диаграмму</button>
+                    </div>
             </div>
     }
+    colors = [
+      '#1f77b4', '#aec7e8', '#ff7f0e', '#ffbb78', '#2ca02c',
+      '#98df8a', '#d62728', '#ff9896', '#9467bd', '#c5b0d5',
+      '#8c564b', '#c49c94', '#e377c2', '#f7b6d2', '#7f7f7f',
+      '#c7c7c7', '#bcbd22', '#dbdb8d', '#17becf', '#9edae5',
+      '#393b79', '#5254a3', '#6b6ecf', '#9c9ede', '#637939',
+      '#8ca252', '#b5cf6b', '#cedb9c', '#8c6d31', '#bd9e39',
+      '#e7ba52', '#e7cb94', '#843c39', '#ad494a', '#d6616b',
+      '#e7969c', '#7b4173', '#a55194', '#ce6dbd', '#de9ed6',
+      '#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#e6550d',
+      '#fd8d3c', '#fdae6b', '#fdd0a2', '#31a354', '#74c476',
+      '#a1d99b', '#c7e9c0', '#756bb1', '#9e9ac8', '#bcbddc',
+      '#dadaeb', '#636363', '#969696', '#bdbdbd', '#d9d9d9'
+    ]
   }
 
 

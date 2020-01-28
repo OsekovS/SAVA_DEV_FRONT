@@ -336,7 +336,7 @@ export const acsIni = function(){
         from_time_type: 'h',
         to: "now/d"
         },
-        paramFilter: {},
+        paramFilter: {}, 
     }
     return {
         settings: {

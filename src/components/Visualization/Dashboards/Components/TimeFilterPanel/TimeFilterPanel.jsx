@@ -2,7 +2,6 @@ import React from 'react';
 import {Component} from 'react'
 import UploadTimeSetter from './uploadTimeSetter/UploadTimeSetterCont.jsx'
 import Calendar from './calendar/calendarCont'
-import moment from "moment"
 import  './TimeFilterPanel.scss'
 class TimeFilterPanel extends Component {
     constructor(props) {
@@ -26,7 +25,6 @@ class TimeFilterPanel extends Component {
       {rus: ["день", "дня", "дней"], val: 'd', sex: 'm'},
       {rus: ["месяц", "месяца", "месяцев"], val: 'M', sex: 'm'},
     ]
-    // /<span onClick={()=>{this.setState({ display: 'interval' });}}>:)<img src={require('./calendar.svg')}></img></span>
     defineLetter(value){
       if(value[value.length-1] === '1' && value !== '11')
         {
@@ -44,7 +42,6 @@ class TimeFilterPanel extends Component {
         }
     }
     makeSpecialString(props){
-      // console.log(props)
       let str1,str2
       this.time_from_letters.forEach(element => {
         if(element.val===props.from_time_type){
@@ -63,7 +60,6 @@ class TimeFilterPanel extends Component {
       return str1+' '+str2
     }
     componentWillReceiveProps(newprops){
-      // console.log(newprops)
       this.setState({ preview: newprops.uploads.uploads?this.makeSpecialString(newprops.uploads):' c ' +newprops.timeFilter.from.format('DD.MM.YYYY HH:mm') + ' по '+newprops.timeFilter.to.format('DD.MM.YYYY HH:mm') });
     }
     onApply(){
@@ -72,12 +68,9 @@ class TimeFilterPanel extends Component {
    
     render(){
         let viget 
-        // console.log(this.props.uploads)
         let {timeKind, timeNum, from_number, from_time_type} = this.props.uploads
-        // console.log(from_time_type)
         if(this.state.display=== 'interval') viget = <Calendar id={this.props.id} indexName={this.props.indexName} timeFilter={{from:this.props.timeFilter.from, to:this.props.timeFilter.to}} onApply={this.onApply}/>
-        else viget = <UploadTimeSetter defineLetter={this.defineLetter} makeSpecialString={this.makeSpecialString} timeKind={timeKind} timeNum={timeNum}  from_number={from_number} from_time_type={from_time_type} id={this.props.id} onApply={this.onApply}/>
-        // console.log(viget)
+        else viget = <UploadTimeSetter indexName={this.props.indexName} defineLetter={this.defineLetter} makeSpecialString={this.makeSpecialString} timeKind={timeKind} timeNum={timeNum}  from_number={from_number} from_time_type={from_time_type} id={this.props.id} onApply={this.onApply}/>
         if(this.state.display==='collapsed') return <span className='time-filter-panel__collapsed' onClick={()=>{this.setState({ display: 'uploads' });}}>{this.state.preview}<img src={require('./calendar.svg')}></img></span>
         else return <div className="modal-form-keeper time-filter-panel"  >
                         <div>

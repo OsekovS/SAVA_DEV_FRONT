@@ -33,14 +33,18 @@ const acsReducer = (state = dashboards, action) => {
         stateCopy.dashboards = action.json.dashboards.map((dash) => {
         // console.log(dash)
         let body = JSON.parse(dash[4])   
-        let toDate = moment((new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(),now.getMinutes(),now.getSeconds(),0)))
-        let fromDate = moment((new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(),now.getMinutes(),now.getSeconds(),0))).subtract(body.timeFilter.from.number, body.timeFilter.from.type)
+        // console.log(new Date(body.timeFilter.from))
+        // console.log(new Date(body.timeFilter.to))
+        // YYYY/MM/DD HH:mm:ss
+        let toDate = moment(new Date(body.timeFilter.to))//moment((new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(),now.getMinutes(),now.getSeconds(),0)))
+        let fromDate = moment(new Date(body.timeFilter.from))//moment((new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(),now.getMinutes(),now.getSeconds(),0))).subtract(body.timeFilter.from.number, body.timeFilter.from.type)
             
             body.timeFilter= {
                 from: fromDate,
                 to: toDate
             }
-            
+            body.pdf=body.saver='wait'
+           
             return {
                 id: dash[0],
                 name: dash[1],
@@ -382,17 +386,29 @@ export const changeUploadsThunk = (uploads,indexName,id) => {///////////////////
                 from: getFromDate(uploads.from_number,uploads.from_time_type).format('YYYY/MM/DD HH:mm:ss'),
                  to:  state.body.uploads.to
             }
-        switch (state.type) {
-            case 'Table':
-                specialObject={
-                    logsCount: state.body.pagination.showedLogs,
-                    curPage: 1,
-                    sortParam: state.body.sortParam
-                }
-                reducers.push(changePage(1,id))
+        let need
+        if(state.type==='Table') {
+            specialObject={
+                logsCount: state.body.pagination.showedLogs,
+                curPage: 1,
+                sortParam: state.body.sortParam 
+            }
+            need = 'logs'
+            reducers.push(changePage(1,id))
+        }else if(state.type==='Circle_Diagram'){
+            console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            specialObject={
+                fieldName: state.body.field,
+                //если фильтр дашборда пустой либо же в этом фильтре нет ничего по нужному параметру - ищем по всем иначе берем что нужно прямо в фильтре
+                fieldList: (state.body.paramFilter===[]||state.body.paramFilter[state.body.field]===undefined)?
+                getState().acs.dashboards.filters[state.body.indexName][state.body.field]:
+                state.body.paramFilter[state.body.field]
+                // fieldList: ["Детский садик 'вишенка'", "Крематорий 'барбекью'"]
+            }
+            need = 'Circle_Diagram'
         }        
         let reqObj = {
-            "need": "logs",
+            need,
             indexName,
             timeFilter,
             "paramsFilter": state.body.paramFilter,
@@ -436,24 +452,7 @@ export const changeShowedLogsThunk = (showedLogs,indexName,id) => {
         uniThunk(reqObj,[changeShowedLogs(showedLogs,id),changePage(1,id)],dispatch,id)
     }
 }
-const uniThunk = (reqObj,dispatches,dispatch, id) => {
-        // console.log(reqObj)
-        axios.post("php/acs-form-processor.php", reqObj).then(response => {
-            console.log(response)
-            let json = JSON.parse(response.request.response);
-            console.log(json)
-            if(reqObj['need']==='logs') dispatch(uploadAcs(json, reqObj, id))
-            if(reqObj['need']==='dashboards') dispatch(uploadDashboards(json))
-            if(reqObj['need']==='Circle_Diagram') dispatch(uploadCircleDiagram(json,id))
-            dispatches.forEach(obj => dispatch(obj))
-        }).catch(function (error) {
-            // handle error
-            console.log(error);
-          })
-          .finally(function () {
-            // always executed
-          });;
-}
+
 export const changePageThunk = (page,indexName,id) => {
     // console.log(reqObj)
     return (dispatch, getState) => {
@@ -493,17 +492,28 @@ export const setTimeFilterThunk = (startDate, endDate,indexName,id) => {
             let state = getState().acs.dashboards.dashboards[id]
             let specialObject = {}
             let reducers = [TimeFilter(startDate, endDate,id),changeUploads(false,id)]
-            switch (state.type) {
-                case 'Table':
-                    specialObject={
-                        logsCount: state.body.pagination.showedLogs,
-                        curPage: 1,
-                        sortParam: state.body.sortParam 
-                    }
-                    reducers.push(changePage(1,id))
-            } 
+            let need
+            if(state.type==='Table') {
+                specialObject={
+                    logsCount: state.body.pagination.showedLogs,
+                    curPage: 1,
+                    sortParam: state.body.sortParam 
+                }
+                need = 'logs'
+                reducers.push(changePage(1,id))
+            }else if(state.type==='Circle_Diagram'){
+                specialObject={
+                    fieldName: state.body.field,
+                    //если фильтр дашборда пустой либо же в этом фильтре нет ничего по нужному параметру - ищем по всем иначе берем что нужно прямо в фильтре
+                    fieldList: (state.body.paramFilter===[]||state.body.paramFilter[state.body.field]===undefined)?
+                    getState().acs.dashboards.filters[state.body.indexName][state.body.field]:
+                    state.body.paramFilter[state.body.field]
+                    // fieldList: ["Детский садик 'вишенка'", "Крематорий 'барбекью'"]
+                }
+                need = 'Circle_Diagram'
+            }
             let reqObj = {
-                "need": "logs",
+                need,
                 indexName,
                 "timeFilter": {
                     from: startDate.format('YYYY/MM/DD HH:mm:ss'),
@@ -527,21 +537,32 @@ export const setParamFilterThunk = (filter,indexName,id) => {
     for (let param in filter) {
         if(filter[param].length!==0) filterCopy[param] = filter[param]
     }
-    
     delete filterCopy.opened
     return (dispatch,getState) => {
         let state = getState().acs.dashboards.dashboards[id]
         let timeFilter, specialObject = {}
         let reducers = [ParamFilter(filterCopy,id)]
-        switch (state.type) {
-            case 'Table':
-                specialObject={
-                    logsCount: state.body.pagination.showedLogs,
-                    curPage: 1,
-                    sortParam: state.body.sortParam 
-                }
-                reducers.push(changePage(1,id))
-        } 
+        let need
+        if(state.type==='Table') {
+            specialObject={
+                logsCount: state.body.pagination.showedLogs,
+                curPage: 1,
+                sortParam: state.body.sortParam 
+            }
+            need = 'logs'
+            reducers.push(changePage(1,id))
+        }else if(state.type==='Circle_Diagram'){
+            specialObject={
+                fieldName: state.body.field,
+                //если фильтр дашборда пустой либо же в этом фильтре нет ничего по нужному параметру - ищем по всем иначе берем что нужно прямо в фильтре
+                fieldList: (state.body.paramFilter===[]||state.body.paramFilter[state.body.field]===undefined)?
+                getState().acs.dashboards.filters[state.body.indexName][state.body.field]:
+                state.body.paramFilter[state.body.field]
+                // fieldList: ["Детский садик 'вишенка'", "Крематорий 'барбекью'"]
+            }
+            need = 'Circle_Diagram'
+        }
+
         if(state.body.uploads.uploads){
             timeFilter = {
                 from: getFromDate(state.body.uploads.from_number,state.body.uploads.from_time_type).format('YYYY/MM/DD HH:mm:ss'),
@@ -556,7 +577,7 @@ export const setParamFilterThunk = (filter,indexName,id) => {
         }
         
         let  reqObj={
-                "need": "logs",
+                need,
                 indexName,
                 timeFilter,
                 "paramsFilter": filterCopy,
@@ -615,6 +636,49 @@ export const changeSortThunk = (sortParam,indexName,id,dashField) => {
         }
         uniThunk(reqObj,[changeSortParam(sortParam,id)],dispatch,id)
     }
+}
+
+export const onSaveDashParamsThunk = (id) => {
+    return (dispatch,getState) => {
+        let state = getState().acs.dashboards.dashboards[id]
+        let {timeFilter,paramFilter,uploads,indexName,field} = state.body
+        timeFilter = {
+                from: timeFilter.from.format('YYYY/MM/DD HH:mm:ss'),
+                to:  timeFilter.to.format('YYYY/MM/DD HH:mm:ss'),
+        }
+        console.log(timeFilter)
+        const reqObj = {
+            "need": "changeDash",
+            id,
+            change: {timeFilter, paramFilter, uploads, field},
+            login: getState().auth.briefUserInfo.name,
+            indexName
+        }
+        uniThunk(reqObj,[],dispatch)
+    }
+}
+
+const uniThunk = (reqObj,dispatches,dispatch, id) => {
+    // console.log(reqObj)
+    axios.post("php/acs-form-processor.php", reqObj).then(response => {
+        console.log(response)
+        let json = JSON.parse(response.request.response);
+        console.log(json)
+        if(reqObj['need']==='logs') dispatch(uploadAcs(json, reqObj, id))
+        if(reqObj['need']==='dashboards') dispatch(uploadDashboards(json))
+        if(reqObj['need']==='Circle_Diagram') dispatch(uploadCircleDiagram(json,id))
+        dispatches.forEach(obj => dispatch(obj))
+    }).catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .finally(function () {
+        // always executed
+      });;
+}
+
+export const onCreatePdfThunk = () => {
+    console.log('pdf')
 }
 
 export const  getFromDate = (from_number,from_time_type)=>{
