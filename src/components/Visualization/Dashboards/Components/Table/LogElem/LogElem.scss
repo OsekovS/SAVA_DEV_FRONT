@@ -1,7 +1,12 @@
-@import '../../colors.scss';
+// @import '../../colors.scss';
 // .list-elem{
 //     cursor: pointer;
+// // }
+// .list-elem__title{
+//     color: $lightGreyText-color;
 // }
-.list-elem__title{
-    color: $lightGreyText-color;
+.list-elem__circle{
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
 }

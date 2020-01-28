@@ -34,19 +34,21 @@ class CircleDiagram extends React.Component {
         //в состоянии хранится значение нашего фильтра по "главному" полю
         //остальные отправляются в фильтр
        
-
-        
+        // this.props.getAcs(this.props.id)
+        // console.log('CONSTRUCTOR')
         
         if(this.props.uploads.uploads){
           this.intervalId = setInterval(()=>{this.props.getAcs(this.props.id)},
           this.props.uploads.timeKind*this.props.uploads.timeNum);
         }
+        
 
     }
 
     componentDidMount() {
-    //   console.log(this.state)
-      this.props.getAcs(this.props.id)
+    //   console.log('MOUNT')
+    console.log(this.props.logs)
+    if(this.props.logs.length===0) this.props.getAcs(this.props.id)
     }
     componentWillUnmount(){
       if(this.intervalId!==undefined) clearInterval(this.intervalId);
@@ -81,7 +83,7 @@ class CircleDiagram extends React.Component {
    
 
     render() {  
-      console.log(this.props)
+      console.log(this.props.logs)
     let secondField = {...this.props.filters[this.props.indexName]}
     let mainField =  (this.props.paramFilter===[]||this.props.paramFilter[this.props.field]===undefined)?
     this.props.filters[this.props.indexName][this.props.field]:

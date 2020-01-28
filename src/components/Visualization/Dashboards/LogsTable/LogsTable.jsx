@@ -19,7 +19,7 @@ class rawLogsTable extends React.Component {
     }
 
     componentDidMount() {
-      // console.log('MOUNT')
+      console.log(this.props)
       this.props.getAcs(this.props.id)
     }
     componentWillUnmount(){
@@ -79,7 +79,7 @@ class rawLogsTable extends React.Component {
                     <FilterPanel configObj={this.props.filters[this.props.indexName]} iniState={this.props.paramFilter} submitCallBack={(filter)=>{this.props.setParamFilterThunk(filter,this.props.indexName,this.props.id)}} id={this.props.id}/>
                     <Saver  id={this.props.id} display={this.props.saver}/>
                   </header>    
-                  <Table logs={this.props.logs} headerElements={this.props.headerElements} curLog={this.props.curLog} onClickCallback={this.props.onChangeCurrentLog} sortParam={this.props.sortParam} changeSortThunk={this.props.changeSortThunk} indexName={this.props.indexName} id={this.props.id}/>
+                  <Table clazz={this.props.clazz} logs={this.props.logs} headerElements={this.props.headerElements} curLog={this.props.curLog} onClickCallback={this.props.onChangeCurrentLog} sortParam={this.props.sortParam} changeSortThunk={this.props.changeSortThunk} indexName={this.props.indexName} id={this.props.id}/>
                   <footer>
                     <span>Всего событий: {this.props.pagination.total}</span>
                     <ShowedLogsBar showedLogs={this.props.pagination.showedLogs} showedLogsList={this.props.pagination.showedLogsList} onClickCallback={this.props.changeShowedLogsThunk} indexName={this.props.indexName} id={this.props.id}/>

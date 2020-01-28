@@ -95,47 +95,17 @@ class __users extends React.Component {
         return  <div className="Settings__users">
                 {/* <__header text={"Список пользователей"} clazz="Common__header Common__header_red"/> */}
                     <table className="Modules_table Modules_table__cam-dev">
-                            <tbody>
-                                {usersElements}  
-                            </tbody>
-                        </table>
-                        <button onClick={this.onChangeMode.bind(this, 'addUser')}>Добавить</button>
-                    <AddForm mode={this.state.mode} onSubmit={this.onAddUser} callback={this.onChangeMode.bind(this, 'view')} />
-                    <ChangeForm mode={this.state.mode} onSubmit={this.onChangePass} callback={this.onChangeMode.bind(this, 'view')} />
+                        <tbody>
+                            {usersElements}  
+                        </tbody>
+                    </table>
+                    <button onClick={this.onChangeMode.bind(this, 'addUser')}>Добавить</button>
+                <AddForm mode={this.state.mode} onSubmit={this.onAddUser} callback={this.onChangeMode.bind(this, 'view')} />
+                <ChangeForm mode={this.state.mode} onSubmit={this.onChangePass} callback={this.onChangeMode.bind(this, 'view')} />
                 </div>
              }
 
 }
 
-// const __users = (props) => {
-
-//     const onDellUser = (id) => {
-//         props.delUserThunk(id)
-//     }
-//     const onAddUser = (user) => {
-//         props.addUserThunk(user)
-//     }
-//     const onChangeMode = (mode) =>{
-//         props.changeMode(mode)
-//     }
-//     //console.log(props.users)
-//     let usersElements = props.users.map((e,n) => {  
-
-//     return <ListElem name='list-elem' items={e} 
-//     key={e.id}
-//     elemChangeCallBack={onDellUser} elemDellCallBack={onDellUser}/>
-//     })
-
-//     return <div className="Settings__users">
-//         {/* <__header text={"Список пользователей"} clazz="Common__header Common__header_red"/> */}
-//             <table className="Modules_table Modules_table__cam-dev">
-//                     <tbody>
-//                         {usersElements}  
-//                     </tbody>
-//                 </table>
-//                 <button onClick={onChangeMode.bind(this,'addUser')}>Добавить</button>
-//             <ReduxForm  onSubmit={onAddUser} />
-//         </div>
-// }
 
 export default __users;

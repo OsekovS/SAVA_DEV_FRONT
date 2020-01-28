@@ -29,30 +29,44 @@ const acsReducer = (state = dashboards, action) => {
    switch (action.type) {
        case UPLOAD_DASHBOARDS:
         stateCopy = {...state};
-        let now = new Date()
-        stateCopy.dashboards = action.json.dashboards.map((dash) => {
-        // console.log(dash)
-        let body = JSON.parse(dash[4])   
-        // console.log(new Date(body.timeFilter.from))
-        // console.log(new Date(body.timeFilter.to))
-        // YYYY/MM/DD HH:mm:ss
-        let toDate = moment(new Date(body.timeFilter.to))//moment((new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(),now.getMinutes(),now.getSeconds(),0)))
-        let fromDate = moment(new Date(body.timeFilter.from))//moment((new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(),now.getMinutes(),now.getSeconds(),0))).subtract(body.timeFilter.from.number, body.timeFilter.from.type)
-            
-            body.timeFilter= {
-                from: fromDate,
-                to: toDate
-            }
-            body.pdf=body.saver='wait'
-           
-            return {
+        stateCopy.dashboards = []
+        action.json.dashboards.forEach(dash => {
+            let body = JSON.parse(dash[4])   
+            let toDate = moment(new Date(body.timeFilter.to))//moment((new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(),now.getMinutes(),now.getSeconds(),0)))
+            let fromDate = moment(new Date(body.timeFilter.from))//moment((new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(),now.getMinutes(),now.getSeconds(),0))).subtract(body.timeFilter.from.number, body.timeFilter.from.type)
+                
+                body.timeFilter= {
+                    from: fromDate,
+                    to: toDate
+                }
+                body.pdf=body.saver='wait'
+            stateCopy.dashboards[dash[0]] = {
                 id: dash[0],
                 name: dash[1],
                 type: dash[2],
                 body: body,
-                // logs: []
             }
         });
+        // stateCopy.dashboards = action.json.dashboards.map((dash) => {
+        // // console.log(dash)
+        // let body = JSON.parse(dash[4])   
+        // let toDate = moment(new Date(body.timeFilter.to))//moment((new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(),now.getMinutes(),now.getSeconds(),0)))
+        // let fromDate = moment(new Date(body.timeFilter.from))//moment((new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(),now.getMinutes(),now.getSeconds(),0))).subtract(body.timeFilter.from.number, body.timeFilter.from.type)
+            
+        //     body.timeFilter= {
+        //         from: fromDate,
+        //         to: toDate
+        //     }
+        //     body.pdf=body.saver='wait'
+           
+        //     return {
+        //         id: dash[0],
+        //         name: dash[1],
+        //         type: dash[2],
+        //         body: body,
+        //         // logs: []
+        //     }
+        // });
         console.log(action)
         stateCopy.filters={}
         action.json.filters.forEach(filter => {
@@ -66,19 +80,23 @@ const acsReducer = (state = dashboards, action) => {
             stateCopy.dashboards = {...state.dashboards}
             stateCopy.dashboards[action.id] = {...state.dashboards[action.id]}
             stateCopy.dashboards[action.id].body = {...state.dashboards[action.id].body}
+            stateCopy.dashboards[action.id].body.logs = {...state.dashboards[action.id].body.logs}
             stateCopy.dashboards[action.id].body.logs = action.json.logs
+            console.log(action)
+            console.log(stateCopy.dashboards[action.id].body.logs)
            return stateCopy
         case UPLOAD_ACS_DASHBOARDS:
             stateCopy = {...state};
-            console.log(state)
+            // console.log(state)
             stateCopy.dashboards = {...state.dashboards}
             stateCopy.dashboards[action.id] = {...state.dashboards[action.id]}
             stateCopy.dashboards[action.id].body = {...state.dashboards[action.id].body}
-            console.log(action)
+            // console.log(action)
             stateCopy.dashboards[action.id].body.logs = action.json.logs.map( (e) => e._source)
             stateCopy.dashboards[action.id].body.pagination = {...state.dashboards[action.id].body.pagination}
             stateCopy.dashboards[action.id].body.pagination.total = action.json.total
             stateCopy.dashboards[action.id].body.pagination.lastPage = Math.ceil(action.json.total/stateCopy.dashboards[action.id].body.pagination.showedLogs)
+            // console.log(stateCopy.dashboards[action.id])
             return stateCopy
         case CHANGE_TIME:
             stateCopy = {...state};
@@ -258,6 +276,7 @@ export const uploadDashboards = (json) => ({type: UPLOAD_DASHBOARDS, json})
 export const changeMainField = (value,id) => ({ type: CHANGE_MAIN_FIELD, value,id})
 export const changeMainFieldList = (id,list) => ({ type: CHANGE_MAIN_FIELD_LIST, list,id})
 export const getAcs = (id) => {
+   
     return (dispatch,getState) => {
         
         let state = getState().acs.dashboards.dashboards[id]
@@ -284,7 +303,7 @@ export const getAcs = (id) => {
             }
             need = "logs"
         }else if(state.type==='Circle_Diagram'){
-            console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+            // console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
             specialObject={
                 fieldName: state.body.field,
                 //если фильтр дашборда пустой либо же в этом фильтре нет ничего по нужному параметру - ищем по всем иначе берем что нужно прямо в фильтре
@@ -661,7 +680,7 @@ export const onSaveDashParamsThunk = (id) => {
 const uniThunk = (reqObj,dispatches,dispatch, id) => {
     // console.log(reqObj)
     axios.post("php/acs-form-processor.php", reqObj).then(response => {
-        console.log(response)
+        // console.log(response)
         let json = JSON.parse(response.request.response);
         console.log(json)
         if(reqObj['need']==='logs') dispatch(uploadAcs(json, reqObj, id))

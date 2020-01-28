@@ -1,29 +1,5 @@
 @import '../../colors.scss';
-.Modules_table.Modules_table-logs{
-    td:nth-of-type(1){
-        width: 145px;
-    }
-    td:nth-of-type(4){
-        width: 130px;
-    }
-    td:nth-of-type(2){
-        width: 105px;
-    }
-    td:nth-of-type(3){
-        width: 140px;
-    }
-    td:nth-of-type(5){
-        width: 110px;
-    }
-    td:nth-of-type(6){
-        width: 80px;
-        white-space: nowrap;
-        padding-right: 8px;
-    }
-    td:nth-of-type(7){
-        width: 150px;
-    }
-}
+
 .Visualization__acs{
     padding: 10px 10px 50px 10px;
     display: flex;
@@ -62,11 +38,16 @@
             margin-right: 5px;
         }
     }
-
-
 }
 @media screen and (max-width: 1500px) {
     .Visualization__acs .logs-table-wrapper{
         width: 50%;
+    }
+}
+@media screen and (max-width: 950px) {
+    .Visualization__acs .logs-table-wrapper{
+        .table-wrapper,.showed-logs{
+            margin-bottom: 20px;
         }
-   }
+    }
+}

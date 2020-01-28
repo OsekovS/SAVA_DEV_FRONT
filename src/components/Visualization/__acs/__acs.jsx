@@ -12,16 +12,18 @@ class __acs extends React.Component {
     this.makeDashboards=this.makeDashboards.bind(this)
   }
   componentDidMount() {
+    //вызвать нужно только 1 раз
+    if(this.props.dashboards===null)
     this.props.getDashboardsThunk()
   }
   makeDashboards(indexName,clazz){
-    // console.log(this.props)
+    console.log(this.props)
     let a = []
    Object.values(this.props.dashboards).forEach((e,n) => {
-      if(e.body.indexName===indexName && e.type==="Table")  a.push(<div><Sidebar></Sidebar><LogsTableDeviceCont {...e.body}  title={e.name} key={e.id} id={n} className={"Modules_table_"+clazz}/></div>)
+      if(e.body.indexName===indexName && e.type==="Table")  a.push(<div><Sidebar></Sidebar><LogsTableDeviceCont clazz={e.body.indexName} {...e.body}  title={e.name} key={e.id} id={e.id} className={"Modules_table_"+clazz}/></div>)//id={n} 
       })
       Object.values(this.props.dashboards).forEach((e,n) => {
-        if(e.body.indexName===indexName && e.type==="Circle_Diagram") a.push(<CircleDiagramCont   {...e.body} key={e.id}  id={n}/>    )
+        if(e.body.indexName===indexName && e.type==="Circle_Diagram") a.push(<CircleDiagramCont   {...e.body} key={e.id} id={e.id} />    )//id={n}
     
     });
 
@@ -33,25 +35,19 @@ class __acs extends React.Component {
     let propsDashboards = this.props.dashboards
     // console.log(this.props)
     if(this.props.dashboards){
-
-  return <BrowserRouter>
-  <div className="Visualization__acs">
-      
-      {/* <div className="Settings__infoHandler"> */}
-          <Route path='/visualization acs devicesLogs' render={()=>
-            {return <>
-              {/* <LogsTableDeviceCont {...propsDashboards[0].body}  title="События СКУД" key={propsDashboards[0].id} id={propsDashboards[0].id} className="Modules_table_devices-events"/> */}
-              {this.makeDashboards("acs_castle_ep2_event","devices-events")}
-            </>}}
-          ></Route>
-          <Route path='/visualization acs usersLogs' render={()=>
-            {return <>{this.makeDashboards("acs_castle_ep2_userlog","user-events")}</>}
-          // <LogsTableDeviceCont {...propsDashboards[1].body} title="События Пользователей"  key={propsDashboards[1].id}  id={propsDashboards[1].id} className="Modules_table_user-events"/>
-          }></Route>
-      {/* </div>      */}
-  </div>
-  </BrowserRouter>
-  }
+      return <BrowserRouter>
+      <div className="Visualization__acs">
+              <Route path='/visualization acs devicesLogs' render={()=>
+                {return <>
+                  {this.makeDashboards("acs_castle_ep2_event","devices-events")}
+                </>}}
+              ></Route>
+              <Route path='/visualization acs usersLogs' render={()=>
+                {return <>{this.makeDashboards("acs_castle_ep2_userlog","user-events")}</>}
+              }></Route>
+      </div>
+      </BrowserRouter>
+    }
   else{return null}
 }
 }

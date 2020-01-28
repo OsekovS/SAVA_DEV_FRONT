@@ -11,8 +11,8 @@ const TableHeader = (props) => {
         }//
         else return  <td onClick={()=>{props.clickCallBack(e,props.indexName,props.id)}} key={n} >{e.text} <img className="logs-table__arrow logs-table__arrow_down" src={require('./non-active.svg')}></img></td>//<img src={require('./multimedia.svg')}></img>
     })
-
-    return <table className="Modules_table Modules_table-logs">
+    // Modules_table Modules_table-logs
+    return <table className={"Modules_table Table__"+props.className}>
             <tbody>
                 <tr className={props.className}  >
                     {Elements}
