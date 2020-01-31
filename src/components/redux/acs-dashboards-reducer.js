@@ -34,12 +34,13 @@ const acsReducer = (state = dashboards, action) => {
             let body = JSON.parse(dash[4])   
             let toDate = moment(new Date(body.timeFilter.to))//moment((new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(),now.getMinutes(),now.getSeconds(),0)))
             let fromDate = moment(new Date(body.timeFilter.from))//moment((new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(),now.getMinutes(),now.getSeconds(),0))).subtract(body.timeFilter.from.number, body.timeFilter.from.type)
-                
+                // body.mode = 'afterlastSession'
                 body.timeFilter= {
                     from: fromDate,
                     to: toDate
                 }
-                body.pdf=body.saver='wait'
+                // body.uploads.uploads=true;
+                body.pdf=body.saver=body.markAsRead='wait'
             stateCopy.dashboards[dash[0]] = {
                 id: dash[0],
                 name: dash[1],
@@ -47,27 +48,6 @@ const acsReducer = (state = dashboards, action) => {
                 body: body,
             }
         });
-        // stateCopy.dashboards = action.json.dashboards.map((dash) => {
-        // // console.log(dash)
-        // let body = JSON.parse(dash[4])   
-        // let toDate = moment(new Date(body.timeFilter.to))//moment((new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(),now.getMinutes(),now.getSeconds(),0)))
-        // let fromDate = moment(new Date(body.timeFilter.from))//moment((new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(),now.getMinutes(),now.getSeconds(),0))).subtract(body.timeFilter.from.number, body.timeFilter.from.type)
-            
-        //     body.timeFilter= {
-        //         from: fromDate,
-        //         to: toDate
-        //     }
-        //     body.pdf=body.saver='wait'
-           
-        //     return {
-        //         id: dash[0],
-        //         name: dash[1],
-        //         type: dash[2],
-        //         body: body,
-        //         // logs: []
-        //     }
-        // });
-        console.log(action)
         stateCopy.filters={}
         action.json.filters.forEach(filter => {
             stateCopy.filters[filter[0]]=JSON.parse(filter[1])
@@ -275,26 +255,42 @@ export const changeSortParam = (sortParam,id) => ({ type: CHANGE_SORT_PARAM, sor
 export const uploadDashboards = (json) => ({type: UPLOAD_DASHBOARDS, json})
 export const changeMainField = (value,id) => ({ type: CHANGE_MAIN_FIELD, value,id})
 export const changeMainFieldList = (id,list) => ({ type: CHANGE_MAIN_FIELD_LIST, list,id})
-export const getAcs = (id) => {
+
+const  prepareTimefilter = (getState,dbName,state,indexName)=>{
+    
+    const module = getState().auth.briefUserInfo.modules[dbName]
+    // console.log(module)
+    // console.log(dbName,state,indexName)
+    if(module.mode==='lastViewed')  return {
+        from: module.indexes[indexName].lastViewed,
+         to:  state.body.uploads.to
+    }
+    else if(state.body.uploads.uploads){
+        return {
+            from: getFromDate(state.body.uploads.from_number,state.body.uploads.from_time_type).format('YYYY/MM/DD HH:mm:ss'),
+             to:  state.body.uploads.to
+        }
+    }else{
+        return {
+            from: state.body.timeFilter.from.format('YYYY/MM/DD HH:mm:ss'),
+            to:  state.body.timeFilter.to.format('YYYY/MM/DD HH:mm:ss'),
+        }
+    }
+  }
+
+export const getAcs = (id,indexName,dbName) => {
    
     return (dispatch,getState) => {
         
         let state = getState().acs.dashboards.dashboards[id]
         
         // console.log('acs-form-processor.php')
-        let timeFilter, specialObject = {}
+        let specialObject = {}
         let need
-        if(state.body.uploads.uploads){
-            timeFilter = {
-                from: getFromDate(state.body.uploads.from_number,state.body.uploads.from_time_type).format('YYYY/MM/DD HH:mm:ss'),
-                 to:  state.body.uploads.to
-            }
-        }else{
-            timeFilter = {
-                from: state.body.timeFilter.from.format('YYYY/MM/DD HH:mm:ss'),
-                to:  state.body.timeFilter.to.format('YYYY/MM/DD HH:mm:ss'),
-            }
-        }
+        // if(state.body.uploads.uploads){
+        // if(mode=='lastViewed') timeFilter = 'lastViewed'
+        let timeFilter = prepareTimefilter(getState,dbName,state,indexName)
+
         if(state.type==='Table') {
             specialObject={
                 logsCount: state.body.pagination.showedLogs,
@@ -365,6 +361,7 @@ export const changeUploadModeThunk = (uploadMode,indexName,id) => {/////////////
         let state = getState().acs.dashboards.dashboards[id]
         let timeFilter, specialObject = {}
         let reducers = [changeUploads(uploadMode,id)]
+        
         if(uploadMode){
             timeFilter = {
                 from: getFromDate(state.body.uploads.from_number,state.body.uploads.from_time_type).format('YYYY/MM/DD HH:mm:ss'),
@@ -440,22 +437,10 @@ export const changeUploadsThunk = (uploads,indexName,id) => {///////////////////
 
 
 
-export const changeShowedLogsThunk = (showedLogs,indexName,id) => {
+export const changeShowedLogsThunk = (showedLogs,indexName,dbName,id) => {
     return (dispatch,getState) => {
         let state = getState().acs.dashboards.dashboards[id]
-        let timeFilter = {}
-        if(state.body.uploads.uploads){
-            timeFilter = {
-                from: getFromDate(state.body.uploads.from_number,state.body.uploads.from_time_type).format('YYYY/MM/DD HH:mm:ss'),
-                 to:  state.body.uploads.to
-            }
-        }
-        else{
-            timeFilter = {
-                from: state.body.timeFilter.from.format('YYYY/MM/DD HH:mm:ss'),
-                to:  state.body.timeFilter.to.format('YYYY/MM/DD HH:mm:ss'),
-            }
-        }
+        let timeFilter = prepareTimefilter(getState,dbName,state,indexName)
         let reqObj = {
             "need": "logs",
             indexName,
@@ -472,24 +457,10 @@ export const changeShowedLogsThunk = (showedLogs,indexName,id) => {
     }
 }
 
-export const changePageThunk = (page,indexName,id) => {
-    // console.log(reqObj)
+export const changePageThunk = (page,indexName,id,dbName) => {
     return (dispatch, getState) => {
-        let state = getState().acs.dashboards.dashboards[id]
-        let timeFilter = {}
-        if(state.body.uploads.uploads){
-            timeFilter = {
-                from: getFromDate(state.body.uploads.from_number,state.body.uploads.from_time_type).format('YYYY/MM/DD HH:mm:ss'),
-                 to:  state.body.uploads.to
-            }
-        }
-        else{
-            timeFilter = {
-                from: state.body.timeFilter.from.format('YYYY/MM/DD HH:mm:ss'),
-                to:  state.body.timeFilter.to.format('YYYY/MM/DD HH:mm:ss'),
-            }
-        }
-
+        let state = getState().acs.dashboards.dashboards[id]       
+        let timeFilter = prepareTimefilter(getState,dbName,state,indexName)
         let reqObj = {
             "need": "logs",
             indexName,
@@ -550,7 +521,7 @@ export const setTimeFilterThunk = (startDate, endDate,indexName,id) => {
 }
 
 // uploads,timeFilter,filter,showedLogs,page
-export const setParamFilterThunk = (filter,indexName,id) => {
+export const setParamFilterThunk = (filter,dbName,indexName,id) => {
     // console.log(filter)
     let filterCopy = {}
     for (let param in filter) {
@@ -559,7 +530,7 @@ export const setParamFilterThunk = (filter,indexName,id) => {
     delete filterCopy.opened
     return (dispatch,getState) => {
         let state = getState().acs.dashboards.dashboards[id]
-        let timeFilter, specialObject = {}
+        let  specialObject = {}
         let reducers = [ParamFilter(filterCopy,id)]
         let need
         if(state.type==='Table') {
@@ -581,19 +552,19 @@ export const setParamFilterThunk = (filter,indexName,id) => {
             }
             need = 'Circle_Diagram'
         }
-
-        if(state.body.uploads.uploads){
-            timeFilter = {
-                from: getFromDate(state.body.uploads.from_number,state.body.uploads.from_time_type).format('YYYY/MM/DD HH:mm:ss'),
-                to:  state.body.uploads.to
-            }
-        }
-        else{
-            timeFilter = {
-                from: state.body.timeFilter.from.format('YYYY/MM/DD HH:mm:ss'),
-                to:  state.body.timeFilter.to.format('YYYY/MM/DD HH:mm:ss'),
-            }
-        }
+        let timeFilter = prepareTimefilter(getState,dbName,state,indexName)
+        // if(state.body.uploads.uploads){
+        //     timeFilter = {
+        //         from: getFromDate(state.body.uploads.from_number,state.body.uploads.from_time_type).format('YYYY/MM/DD HH:mm:ss'),
+        //         to:  state.body.uploads.to
+        //     }
+        // }
+        // else{
+        //     timeFilter = {
+        //         from: state.body.timeFilter.from.format('YYYY/MM/DD HH:mm:ss'),
+        //         to:  state.body.timeFilter.to.format('YYYY/MM/DD HH:mm:ss'),
+        //     }
+        // }
         
         let  reqObj={
                 need,

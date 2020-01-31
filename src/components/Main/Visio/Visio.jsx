@@ -3,20 +3,42 @@ import __mainMenuItem from './MenuItem/MenuItem'
 import __header from '../../Common/__header/__header'
 import {NavLink} from 'react-router-dom'
 import './Visio.scss';
+import { checkPropTypes } from 'prop-types';
 
 const Visio = (props) => {
+    // console.log(props)
+    //||Object.keys(props.paths).length===0
+    const MenuItems = props.modules===undefined?null:Object.keys(props.modules).map(key => {
+        return  <li>
+                    <NavLink to={props.paths[key]}>
+                    <__mainMenuItem 
+                        head={
+                            {
+                                text: props.modules[key].title, 
+                            }
+                        } 
+
+                        indexes={props.modules[key].indexes}
+                        to={props.paths[key]}/>
+                    </NavLink>
+                </li>
+    });
     return <div className="Visio">
         <__header text={"Визуализация"} clazz="Common__header Common__header_red"/>
         <ul>
-            <li>
+            {MenuItems}
+        </ul>
+    </div>
+}
+
+export default Visio;
+
+{/* <li>
                 <NavLink to='/visualization cameras'>
                 <__mainMenuItem 
                     head={
                         {
                             text: "SAVA видеокамеры",
-                            events: props.cameras_dahua.events,
-                            errors: props.cameras_dahua.errors,
-                            exceptions: props.cameras_dahua.exceptions
                         }
                     } 
                     body={
@@ -34,9 +56,6 @@ const Visio = (props) => {
                         head={
                             {
                                 text: "SAVA СКУД",
-                                events: props.acs_castle_ep2.events,
-                                errors: props.acs_castle_ep2.errors,
-                                exceptions: props.acs_castle_ep2.exceptions
                             }
                         } 
                         body={
@@ -54,9 +73,6 @@ const Visio = (props) => {
                     head={
                         {
                             text: 'SAVA СЗИ', 
-                            events: props.iss.events,
-                            errors: props.iss.errors,
-                            exceptions: props.iss.exceptions
                         }
                     } 
                     body={
@@ -69,9 +85,4 @@ const Visio = (props) => {
                     }
                     to='/visualization iss'/>
                 </NavLink>
-            </li>
-        </ul>
-    </div>
-}
-
-export default Visio;
+            </li> */}

@@ -1,3 +1,4 @@
+@import '../../colors.scss';
 .settings{
     display: none;
     width: 100%;
@@ -26,7 +27,8 @@
 
 
 .aside-panel li.aside-panel__item_active{
-    background-color: #ce0f16;
+    background-color: $red-color;
+    color: white;
 }
 .aside-panel li.aside-panel__item_active p{
     color: white;
@@ -39,7 +41,7 @@
     background-color: #eceaeb;
 }
 .aside-panel li.aside-panel__item_active:hover{
-    background-color: #ce0f16;
+    background-color: $red-color;
 }
 .aside-panel_rip li:hover{
     background-color: #7a7272e7;

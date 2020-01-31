@@ -10,20 +10,23 @@
         display: inline-block;
         // margin-right: 3px;
     }
+    .mini{
+        font-size: 16px;
+    }
     span:nth-child(2),span:nth-child(3),span:nth-child(4){
         margin-right: 3px;
     }
     span:nth-child(1){
         margin-right: auto;
    }
-    span:nth-child(2){
-        @include label($green-color);
+    .label0{
+        @include label($green-label-color,42px,25px,18px);
    }
-   span:nth-child(3){
-        @include label($yell-label-color);
+   .label1{
+        @include label($yell-label-color,42px,25px,18px);
     }
-    span:nth-child(4){
-        @include label($red-label-color);
+    .label2{
+        @include label($red-label-color,42px,25px,18px);
     }
     div{
         background-color: $lightGrey-color;

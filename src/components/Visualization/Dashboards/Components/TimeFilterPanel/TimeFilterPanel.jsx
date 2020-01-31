@@ -62,6 +62,7 @@ class TimeFilterPanel extends Component {
     componentWillReceiveProps(newprops){
       this.setState({ preview: newprops.uploads.uploads?this.makeSpecialString(newprops.uploads):' c ' +newprops.timeFilter.from.format('DD.MM.YYYY HH:mm') + ' по '+newprops.timeFilter.to.format('DD.MM.YYYY HH:mm') });
     }
+
     onApply(){
       this.setState({ display: 'collapsed' });
     }
@@ -71,7 +72,7 @@ class TimeFilterPanel extends Component {
         let {timeKind, timeNum, from_number, from_time_type} = this.props.uploads
         if(this.state.display=== 'interval') viget = <Calendar id={this.props.id} indexName={this.props.indexName} timeFilter={{from:this.props.timeFilter.from, to:this.props.timeFilter.to}} onApply={this.onApply}/>
         else viget = <UploadTimeSetter indexName={this.props.indexName} defineLetter={this.defineLetter} makeSpecialString={this.makeSpecialString} timeKind={timeKind} timeNum={timeNum}  from_number={from_number} from_time_type={from_time_type} id={this.props.id} onApply={this.onApply}/>
-        if(this.state.display==='collapsed') return <span className='time-filter-panel__collapsed' onClick={()=>{this.setState({ display: 'uploads' });}}>{this.state.preview}<img src={require('./calendar.svg')}></img></span>
+        if(this.state.display==='collapsed') return <span style={{fontSize:'16px'}} className='time-filter-panel__collapsed' onClick={()=>{this.setState({ display: 'uploads' });}}>{this.state.preview}<img src={require('./calendar.svg')}></img></span>
         else return <div className="modal-form-keeper time-filter-panel"  >
                         <div>
                             <header><span><img src={require('./calendar.svg')}></img>Временные настройки</span><button onClick={()=>{this.setState({ display: 'collapsed' });}}><img src={require('../close.svg')}></img></button></header>
@@ -82,7 +83,7 @@ class TimeFilterPanel extends Component {
                             {viget}    
                         </div>
                                        
-                </div>
+                      </div>
     }
 }
 

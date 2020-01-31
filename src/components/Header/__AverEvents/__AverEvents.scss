@@ -14,12 +14,12 @@
         position: absolute;
     }
     .Header__errors{
-        @include label($yell-label-color);
+        @include label($yell-label-color,42px,25px,20px);
         bottom: -11px;
         right: -33px;
     }
     .Header__exceptions{
-        @include label($red-label-color);
+        @include label($red-label-color,42px,25px,20px);
 
         top: -10px;
         right: -33px;

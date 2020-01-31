@@ -38,7 +38,7 @@ class CircleDiagram extends React.Component {
         // console.log('CONSTRUCTOR')
         
         if(this.props.uploads.uploads){
-          this.intervalId = setInterval(()=>{this.props.getAcs(this.props.id)},
+          this.intervalId = setInterval(()=>{this.props.getAcs(this.props.id,this.props.indexName,this.props.dbName)},
           this.props.uploads.timeKind*this.props.uploads.timeNum);
         }
         
@@ -47,8 +47,9 @@ class CircleDiagram extends React.Component {
 
     componentDidMount() {
     //   console.log('MOUNT')
-    console.log(this.props.logs)
-    if(this.props.logs.length===0) this.props.getAcs(this.props.id)
+    // console.log(this.props.logs)
+    // if(this.props.logs.length===0) 
+    this.props.getAcs(this.props.id,this.props.indexName,this.props.dbName)
     }
     componentWillUnmount(){
       if(this.intervalId!==undefined) clearInterval(this.intervalId);
@@ -72,10 +73,10 @@ class CircleDiagram extends React.Component {
       }
       //включены обновления а были выключены
       else if(nextProps.uploads.uploads&&nextProps.uploads.uploads!==this.props.uploads.uploads){
-        this.intervalId = setInterval(()=>{this.props.getAcs(this.props.id)}, this.props.uploads.timeKind*this.props.uploads.timeNum);
+        this.intervalId = setInterval(()=>{this.props.getAcs(this.props.id,this.props.indexName,this.props.dbName)}, this.props.uploads.timeKind*this.props.uploads.timeNum);
       }else if(nextProps.uploads.uploads&&!this.isObjEqual(nextProps.uploads,this.props.uploads)){
         clearInterval(this.intervalId);
-        this.intervalId = setInterval(()=>{this.props.getAcs(this.props.id)}, nextProps.uploads.timeKind*nextProps.uploads.timeNum);
+        this.intervalId = setInterval(()=>{this.props.getAcs(this.props.id,this.props.indexName,this.props.dbName)}, nextProps.uploads.timeKind*nextProps.uploads.timeNum);
       }
   }
 
@@ -83,7 +84,7 @@ class CircleDiagram extends React.Component {
    
 
     render() {  
-      console.log(this.props.logs)
+      // console.log(this.props.logs)
     let secondField = {...this.props.filters[this.props.indexName]}
     let mainField =  (this.props.paramFilter===[]||this.props.paramFilter[this.props.field]===undefined)?
     this.props.filters[this.props.indexName][this.props.field]:
@@ -165,7 +166,7 @@ class CircleDiagram extends React.Component {
                         </select>
                         <span>Выбранные значения параметра: </span>
                         <Dropdown selected={this.props.paramFilter[this.props.field]===undefined?[]:this.props.paramFilter[this.props.field]} iniState={[]} name={this.props.field} options={mainFieldOptions} preview={filter.translate[this.props.field]}  onChangeCallBack={(keyState)=>{this.props.changeMainFieldList(this.props.id,keyState)}}/>
-                        <button onClick={()=>{this.props.getAcs(this.props.id)}}>Построить диаграмму</button>
+                        <button onClick={()=>{this.props.getAcs(this.props.id,this.props.indexName,this.props.dbName)}}>Построить диаграмму</button>
                     </div>
             </div>
     }

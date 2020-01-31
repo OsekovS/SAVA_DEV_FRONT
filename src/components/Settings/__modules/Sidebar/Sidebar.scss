@@ -1,50 +1,50 @@
-.settings{
-    display: none;
-    width: 100%;
-}
-.aside-panel{
-    /* display: none; */
-    width: 250px;
-    height: 200px;
-    border: 1px solid #b6b6b6;
-    border-radius: 5px;
-    // flex-shrink: 1;
-    margin-right: 2.2%;
-}
-.aside-panel li{
-    height: 60px;
-    cursor: pointer;    
-    display: flex;
-    // text-align: center;
-    // position: relative;
-    align-items: center;
-    justify-content: center;
-}
-.aside-panel_rip li{
-    background-color: #7a7272e7;
-}
+// .settings{
+//     display: none;
+//     width: 100%;
+// }
+// .aside-panel{
+//     /* display: none; */
+//     width: 250px;
+//     height: 200px;
+//     border: 1px solid #b6b6b6;
+//     border-radius: 5px;
+//     // flex-shrink: 1;
+//     margin-right: 2.2%;
+// }
+// .aside-panel li{
+//     height: 60px;
+//     cursor: pointer;    
+//     display: flex;
+//     // text-align: center;
+//     // position: relative;
+//     align-items: center;
+//     justify-content: center;
+// }
+// .aside-panel_rip li{
+//     background-color: #7a7272e7;
+// }
 
 
-.aside-panel li.aside-panel__item_active{
-    background-color: #ce0f16;
-}
-.aside-panel li.aside-panel__item_active p{
-    color: white;
-}
-.aside-panel li img{
-    height: fit-content;
-}
+// .aside-panel li.aside-panel__item_active{
+//     background-color: #ce0f16;
+// }
+// .aside-panel li.aside-panel__item_active p{
+//     color: white;
+// }
+// .aside-panel li img{
+//     height: fit-content;
+// }
 
-.aside-panel li:hover{
-    background-color: #eceaeb;
-}
-.aside-panel li.aside-panel__item_active:hover{
-    background-color: #ce0f16;
-}
-.aside-panel_rip li:hover{
-    background-color: #7a7272e7;
-    cursor: auto;
-}
+// .aside-panel li:hover{
+//     background-color: #eceaeb;
+// }
+// .aside-panel li.aside-panel__item_active:hover{
+//     background-color: #ce0f16;
+// }
+// .aside-panel_rip li:hover{
+//     background-color: #7a7272e7;
+//     cursor: auto;
+// }
 
 // .aside-panel li::after{
 //     content: "";

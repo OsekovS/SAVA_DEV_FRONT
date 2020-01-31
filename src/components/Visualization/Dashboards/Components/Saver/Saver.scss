@@ -33,7 +33,7 @@
     transform: rotate(360deg);
   }
 }
-.saver__wait,.pdf__wait,.param-filter-panel__collapsed{
+.saver__wait,.pdf__wait,.param-filter-panel__collapsed,.markAsRead__wait{
   cursor: pointer;
   position: absolute;
 }
@@ -46,6 +46,15 @@
   top: 5px;
   right: 8px;
   width: 24px;
+}
+.markAsRead__wait{
+  right: 110px;
+  &>img{
+    position: relative;
+    width: 20px;
+    right: -7px;
+    top: 3px;
+  }
 }
 .param-filter-panel__collapsed{
   right: 70px;

@@ -1,24 +1,22 @@
 @import '../../colors.scss';
 .Visio{
-    width: 100%;
-    
-    ul{
+    width: 100%; 
+    &>ul{
         padding: 16px 29px 12px 19px;
         box-sizing: border-box;
         display: flex;
         flex-wrap: wrap;
-        justify-content: left
-    }
-    li{
-        width: 31.5%;  
-        margin-right: 1.5%;
-        position: relative;
-        img{
-            position: absolute;
-            bottom: 30px;
-            right: 20px;
+        justify-content: left;
+        &>li {
+            width: 31.5%;  
+            margin-right: 1.5%;
+            position: relative;
+            img{
+                position: absolute;
+                bottom: 30px;
+                right: 20px;
+            }
         }
     }
-   
- 
+    // &>ul 
 }

@@ -20,10 +20,10 @@ class __acs extends React.Component {
     console.log(this.props)
     let a = []
    Object.values(this.props.dashboards).forEach((e,n) => {
-      if(e.body.indexName===indexName && e.type==="Table")  a.push(<div><Sidebar></Sidebar><LogsTableDeviceCont clazz={e.body.indexName} {...e.body}  title={e.name} key={e.id} id={e.id} className={"Modules_table_"+clazz}/></div>)//id={n} 
+      if(e.body.indexName===indexName && e.type==="Table")  a.push(<div><Sidebar></Sidebar><LogsTableDeviceCont dbName={this.props.dbName} clazz={e.body.indexName} {...e.body}  title={e.name} key={e.id} id={e.id} className={"Modules_table_"+clazz}/></div>)//id={n} 
       })
       Object.values(this.props.dashboards).forEach((e,n) => {
-        if(e.body.indexName===indexName && e.type==="Circle_Diagram") a.push(<CircleDiagramCont   {...e.body} key={e.id} id={e.id} />    )//id={n}
+        if(e.body.indexName===indexName && e.type==="Circle_Diagram") a.push(<CircleDiagramCont dbName={this.props.dbName} {...e.body} key={e.id} id={e.id} />    )//id={n}
     
     });
 

@@ -7,6 +7,7 @@ import {checkCookies} from '../../../redux/auth-reducer'
 export const withAuthRedirect = (Component) => {
     class RedirectComponent extends React.Component{
         componentDidMount() {
+            console.log('!')
             this.props.checkCookies()
             // console.log("fBlood") 
         }

@@ -4,7 +4,7 @@
     padding: 10px 10px 50px 10px;
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: space-evenly;
     .logs-table-wrapper{
         margin-bottom: 50px;
         width: 30%;
@@ -38,10 +38,13 @@
             margin-right: 5px;
         }
     }
+    .time-filter-panel__collapsed{
+        margin-right: 25px;
+    }
 }
 @media screen and (max-width: 1500px) {
     .Visualization__acs .logs-table-wrapper{
-        width: 50%;
+        width: 45%;
     }
 }
 @media screen and (max-width: 950px) {

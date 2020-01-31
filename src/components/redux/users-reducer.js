@@ -1,10 +1,12 @@
 import { stat } from "fs";
 import { isArray } from "util";
 import * as axios from 'axios'
+
 const ADD_USER = 'ADD_USER';
 const DEL_USER = 'DEL_USER'
 const TOG_FECH = 'TOG_FECH'
 const UPLOAD_USERS = 'UPLOAD_USERS'
+
 
 let initialState = 
            {
@@ -59,10 +61,12 @@ export const toggleIsFetching = (bool) => ({type: TOG_FECH, status: bool })
 
 export const delUser = (id) => ({type: DEL_USER, id: id })
 
+
 export const addUser = ({login, password_rep, password, admin}) =>
     ({ type: ADD_USER, login: login, password_rep: password_rep, password: password, admin: admin})
 
 export const uploadUser = (usernames) => ({type: UPLOAD_USERS, usernames})
+
 
 
 

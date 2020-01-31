@@ -5,6 +5,7 @@ import Table from '../Components/Table/Table'
 import ShowedLogsBar from './ShowedLogsBar/ShowedLogsBar'
 import TimeFilterPanel from '../Components/TimeFilterPanel/TimeFilterPanel'
 import Saver from '../Components/Saver/Saver'
+import MarkAsRead from '../Components/MarkAsRead/MarkAsRead'
 import './Logtable.scss'
 // import  {getFromDate} from "../../../../components/redux/acs-reducer";
 class rawLogsTable extends React.Component {
@@ -12,7 +13,7 @@ class rawLogsTable extends React.Component {
         super(props);
 
         if(this.props.uploads.uploads){
-          this.intervalId = setInterval(()=>{this.props.getAcs(this.props.id)},
+          this.intervalId = setInterval(()=>{this.props.getAcs(this.props.id,this.props.indexName,this.props.dbName)},
           this.props.uploads.timeKind*this.props.uploads.timeNum);
         }
 
@@ -20,7 +21,7 @@ class rawLogsTable extends React.Component {
 
     componentDidMount() {
       console.log(this.props)
-      this.props.getAcs(this.props.id)
+      this.props.getAcs(this.props.id,this.props.indexName,this.props.dbName)
     }
     componentWillUnmount(){
       if(this.intervalId!==undefined) clearInterval(this.intervalId);
@@ -44,10 +45,10 @@ class rawLogsTable extends React.Component {
       }
       //включены обновления а были выключены
       else if(nextProps.uploads.uploads&&nextProps.uploads.uploads!==this.props.uploads.uploads){
-        this.intervalId = setInterval(()=>{this.props.getAcs(this.props.id)}, this.props.uploads.timeKind*this.props.uploads.timeNum);
+        this.intervalId = setInterval(()=>{this.props.getAcs(this.props.id,this.props.indexName,this.props.dbName)}, this.props.uploads.timeKind*this.props.uploads.timeNum);
       }else if(nextProps.uploads.uploads&&!this.isObjEqual(nextProps.uploads,this.props.uploads)){
         clearInterval(this.intervalId);
-        this.intervalId = setInterval(()=>{this.props.getAcs(this.props.id)}, nextProps.uploads.timeKind*nextProps.uploads.timeNum);
+        this.intervalId = setInterval(()=>{this.props.getAcs(this.props.id,this.props.indexName,this.props.dbName)}, nextProps.uploads.timeKind*nextProps.uploads.timeNum);
       }
   }
 /* <input onChange={()=>this.props.changeUploadModeThunk(false,this.props.indexName,this.props.id)} type="radio" name={"time_period"+this.props.id} value="configured_time" checked={!this.props.uploads.uploads}/>
@@ -62,28 +63,24 @@ class rawLogsTable extends React.Component {
               {e.text+curLog[e.field]}
             </li>
         })}
-        // console.log(this.props)                  
+        console.log(this.props) 
+        const {id,indexName,dbName} = this.props
+        const personal = {id,indexName,dbName}                 
         return <div className={"logs-table-wrapper"+' '+this.props.className}>
                   <header className="Common__header Common__header_red Common__header_with-filter">
                     {this.props.title+ ''}
                     
                     <TimeFilterPanel id={this.props.id}  uploads={this.props.uploads} indexName={this.props.indexName} timeFilter={{from:this.props.timeFilter.from, to:this.props.timeFilter.to}}></TimeFilterPanel>
-                    {/* <Calendar id={this.props.id} applyParentCallback={(startDate, endDate)=>{this.props.setTimeFilterThunk(startDate, endDate, this.props.indexName, this.props.id)}} timeFilter={{from:this.props.timeFilter.from, to:this.props.timeFilter.to}}/> */}
-
-                    {/* <UploadTimeSetter  handleSubmit={(updateForm,event)=>{
-                      this.props.changeUploadsThunk(updateForm,this.props.indexName,this.props.id);
-                      // this.props.changeUploadModeThunk(true,this.props.indexName,this.props.id)
-                    }}
-                        timeKind={this.props.uploads.timeKind} timeNum={this.props.uploads.timeNum}
-                        from_number={this.props.uploads.from_number} from_time_type={this.props.uploads.from_time_type}  id={this.props.id}/> */}
-                    <FilterPanel configObj={this.props.filters[this.props.indexName]} iniState={this.props.paramFilter} submitCallBack={(filter)=>{this.props.setParamFilterThunk(filter,this.props.indexName,this.props.id)}} id={this.props.id}/>
+                    {/* <LogsCount indexName={this.props.indexName} indexName={this.props.indexName}/> */}
+                     <MarkAsRead indexName={this.props.indexName} display={this.props.markAsRead} id={this.props.id} dbName={this.props.dbName}></MarkAsRead>
+                    <FilterPanel configObj={this.props.filters[this.props.indexName]} iniState={this.props.paramFilter} submitCallBack={(filter)=>{this.props.setParamFilterThunk(filter,dbName,indexName,id)}} id={id}/>
                     <Saver  id={this.props.id} display={this.props.saver}/>
                   </header>    
                   <Table clazz={this.props.clazz} logs={this.props.logs} headerElements={this.props.headerElements} curLog={this.props.curLog} onClickCallback={this.props.onChangeCurrentLog} sortParam={this.props.sortParam} changeSortThunk={this.props.changeSortThunk} indexName={this.props.indexName} id={this.props.id}/>
                   <footer>
                     <span>Всего событий: {this.props.pagination.total}</span>
-                    <ShowedLogsBar showedLogs={this.props.pagination.showedLogs} showedLogsList={this.props.pagination.showedLogsList} onClickCallback={this.props.changeShowedLogsThunk} indexName={this.props.indexName} id={this.props.id}/>
-                    <PagesBar callBack={this.props.changePageThunk} pagination={this.props.pagination} indexName={this.props.indexName} id={this.props.id}/>
+                    <ShowedLogsBar showedLogs={this.props.pagination.showedLogs} showedLogsList={this.props.pagination.showedLogsList} onClickCallback={this.props.changeShowedLogsThunk} personal={personal} />
+                    <PagesBar callBack={this.props.changePageThunk} pagination={this.props.pagination} personal={personal} />
                     {this.props.curLog !== null ?<div className="additional-info"><h2>Дополнительная информация о выбранном событии:</h2><ul>{footerElements}</ul></div>:null}
                   </footer>
             </div>
