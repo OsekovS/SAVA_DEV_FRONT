@@ -1,5 +1,4 @@
 import React from 'react';
-import './MenuItem.scss';
 import __header from '../../../Common/__header/__header'
 import {changeLinkCreator} from '../../../redux/nav-bar-reducer'
 import {connect} from "react-redux";
@@ -11,7 +10,7 @@ const rawMainMenuItem = (props) => {
     return <div className="Common__mainMenuItem" onClick={onClick.bind(this,props.to)}>
         <__header 
         text={props.head['text']}
-            clazz="Common__header Common__header_grey"
+            clazz="Common__header Common__header_grey Common__header_menu-item"
             />
         <div>
             <pre>

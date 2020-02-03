@@ -17,51 +17,60 @@ const authReducer = (state = initialState, action) => {
    let stateCopy = state
     switch (action.type) {
        case LOG_IN:
-            
+            let modules = action.data.modules
+            let indexes = {}
             stateCopy = {...state}
             stateCopy.isAuth = true
             stateCopy.briefUserInfo.name = action.data.login
             stateCopy.briefUserInfo.admin = action.data.admin === "yes" ? 'администратор' : 'оператор'
-            stateCopy.briefUserInfo.modules = action.data.modules//JSON.parse(action.data.modules)
-            // for (const key in action.data) {
-            //     if (action.data.hasOwnProperty(key)) {
-            //         setCookie(key,action.data[key])
-            //     }
-            // }
+            stateCopy.briefUserInfo.modules = modules//JSON.parse(action.data.modules)
+            // console.log(modules)
+            for (const moduleKey in modules) {
+                if (modules.hasOwnProperty(moduleKey)) {
+                    // indexes[moduleKey]=[]
+                    // console.log(modules[moduleKey]['indexes'])
+                    indexes[moduleKey] = Object.keys(modules[moduleKey]['indexes'])
+                }
+            }
+            // console.log(indexes)
+            setCookie('modules',JSON.stringify(indexes))
             setCookie("admin",action.data.admin)
             setCookie("hash",action.data.hash)
             setCookie("login",action.data.login)
-            setCookie("modules",JSON.stringify(action.data.modules))
+            // setCookie("modules",JSON.stringify(action.data.modules.acs_castle_ep2))
            return stateCopy;
         case UPDATE_PAGE:
-
+            console.log(action)
+            let filters = action.filters
             stateCopy = {...state}
             stateCopy.isAuth = true
             stateCopy.briefUserInfo.name = getCookie('login')
             stateCopy.briefUserInfo.admin = getCookie('admin') === "yes" ? 'администратор' : 'оператор'
             stateCopy.briefUserInfo.modules = action.modules//JSON.parse(getCookie('modules'))
+            // for (const moduleKey in filters) {
+            //     if (filters.hasOwnProperty(moduleKey)) {
+            //         // indexes[moduleKey]=[]
+            //         // console.log(modules[moduleKey]['indexes'])
+            //         indexes[moduleKey] = Object.keys(modules[moduleKey]['indexes'])
+            //     }
+            // }
+            // cons
             // console.log(action.modules)
             return stateCopy;
         case LOG_OUT:
             stateCopy = {...state}
             stateCopy.isAuth = false
+            stateCopy.briefUserInfo.name = '';
+            stateCopy.briefUserInfo.admin = ''
             setCookie("admin","")
             setCookie("hash","")
             setCookie("login","")
-            setCookie("modules","")
+            // setCookie("modules","")
             return stateCopy;
         case UPDATE_PANEL_LOGS_COUNT:
             stateCopy = {...state}
             stateCopy.briefUserInfo = {...state.briefUserInfo}
             stateCopy.briefUserInfo.modules = {...state.briefUserInfo.modules}
-
-            // action.data = {
-            //     acs_castle_ep2:{
-            //         acs_castle_ep2_event: [1,2,3],
-            //         acs_castle_ep2_userlog: [4,5,6]
-            //     }
-            // }         
-            // console.log(action.data)
             for (const key in action.data) {
                 if (action.data.hasOwnProperty(key)) {
                     stateCopy.briefUserInfo.modules[key] = {...state.briefUserInfo.modules[key]}
@@ -70,15 +79,7 @@ const authReducer = (state = initialState, action) => {
                     for (const index in action.data[key]) {
                         stateCopy.briefUserInfo.modules[key].indexes[index].logsCount={}
                         if (action.data[key].hasOwnProperty(index)) {
-                            //цикл по всем типам событий по порядку
                             stateCopy.briefUserInfo.modules[key].indexes[index].logsCount = action.data[key][index]
-                            // console.log( stateCopy.briefUserInfo.modules[key].indexes[index].events)//тут назв индексов нужно распихать
-                            //цикл по названиям событий внутри конткретного индекса (для сохранения порядка следования)
-                            // stateCopy.briefUserInfo.modules[key].indexes[index].events.forEach((event,num) => {
-                            //     stateCopy.briefUserInfo.modules[key].indexes[index].logsCount = action.data[key][index]
-                            // });
-                            // stateCopy.briefUserInfo.modules[key].indexes[index].eventsObject = action.data[key][index].logsCount[action.data[key][index].events[i]]
-                            
                         }
                     }
                     // console.log(stateCopy)
@@ -118,7 +119,7 @@ export const getLogsCountThumk = () =>{
             
             // console.log(response.request)
             let json = JSON.parse(response.request.response);
-            // console.log(json)
+            console.log(json)
             return dispatch(updatePageLogsCount(json))
             // dispatch(updatePage())
         
@@ -165,7 +166,7 @@ export const logInThunk = (logObj) => {
         axios.post("php/users-form-processor.php",{"auth":logObj}).then(response => {
             // console.log(response.request)
             let json = JSON.parse(response.request.response);
-            // console.log(json)
+            console.log(json)
             if(json.result)
             dispatch(logIn(json.cookies));
             else alert('Ошибка авторизации, неверно введен пароль или логин')
@@ -187,14 +188,15 @@ export const checkCookies = () => {
         // let indexes = getState().auth.briefUserInfo.modules.indexes
         axios.post("php/users-form-processor.php",{"upload":{
             login: getCookie("login"),
-            hash: getCookie("hash"),//,aggs:true,aggsParam: 'significance'
-            modules: getCookie("modules"),
+            hash: getCookie("hash"),
+            modules: (getCookie('modules'))//,aggs:true,aggsParam: 'significance'
+            // modules: getCookie("modules"),
             
         }}).then(response => {
             
             // console.log(response.request)
             let json = JSON.parse(response.request.response);
-            // console.log(json)
+            console.log(json)
             if(json.result){
                 dispatch(updatePage(json.modules))
             }

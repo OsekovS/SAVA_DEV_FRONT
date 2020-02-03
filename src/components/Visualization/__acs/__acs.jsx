@@ -13,29 +13,29 @@ class __acs extends React.Component {
   }
   componentDidMount() {
     //вызвать нужно только 1 раз
+
     if(this.props.dashboards===null)
-    this.props.getDashboardsThunk()
+    this.props.getDashboardsThunk(this.props.dbName)
   }
   makeDashboards(indexName,clazz){
-    console.log(this.props)
     let a = []
    Object.values(this.props.dashboards).forEach((e,n) => {
-      if(e.body.indexName===indexName && e.type==="Table")  a.push(<div><Sidebar></Sidebar><LogsTableDeviceCont dbName={this.props.dbName} clazz={e.body.indexName} {...e.body}  title={e.name} key={e.id} id={e.id} className={"Modules_table_"+clazz}/></div>)//id={n} 
+      if(e.body.indexName===indexName && e.type==="Table")  a.push(
+        <div>
+          <Sidebar dbName={this.props.dbName} state={this.props.sidebar}  type= 'dashboards'></Sidebar>
+          <LogsTableDeviceCont fields={this.props.indexes[e.body.indexName].fields} filter={this.props.indexes[e.body.indexName].filter} dbName={this.props.dbName} clazz={e.body.indexName} {...e.body}  title={e.name} key={e.id} id={e.id} className={"Modules_table_"+clazz}/>
+        </div>)//id={n} 
       })
       Object.values(this.props.dashboards).forEach((e,n) => {
-        if(e.body.indexName===indexName && e.type==="Circle_Diagram") a.push(<CircleDiagramCont dbName={this.props.dbName} {...e.body} key={e.id} id={e.id} />    )//id={n}
+        if(e.body.indexName===indexName && e.type==="Circle_Diagram") a.push(<CircleDiagramCont fields={this.props.indexes[e.body.indexName].fields} filter={this.props.indexes[e.body.indexName].filter} dbName={this.props.dbName} {...e.body} key={e.id} id={e.id} />    )//id={n}
     
     });
 
   return a
   }
   render() {
-        let dashboards = []
-
-    let propsDashboards = this.props.dashboards
-    // console.log(this.props)
     if(this.props.dashboards){
-      return <BrowserRouter>
+      return <BrowserRouter >
       <div className="Visualization__acs">
               <Route path='/visualization acs devicesLogs' render={()=>
                 {return <>
@@ -44,6 +44,9 @@ class __acs extends React.Component {
               ></Route>
               <Route path='/visualization acs usersLogs' render={()=>
                 {return <>{this.makeDashboards("acs_castle_ep2_userlog","user-events")}</>}
+              }></Route>
+              <Route path='/visualization iss' render={()=>
+                {return <>{this.makeDashboards("sns_event","user-events")}</>}
               }></Route>
       </div>
       </BrowserRouter>

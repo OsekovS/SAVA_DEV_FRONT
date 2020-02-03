@@ -5,7 +5,7 @@ import  {getAcs,setTimeFilterThunk,changeUploadModeThunk,setParamFilterThunk,cha
       
 let mapStateToProps = (state) => {
     return {
-        filters: state.acs.dashboards.filters
+        // filters: state.acs.dashboards.filters
     }
 }
 

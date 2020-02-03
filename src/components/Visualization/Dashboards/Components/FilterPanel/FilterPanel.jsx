@@ -45,7 +45,6 @@ onCancel(){
 
     render() {
     if(this.state.display==='deployed'){
-        console.log('!')
         let filter = []
         let options
         let devices
@@ -61,13 +60,15 @@ onCancel(){
                         } 
                     }
                     )
+
                     filter.push(
                         <Dropdown selected={this.state.params[key]===undefined?[]:this.state.params[key]} iniState={this.state.params[key]===undefined?[]:this.state.params[key]} name={key} options={options} 
-                        preview={this.props.configObj.translate[key]} onChangeCallBack={(this.onChangeField.bind(this))}/>
+                        preview={this.props.fields[key].translate} onChangeCallBack={(this.onChangeField.bind(this))}/>
                     )
                 }
             }
         }
+        //this.props.configObj.translate[key]
     return <div className="modal-form-keeper param-filter-panel"  >
     <div>
         <header><span><img src={require('./filter.svg')}></img>Настройки параметрического фильтра</span><button onClick={()=>{this.setState({ display: 'collapsed' });}}><img src={require('../close.svg')}></img></button></header>

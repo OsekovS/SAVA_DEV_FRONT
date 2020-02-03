@@ -339,6 +339,134 @@ export const acsIni = function(){
         },
         paramFilter: {}, 
     }
+    // {    headerElements :[{text:'Дата', type:'date', field:'time'},    {text:'Приоритет', type:'text', field:'significance'},    {text:'Тип события', type:'text', field:'event_type'},    {text:'Событие', type:'text', field:'event'},    {text:'Конечная точка', type:'text', field:'point'}  ],      name:'События SNS',    footerElements: [],            indexName: 'sns_event',      logs:  [],    timeFilter: {        from: {number: 60, type:'days'},        to: 'now'    },    uploads: {      uploads: false,      timeKind: 1,      timeNum: 5000,      from_number: '2',      from_time_type: 'M',      to: "now/d"    },            paramFilter: {},    pagination: {        total: '',        currentPage: 1,        fromPage: 1,        showedPages: 5,        lastPage: '',        showedLogs: 100,        showedLogsList: [50, 100, 250, 500]    },    sortParam: {        type:'date',        field:'time',        direction: 'asc'    },    curLog: null    }
+    let circleDg3 = {
+        field: 'event_type',
+        indexName: 'sns_event',
+        logs:  [],
+        timeFilter: {
+            from: {number: 1, type:'days'},
+            to: 'now'
+        },
+        uploads: {
+        uploads: false,
+        timeKind: 1,
+        timeNum: 11000,
+        from_number: '3',
+        from_time_type: 'h',
+        to: "now/d"
+        },
+        paramFilter: {}, 
+    }
+    let user = {
+        'acs_castle_ep2':{
+            admin: 'yes',
+            indexes: {
+                acs_castle_ep2_event:{
+                    style: "devices-events",
+                    title: "События устройств",
+                    events: ['top','mid','low'],
+                    fields: {
+                        'significance':{
+                            hidden: false,
+                            translate: 'Приоритет'
+                        },
+                        'object':{
+                            hidden: false,
+                            translate: 'Объекты'
+                        },
+                        'device':{
+                            hidden: false,
+                            translate: 'Конечные точки'
+                        },
+                        'ip_device':{
+                            hidden: true,
+                            translate: 'ip конечных точек'
+                        },
+                        'event':{
+                            hidden: false,
+                            translate: 'События'
+                        },
+                        'route':{
+                            hidden: false,
+                            translate: 'Направление'
+                        },
+                        'person':{
+                            hidden: false,
+                            translate: 'Владелец'
+                        },
+                        'pass_number':{
+                            hidden: true,
+                            translate: 'Номер владельца'
+                        }
+                    }
+                },
+                acs_castle_ep2_userlog:{
+                    style:"user-events",
+                    title:"События пользователей",
+                    events:['top','mid','low'],
+                    fields: {
+                        'significance':{
+                            hidden: false,
+                            translate: 'Приоритет'
+                        },
+                        'object':{
+                            hidden: false,
+                            translate: 'Объекты'
+                        },
+                        
+                        'personal':{
+                            hidden: false,
+                            translate: 'Персонал'
+                        },
+                        'event':{
+                            hidden: false,
+                            translate: 'События'
+                        }
+                    }
+                }
+            },
+            title: 'SAVA СКУД'
+        },
+        'iss':{
+            admin: 'yes',
+            indexes: {
+                sns_event:{
+                    style:"sns_event",
+                    title:"События SNS",
+                    events:['0','1'],
+                    fields: {
+                        'event':{
+                            hidden: false,
+                            translate: 'Событие'
+                        },
+                        'event_type':{
+                            hidden: false,
+                            translate: 'Тип события'
+                        },
+                        'source_log':{
+                            hidden: true,
+                            translate: 'Источник'
+                        },
+                        'point':{
+                            hidden: false,
+                            translate: 'Конечная точка'
+                        },
+                        'significance':{
+                            hidden: false,
+                            translate: 'Приоритет'
+                        },
+                        'detailed_information':{
+                            hidden: true,
+                            translate: 'Детальная информация'
+                        },
+                    }
+                },
+           
+        },
+        title: 'SAVA СЗИ'
+    }
+    }
     return {
         settings: {
         mode: 'view',//'view',
@@ -355,7 +483,10 @@ export const acsIni = function(){
         }]
         },
         dashboards: {
-            dashboards:null,
+            dashboards:{
+                iss: null,
+                acs_castle_ep2: null
+            },
             filters: null
         },
         logs: {

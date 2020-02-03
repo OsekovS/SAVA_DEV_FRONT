@@ -48,7 +48,8 @@ class UploadTimeSetter extends Component {
   
   onSubmit(event){
     event.preventDefault()
-    this.props.changeUploadsThunk(this.state,this.props.indexName,this.props.id)
+    const {id,indexName,dbName} = this.props
+    this.props.changeUploadsThunk(this.state,id,indexName,dbName)
     this.props.onApply()
   }
 

@@ -24,7 +24,7 @@ const rawSidebar = (props) => {
 }
 
 let mapStateToProps = (state) => {
-    return {state: state.modSidebar.dashboards.acs, type: 'dashboards'}
+    // return {state: state.modSidebar.dashboards.acs, type: 'dashboards'}
 }
 // let mapDispatchToProps = (dispatch) => {
 //     return {

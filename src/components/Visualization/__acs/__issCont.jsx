@@ -5,7 +5,7 @@ import __acs from './__acs'
 
 let mapStateToProps = (state) => {
     return {
-        dashboards: state.dashboards.dashboards.acs_castle_ep2,
+        dashboards: state.dashboards.dashboards.iss,
    }
 }
 let mapDispatchToProps = {

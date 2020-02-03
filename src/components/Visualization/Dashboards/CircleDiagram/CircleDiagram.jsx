@@ -84,69 +84,47 @@ class CircleDiagram extends React.Component {
    
 
     render() {  
-      // console.log(this.props.logs)
-    let secondField = {...this.props.filters[this.props.indexName]}
+      // console.log(this.props)
+    let secondField = {...this.props.filter}
     let mainField =  (this.props.paramFilter===[]||this.props.paramFilter[this.props.field]===undefined)?
-    this.props.filters[this.props.indexName][this.props.field]:
+    this.props.filter[this.props.field]:
     this.props.paramFilter[this.props.field]
-    //this.props.filters[this.props.indexName][this.props.field]
+    //this.props.filter[this.props.field]
     // console.log(this.props)
     delete secondField[this.props.field]
         // let bigData = [1,2,3,4,5,6,7,8,9,10,11,12,13,12,11,10,9,8,7,6,5,4,3,2,1,1,2,3,4,5,6,7,8,9,10,11,12,13,12,11,10,9,8,7,6,5,4,3,2,1,2,3,4,5,6,7,8,9,10,11,12,13,12,11,10,9,8,7,6,5,4,3,2]
         const series = [{
             data: this.props.logs.count//bigData//
         }];
-        let filter = this.props.filters[this.props.indexName]
+        let filter = this.props.filter
 
-        // console.log(fields)
+        // console.log(filter)
         let mainFieldOptions = filter[this.props.field].map((e,n) => {
             return {
                 value: e,
                 label: e,
             } 
         })
+        //filter.translate[e]
         let fields = Object.keys(filter).map((e,n) => {
             //начальное значение - отдельная запара
-            if(e===this.props.field) return <option selected value={e}>{filter.translate[e]}</option>
-            else if(e!=='translate') return <option value={e}>{filter.translate[e]}</option>
+            if(e===this.props.field) return <option selected value={e}>{this.props.fields[e].translate}</option>
+            else if(e!=='translate') return <option value={e}>{this.props.fields[e].translate}</option>
         })
         let ourColors = []
-      //   const series2 = [{
-      //     data: [1], label: 'Highcharts 1 '
-      // }, {
-      //     data: [5] , label: 'amCharts 2'
-      // }, {
-      //     data: [3], label: 'Google Charts 3'
-      // }];                    
+             
       const categories = this.props.logs.labels!==undefined?this.props.logs.labels.map((elem,numb)=>{
         ourColors.push(this.colors[numb])
         return <li key={numb}><div style={{backgroundColor: this.colors[numb]}}></div>{elem+' '+this.props.logs.count[numb]}</li>
       }):[]
-      // const series3 = [{
-      //   data: [
-      //     {label: 'Highcharts 1 ', y: 1},
-      //     {label: 'amCharts 2', y: 5},
-      //     {label: 'Google Charts 3', y: 3},
-      //   ]
-      // }];
-      let blackColor = series.map(()=>{
-        return 'black'
-      })
-      // let series2 = series.map(()=>{
-
-      // })
-        // console.log(this.props)   
-        // console.log(fields)    
-        // console.log(filter)                                              allowed={filter[this.props.field]}
-        // <input onChange={()=>this.props.changeUploadModeThunk(false,this.props.indexName,this.props.id)} type="radio" name={"time_period"+this.props.id} value="configured_time" checked={!this.props.uploads.uploads}/>
-        // width="180" height="180" viewBox="180 -20 260 290"
+      const {id,indexName,dbName} = this.props
        return <div className="logs-table-wrapper logs-table-wrapper_pie" >
-                    <header className="Common__header Common__header_red Common__header_with-filter">
+                    <header className="Common__header Common__header_grey Common__header_with-filter">
                         {this.props.title}
-                        <TimeFilterPanel id={this.props.id}  uploads={this.props.uploads} indexName={this.props.indexName} timeFilter={{from:this.props.timeFilter.from, to:this.props.timeFilter.to}}></TimeFilterPanel>
+                        <TimeFilterPanel id={id}  uploads={this.props.uploads} indexName={indexName} dbName={dbName} timeFilter={{from:this.props.timeFilter.from, to:this.props.timeFilter.to}}></TimeFilterPanel>
                         {/* <FilterPanel configObj={this.props.filters[this.props.indexName]} iniState={this.props.paramFilter} submitCallBack={(filter)=>{this.props.setParamFilterThunk(filter,this.props.indexName,this.props.id)}} id={this.props.id}/> */}
-                        <FilterPanel configObj={secondField} iniState={this.props.paramFilter} submitCallBack={(filter)=>{this.props.setParamFilterThunk(filter,this.props.indexName,this.props.id)}} id={this.props.id}/>
-                        <Saver  id={this.props.id} display={this.props.saver}/>
+                        <FilterPanel fields={this.props.fields} configObj={secondField} iniState={this.props.paramFilter} submitCallBack={(filter)=>{this.props.setParamFilterThunk(filter,indexName,dbName,id)}} id={id}/>
+                        <Saver  id={id} dbName = {dbName} display={this.props.saver}/>
                         <Pdf  id={this.props.id} display={this.props.saver}/>
                     </header>  
                    <div>
@@ -161,11 +139,11 @@ class CircleDiagram extends React.Component {
                    </div>
                     <div className="logs-table-wrapper__pie-settings">
                       <span>Параметр: </span>
-                        <select onChange={(event)=>{this.props.changeMainField(event.target.value,this.props.id)}}>
+                        <select onChange={(event)=>{this.props.changeMainField(event.target.value,id,dbName)}}>
                           {fields}
                         </select>
                         <span>Выбранные значения параметра: </span>
-                        <Dropdown selected={this.props.paramFilter[this.props.field]===undefined?[]:this.props.paramFilter[this.props.field]} iniState={[]} name={this.props.field} options={mainFieldOptions} preview={filter.translate[this.props.field]}  onChangeCallBack={(keyState)=>{this.props.changeMainFieldList(this.props.id,keyState)}}/>
+                        <Dropdown selected={this.props.paramFilter[this.props.field]===undefined?[]:this.props.paramFilter[this.props.field]} iniState={[]} name={this.props.field} options={mainFieldOptions} preview={this.props.fields[this.props.field].translate}  onChangeCallBack={(keyState)=>{this.props.changeMainFieldList(id,dbName,keyState)}}/>
                         <button onClick={()=>{this.props.getAcs(this.props.id,this.props.indexName,this.props.dbName)}}>Построить диаграмму</button>
                     </div>
             </div>

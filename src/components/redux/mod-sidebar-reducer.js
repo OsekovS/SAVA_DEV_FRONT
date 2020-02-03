@@ -18,6 +18,9 @@ let initialState = {
         acs: [
             {active: true,text: "События устройств",to: '/visualization acs devicesLogs' },
             {active: false,text: "События пользователей",to: '/visualization acs usersLogs' }
+        ],
+        iss: [
+            {active: true,text: "События SNS",to: '/visualization iss' },
         ]
     }
 }

@@ -10,8 +10,13 @@
         display: inline-block;
         // margin-right: 3px;
     }
+    h3{
+        margin-top: 10px;
+    }
     .mini{
         font-size: 16px;
+        margin-bottom: 10px;
+        display: block;
     }
     span:nth-child(2),span:nth-child(3),span:nth-child(4){
         margin-right: 3px;
@@ -25,15 +30,19 @@
    .label1{
         @include label($yell-label-color,42px,25px,18px);
     }
-    .label2{
+    .label2, .label5{
         @include label($red-label-color,42px,25px,18px);
     }
     div{
         background-color: $lightGrey-color;
         height: 196px;
-        padding: 28px 0 0 47px;
+        padding: 8px 0 10px 27px;
         font-size: 18px;
         font-weight: 600;
+        ul{
+            height: 200px;
+            overflow-y: scroll;
+        }
     }
     
 }

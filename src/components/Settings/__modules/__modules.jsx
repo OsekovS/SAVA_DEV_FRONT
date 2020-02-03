@@ -4,7 +4,7 @@ import Sidebar from './Sidebar/Sidebar'
 import {BrowserRouter, Route} from 'react-router-dom'
 import CamerasCont from './Cameras/CamerasCont'
 import AcsCont from './Acs/AcsCont'
-import IssCont from './Iss/IssCont'
+// import IssCont from './Iss/IssCont'
 
 const __modules = (props) => {
     console.log(props)
@@ -14,7 +14,7 @@ const __modules = (props) => {
         <div className="Settings__infoHandler">
             <Route path='/setting module cameras' render={()=><CamerasCont />}></Route>
             <Route path='/setting module acs' render={()=><AcsCont  />}></Route>
-            <Route path='/setting module iss' render={()=><IssCont />}></Route>
+            {/* <Route path='/setting module iss' render={()=><IssCont />}></Route> */}
         </div>     
     </div>
     </BrowserRouter>

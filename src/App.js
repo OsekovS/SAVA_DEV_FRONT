@@ -4,7 +4,7 @@ import Header from './components/Header/Header'
 import NavBar from './components/Navbar/Navbar'
 import Main from './components/Main/Main'
 import {getCookie} from './components/JS/core'
-import {Visualization__cameras,Visualization__acs,Visualization__iss} from './components/Visualization/Visualization'
+import {Visualization__acs,Visualization__iss} from './components/Visualization/Visualization'
 import {Settings__lic,Settings__modules,Settings__users,Settings__common} from './components/Settings/Settings'
 import {BrowserRouter, Route} from 'react-router-dom'
 import {connect} from "react-redux";
@@ -65,15 +65,15 @@ class App extends React.Component {
   }
   modules={
     cameras: {
-      react: <Route path='/visualization cameras' render={()=><Visualization__cameras  />}></Route>,
+      react: <Route path='/visualization cameras' render={()=><Visualization__acs  />}></Route>,
       path: '/visualization cameras',
     },
     acs_castle_ep2: {
-      react: <Route path='/visualization acs devicesLogs' render={()=><Visualization__acs dbName={'acs_castle_ep2'} />}></Route>,
+      react: <Route path='/visualization acs devicesLogs' render={()=><Visualization__acs sidebar={this.props.state.modSidebar.dashboards['acs']} indexes={this.props.state.auth.briefUserInfo.modules['acs_castle_ep2'].indexes} dbName={'acs_castle_ep2'} />}></Route>,
       path: '/visualization acs devicesLogs',
     },
     iss: {
-      react: <Route path='/visualization iss' render={()=><Visualization__iss   />}></Route>,
+      react: <Route path='/visualization iss' render={()=><Visualization__iss sidebar={this.props.state.modSidebar.dashboards['iss']}  indexes={this.props.state.auth.briefUserInfo.modules['iss'].indexes} dbName={'iss'} />}></Route>,
       path: '/visualization iss',
     }
   }

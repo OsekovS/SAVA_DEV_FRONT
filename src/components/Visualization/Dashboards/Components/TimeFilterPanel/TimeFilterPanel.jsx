@@ -69,9 +69,10 @@ class TimeFilterPanel extends Component {
    
     render(){
         let viget 
+        const {id,indexName,dbName} = this.props
         let {timeKind, timeNum, from_number, from_time_type} = this.props.uploads
-        if(this.state.display=== 'interval') viget = <Calendar id={this.props.id} indexName={this.props.indexName} timeFilter={{from:this.props.timeFilter.from, to:this.props.timeFilter.to}} onApply={this.onApply}/>
-        else viget = <UploadTimeSetter indexName={this.props.indexName} defineLetter={this.defineLetter} makeSpecialString={this.makeSpecialString} timeKind={timeKind} timeNum={timeNum}  from_number={from_number} from_time_type={from_time_type} id={this.props.id} onApply={this.onApply}/>
+        if(this.state.display=== 'interval') viget = <Calendar id={id} indexName={indexName} dbName={dbName} timeFilter={{from:this.props.timeFilter.from, to:this.props.timeFilter.to}} onApply={this.onApply}/>
+        else viget = <UploadTimeSetter id={id} indexName={indexName} dbName={dbName} defineLetter={this.defineLetter} makeSpecialString={this.makeSpecialString} timeKind={timeKind} timeNum={timeNum}  from_number={from_number} from_time_type={from_time_type}  onApply={this.onApply}/>
         if(this.state.display==='collapsed') return <span style={{fontSize:'16px'}} className='time-filter-panel__collapsed' onClick={()=>{this.setState({ display: 'uploads' });}}>{this.state.preview}<img src={require('./calendar.svg')}></img></span>
         else return <div className="modal-form-keeper time-filter-panel"  >
                         <div>

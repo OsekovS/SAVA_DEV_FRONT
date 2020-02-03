@@ -63,20 +63,20 @@ class rawLogsTable extends React.Component {
               {e.text+curLog[e.field]}
             </li>
         })}
-        console.log(this.props) 
+        // console.log(this.props) 
         const {id,indexName,dbName} = this.props
         const personal = {id,indexName,dbName}                 
         return <div className={"logs-table-wrapper"+' '+this.props.className}>
-                  <header className="Common__header Common__header_red Common__header_with-filter">
+                  <header className="Common__header Common__header_grey Common__header_with-filter">
                     {this.props.title+ ''}
                     
-                    <TimeFilterPanel id={this.props.id}  uploads={this.props.uploads} indexName={this.props.indexName} timeFilter={{from:this.props.timeFilter.from, to:this.props.timeFilter.to}}></TimeFilterPanel>
+                    <TimeFilterPanel id={id} dbName={dbName} uploads={this.props.uploads} indexName={indexName} timeFilter={{from:this.props.timeFilter.from, to:this.props.timeFilter.to}}></TimeFilterPanel>
                     {/* <LogsCount indexName={this.props.indexName} indexName={this.props.indexName}/> */}
-                     <MarkAsRead indexName={this.props.indexName} display={this.props.markAsRead} id={this.props.id} dbName={this.props.dbName}></MarkAsRead>
-                    <FilterPanel configObj={this.props.filters[this.props.indexName]} iniState={this.props.paramFilter} submitCallBack={(filter)=>{this.props.setParamFilterThunk(filter,dbName,indexName,id)}} id={id}/>
-                    <Saver  id={this.props.id} display={this.props.saver}/>
+                     <MarkAsRead indexName={indexName} display={this.props.markAsRead} id={this.props.id} dbName={this.props.dbName}></MarkAsRead>
+                    <FilterPanel fields={this.props.fields} configObj={this.props.filter} iniState={this.props.paramFilter} submitCallBack={(filter)=>{this.props.setParamFilterThunk(filter,dbName,indexName,id)}} id={id}/>
+                    <Saver  id={id} display={this.props.saver}/>
                   </header>    
-                  <Table clazz={this.props.clazz} logs={this.props.logs} headerElements={this.props.headerElements} curLog={this.props.curLog} onClickCallback={this.props.onChangeCurrentLog} sortParam={this.props.sortParam} changeSortThunk={this.props.changeSortThunk} indexName={this.props.indexName} id={this.props.id}/>
+                  <Table clazz={this.props.clazz} logs={this.props.logs} headerElements={this.props.headerElements} curLog={this.props.curLog} onClickCallback={this.props.onChangeCurrentLog} sortParam={this.props.sortParam} changeSortThunk={this.props.changeSortThunk}  id={id} dbName={dbName} indexName={indexName}/>
                   <footer>
                     <span>Всего событий: {this.props.pagination.total}</span>
                     <ShowedLogsBar showedLogs={this.props.pagination.showedLogs} showedLogsList={this.props.pagination.showedLogsList} onClickCallback={this.props.changeShowedLogsThunk} personal={personal} />

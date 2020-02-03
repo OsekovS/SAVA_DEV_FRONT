@@ -4,7 +4,7 @@ import {headerReducer} from './header-reducer'
 import navBarReducer from './nav-bar-reducer'
 import allEventsReducer from './all-events-reducer'
 import camerasReducer from './cameras-reducer'
-import issReducer from './iss-reducer'
+// import issReducer from './iss-reducer'
 import acsLogsReducer from './acs-dashboards-reducer'
 import acsSettingsReducer from './acs-settings-reducer'
 import usersReducer from './users-reducer'
@@ -22,12 +22,16 @@ let reducers = combineReducers({
     timezone: timezoneSettingsReducer,
     users: usersReducer,
     auth: authReducer,
-    cameras: camerasReducer,
+    dashboards: acsLogsReducer,
+    // cameras: camerasReducer,
     acs: combineReducers({
         dashboards: acsLogsReducer,
         settings: acsSettingsReducer
     }),
-    iss: issReducer,
+    iss: combineReducers({
+        dashboards: acsLogsReducer,
+        settings: acsSettingsReducer
+    }),
     headerInfo: headerReducer,
     navBar: navBarReducer,
     allEvents: allEventsReducer,

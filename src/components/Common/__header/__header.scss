@@ -18,7 +18,11 @@
 }
 .Common__header_grey{
     background-color: $grey-color;
+
+    
+}
+.Common__header_menu-item{
+    padding: 3px 0 5px 17px;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
-    padding: 3px 0 5px 17px;
 }

@@ -22,7 +22,8 @@ class Wrapper extends React.Component {
     //     return 'C ' +this.props.timeFilter.from.format('DD.MM.YYYY HH:mm') + ' по '+this.props.timeFilter.to.format('DD.MM.YYYY HH:mm')// .format('YYYY/MM/DD HH:mm:ss'
     // }
     applyCallback(startDate, endDate){
-        this.props.setTimeFilterThunk(startDate, endDate, this.props.indexName, this.props.id);
+        const {id,indexName,dbName} = this.props
+        this.props.setTimeFilterThunk(startDate, endDate, indexName, id, dbName);
         this.props.onApply()//'C ' +this.props.timeFilter.from.format('DD.MM.YYYY HH:mm') + ' по '+this.props.timeFilter.to.format('DD.MM.YYYY HH:mm')
     }
     render(){  

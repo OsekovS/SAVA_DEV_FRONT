@@ -35,12 +35,12 @@ class rawMainMenuItem extends React.Component {
                 //     eventsCount.push(<span>{indexes[index].logsCount[event]}</span>) 
                 // });
                 briefIndexesInfo.push(
-                    <li><h3>{indexes[index].title}<span className='mini'>   (Последний просмотр {indexes[index].lastViewed})</span></h3>{eventsCount>999?'999+':eventsCount}</li>
+                    <li><h3>{indexes[index].title}</h3><span className='mini'>   (Последний просмотр {indexes[index].lastViewed})</span>{eventsCount>999?'999+':eventsCount}</li>
                 )
             }
         }
         return <div className="Common__mainMenuItem" onClick={onClick.bind(this,this.props.to)} >
-        <header className="Common__header Common__header_grey"
+        <header className="Common__header Common__header_grey Common__header_menu-item"
             ><span>{this.props.head['text']}</span>
             </header>
     

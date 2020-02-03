@@ -5,13 +5,13 @@ import './Table.scss'
 const Table = (props) => {
 
 let Elements = props.logs.map((e,number) => <LogElem viewed={props.headerElements} name={props.curLog===number?'Modules_table__current':''} items={e} onClickCallback={()=>{props.onClickCallback(number,props.id)}}/>)
-
+let {id,indexName,dbName} = props
 let headerElements = Object.values(props.headerElements).map((e,n) => {
     if(e.field===props.sortParam.field) {
         let clazzName = props.sortParam.direction === 'asc'?"logs-table__arrow logs-table__arrow_up":"logs-table__arrow logs-table__arrow_down"
-        return  <td onClick={()=>{props.changeSortThunk(e,props.indexName,props.id)}} key={n} >{e.text} <img className={clazzName} src={require('./active.svg')}></img></td>
+        return  <td onClick={()=>{props.changeSortThunk(e,indexName,id,dbName)}} key={n} >{e.text} <img className={clazzName} src={require('./active.svg')}></img></td>
     }//
-    else return  <td onClick={()=>{props.changeSortThunk(e,props.indexName,props.id)}} key={n} >{e.text} <img className="logs-table__arrow logs-table__arrow_down" src={require('./non-active.svg')}></img></td>//<img src={require('./multimedia.svg')}></img>
+    else return  <td onClick={()=>{props.changeSortThunk(e,indexName,id,dbName)}} key={n} >{e.text} <img className="logs-table__arrow logs-table__arrow_down" src={require('./non-active.svg')}></img></td>//<img src={require('./multimedia.svg')}></img>
 })
 return <>
             

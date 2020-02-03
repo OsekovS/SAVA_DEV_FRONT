@@ -37,9 +37,9 @@ const navBarReducer = (state = initialState, action) => {
               stateCopy.state = arr.map((e,numb) => {
                   return {link: links[numb], text: e}
               })
-              console.log((window.location.pathname+action.to))
-              console.log(arr)
-              console.log(links)
+            //   console.log((window.location.pathname+action.to))
+            //   console.log(arr)
+            //   console.log(links)
             return stateCopy;
         case NAV_BAR_DIR_CHANGE:
                 stateCopy = {...state};
