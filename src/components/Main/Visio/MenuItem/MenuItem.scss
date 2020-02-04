@@ -41,7 +41,6 @@
         ul{
             padding: 5px;
             height: 200px;
-            overflow-y: scroll;
             li{padding: 10px 0 10px 10px;}
             li:hover{
                 cursor: pointer;
@@ -49,6 +48,9 @@
                 color: white;
                 border-radius: 10px;
             }
+        }
+        ul:hover{
+            overflow-y: scroll;
         }
     }
     

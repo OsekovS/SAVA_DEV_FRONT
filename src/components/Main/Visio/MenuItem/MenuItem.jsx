@@ -20,20 +20,10 @@ class rawMainMenuItem extends React.Component {
             if (indexes.hasOwnProperty(index)&&indexes[index].logsCount!==undefined) {
                 let events = indexes[index].events
                 let eventsCount = []
-                // console.log(indexes)
-                // for (const key in indexes[index].logsCount) {
-                //     if (object.hasOwnProperty(indexes[index].logsCount)) {
-                //         const element = object[key];
-                        
-                //     }
-                // }
                 indexes[index].logsCount.forEach(event => {
                     // console.log(event)
                     eventsCount.push(<span className={'label'+event.key}>{event.doc_count>999?'999+':event.doc_count}</span>) 
                 });
-                // events.forEach(event => {
-                //     eventsCount.push(<span>{indexes[index].logsCount[event]}</span>) 
-                // });
                 briefIndexesInfo.push(
                     <li><h3>{indexes[index].title}</h3><span className='mini'>   (Последний просмотр {indexes[index].lastViewed})</span>{eventsCount>999?'999+':eventsCount}</li>
                 )

@@ -115,7 +115,7 @@ class CircleDiagram extends React.Component {
              
       const categories = this.props.logs.labels!==undefined?this.props.logs.labels.map((elem,numb)=>{
         ourColors.push(this.colors[numb])
-        return <li key={numb}><div style={{backgroundColor: this.colors[numb]}}></div>{elem+' '+this.props.logs.count[numb]}</li>
+        return <li key={numb}><div style={{backgroundColor: this.colors[numb]}}></div>{elem+' ('+this.props.logs.count[numb]+' событий)'}</li>
       }):[]
       const {id,indexName,dbName} = this.props
        return <div className="logs-table-wrapper logs-table-wrapper_pie" >

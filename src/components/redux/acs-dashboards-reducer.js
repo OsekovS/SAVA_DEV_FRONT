@@ -50,7 +50,12 @@ const acsReducer = (state = dashboards, action) => {
                 body: body,
             }
         });
-        stateCopy.filters={}
+        
+        if(state.filters!==null&& Object.keys(state.filters).length>0){
+            stateCopy.filters = {...state.filters}
+        }else{
+            stateCopy.filters={}
+        }
         
         action.json.filters.forEach(filter => {
             stateCopy.filters[filter[0]]=JSON.parse(filter[1])
@@ -250,7 +255,7 @@ export const getAcs = (id,indexName,dbName) => {
             specialObject={
                 fieldName: state.body.field,
                 //если фильтр дашборда пустой либо же в этом фильтре нет ничего по нужному параметру - ищем по всем иначе берем что нужно прямо в фильтре
-                fieldList: (state.body.paramFilter===[]||state.body.paramFilter[state.body.field]===undefined)?
+                fieldList: (Object.keys(state.body.paramFilter).length===0||state.body.paramFilter[state.body.field]===undefined)?
                 getState().acs.dashboards.filters[state.body.indexName][state.body.field]:
                 state.body.paramFilter[state.body.field]
                 // fieldList: ["Детский садик 'вишенка'", "Крематорий 'барбекью'"]
@@ -480,6 +485,7 @@ export const setParamFilterThunk = (filter,indexName,dbName,id) => {
         let  specialObject = {}
         let reducers = [ParamFilter(filterCopy,id,dbName)]
         let need
+        
         if(state.type==='Table') {
             specialObject={
                 logsCount: state.body.pagination.showedLogs,
@@ -575,7 +581,7 @@ const uniThunk = (reqObj,dispatches,dispatch, id,dbName) => {
     axios.post("php/acs-form-processor.php", reqObj).then(response => {
         // console.log(response)
         let json = JSON.parse(response.request.response);
-        console.log(json)
+        // console.log(json)
         if(reqObj['need']==='logs') dispatch(uploadAcs(json, reqObj, id,dbName))
         if(reqObj['need']==='dashboards') dispatch(uploadDashboards(reqObj.dbName,json))
         if(reqObj['need']==='Circle_Diagram') dispatch(uploadCircleDiagram(json,id,dbName))

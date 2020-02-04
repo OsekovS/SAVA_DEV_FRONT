@@ -339,7 +339,7 @@ export const acsIni = function(){
         },
         paramFilter: {}, 
     }
-    // {    headerElements :[{text:'Дата', type:'date', field:'time'},    {text:'Приоритет', type:'text', field:'significance'},    {text:'Тип события', type:'text', field:'event_type'},    {text:'Событие', type:'text', field:'event'},    {text:'Конечная точка', type:'text', field:'point'}  ],      name:'События SNS',    footerElements: [],            indexName: 'sns_event',      logs:  [],    timeFilter: {        from: {number: 60, type:'days'},        to: 'now'    },    uploads: {      uploads: false,      timeKind: 1,      timeNum: 5000,      from_number: '2',      from_time_type: 'M',      to: "now/d"    },            paramFilter: {},    pagination: {        total: '',        currentPage: 1,        fromPage: 1,        showedPages: 5,        lastPage: '',        showedLogs: 100,        showedLogsList: [50, 100, 250, 500]    },    sortParam: {        type:'date',        field:'time',        direction: 'asc'    },    curLog: null    }
+     //{    headerElements :[{text:'Дата', type:'date', field:'time'},    {text:'Приоритет', type:'text', field:'significance'},    {text:'Тип события', type:'text', field:'event_type'},    {text:'Событие', type:'text', field:'event'},    {text:'Конечная точка', type:'text', field:'point'}  ],      name:'События SNS',    footerElements: [],            indexName: 'sns_event',      logs:  [],    timeFilter: {        from: {number: 60, type:'days'},        to: 'now'    },    uploads: {      uploads: false,      timeKind: 1,      timeNum: 5000,      from_number: '2',      from_time_type: 'M',      to: "now/d"    },            paramFilter: {},    pagination: {        total: '',        currentPage: 1,        fromPage: 1,        showedPages: 5,        lastPage: '',        showedLogs: 100,        showedLogsList: [50, 100, 250, 500]    },    sortParam: {        type:'date',        field:'time',        direction: 'asc'    },    curLog: null    }
     let circleDg3 = {
         field: 'event_type',
         indexName: 'sns_event',
@@ -426,14 +426,14 @@ export const acsIni = function(){
                     }
                 }
             },
-            title: 'SAVA СКУД'
+            title: 'SAVA СКУД «Castle»'
         },
         'iss':{
             admin: 'yes',
             indexes: {
                 sns_event:{
                     style:"sns_event",
-                    title:"События SNS",
+                    title:"Журналы станций",
                     events:['0','1'],
                     fields: {
                         'event':{
@@ -464,7 +464,7 @@ export const acsIni = function(){
                 },
            
         },
-        title: 'SAVA СЗИ'
+        title: 'SAVA СЗИ «SNS»'
     }
     }
     return {
