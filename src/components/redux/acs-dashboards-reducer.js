@@ -15,6 +15,7 @@ const UPLOAD_DASHBOARDS = 'UPLOAD_DASHBOARDS'
 const UPLOAD_CIRCLE_DIAGRAM = 'UPLOAD_CIRCLE_DIAGRAM'
 const CHANGE_MAIN_FIELD = 'CHANGE_MAIN_FIELD'
 const CHANGE_MAIN_FIELD_LIST = 'CHANGE_MAIN_FIELD_LIST'
+const DEL_DASH = 'DEL_DASH'
 // const SIDEBAR_CHANGE = 'SIDEBAR_CHANGE';
 const dummy = {type: ''}
 // let initialState = acsIni()
@@ -55,6 +56,9 @@ const acsReducer = (state = dashboards, action) => {
             stateCopy.filters[filter[0]]=JSON.parse(filter[1])
         });
            return stateCopy
+        case DEL_DASH:
+            stateCopy=  acsIni().dashboards
+            return stateCopy
        case UPLOAD_CIRCLE_DIAGRAM:
             stateCopy = getDashBody(state,action)
             stateCopy.dashboards[action.dbName][action.id].body.logs = {...state.dashboards[action.dbName][action.id].body.logs}
@@ -177,7 +181,7 @@ const acsReducer = (state = dashboards, action) => {
  
 
 
-
+export const clearDash = () => ({type: DEL_DASH})
 
 export const TimeFilter = (startDate, endDate,id,dbName) =>
 ({type: CHANGE_TIME, startDate, endDate,id,dbName})

@@ -3,6 +3,7 @@ import './__UserPanel.scss';
 
 import {connect} from "react-redux";
 import {logOut} from '../../redux/auth-reducer'
+import {clearDash} from '../../redux/acs-dashboards-reducer'
 class rawUserPanel extends React.Component{
     
     constructor(props) {
@@ -22,7 +23,7 @@ class rawUserPanel extends React.Component{
         onLogOut = () => {
 
             this.props.logOut()
-
+            this.props.clearDash()
         }
 
     render(){
@@ -55,7 +56,8 @@ let mapStateToProps = (state) => {
 
 
 let mapDispatchToProps ={
-    logOut
+    logOut,
+    clearDash
 }
 
 const __UserPanel = connect(mapStateToProps, mapDispatchToProps)(rawUserPanel);

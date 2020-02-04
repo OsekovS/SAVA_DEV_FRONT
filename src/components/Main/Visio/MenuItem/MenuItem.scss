@@ -14,7 +14,7 @@
         margin-top: 10px;
     }
     .mini{
-        font-size: 16px;
+        font-size: 0.8em;
         margin-bottom: 10px;
         display: block;
     }
@@ -35,16 +35,19 @@
     }
     div{
         background-color: $lightGrey-color;
-        height: 196px;
-        padding: 8px 0 10px 27px;
-        font-size: 18px;
+        height: 225px;
+        font-size: 1em;
         font-weight: 600;
         ul{
+            padding: 5px;
             height: 200px;
             overflow-y: scroll;
+            li{padding: 10px 0 10px 10px;}
             li:hover{
                 cursor: pointer;
                 background-color: $lightGreyText-color-hover;
+                color: white;
+                border-radius: 10px;
             }
         }
     }
