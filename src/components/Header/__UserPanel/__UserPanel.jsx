@@ -32,16 +32,16 @@ class rawUserPanel extends React.Component{
             <span >{this.props.briefUserInfo.name}</span>
             <div>
                 <span>{this.props.briefUserInfo.admin}</span>
-                <button className="Header__ButtDown"></button>
+                <button className="Header__Butt Header__Butt_Up"></button>
             </div>
-            <button onClick={this.onLogOut}>Выйти</button>
+            <span className="Header__Exit" onClick={this.onLogOut}>Выйти<img  src={require("./logout.svg")} alt="Выйти"></img></span>
         </div>
         }
         else{
             return <div onClick={this.handleClick}  className="Header__UserPanel">
                 <img width='45' height='45' src={require("./user.png")} alt="Пользователь"></img>
                 <span > {this.props.briefUserInfo.name}</span>
-                <button className="Header__ButtDown"></button>
+                <button className="Header__Butt Header__Butt_Down"></button>
             </div>
         }
     }

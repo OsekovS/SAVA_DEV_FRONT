@@ -1,11 +1,11 @@
 @import '../../colors.scss';
 .Header__UserPanel{
+
 border-left: 2px solid $white-color;
 border-right: 2px solid $white-color;
 cursor: pointer;
-width: 320px;
+width: 260px;
 height: 55px;
-padding: 0 0 0 27px;
 box-sizing: border-box;
 text-align: center;
 display: flex;
@@ -13,25 +13,44 @@ z-index: 2;
 align-items: center;
 background: $grey-color;
 img{
-    margin-right: 20px;
+    margin: 0 20px 0 20px;
 }
 span{
-    font-size: 30px;
+    font-size: 24px;
     
 }
-.Header__ButtDown{
+.Header__Butt{
     background: inherit;
     width: 14px;
     height: 14px;
     border: none;
     border-left: 3px solid $white-color;
     border-bottom: 3px solid $white-color;
-    transform: rotate(-45deg);
     margin-left: 14px;
+}
+.Header__Butt_Down{
+    transform: rotate(-45deg);
+}
+.Header__Butt_Up{
+    transform: rotate(135deg);
+}
 
 }
-}
 .Header__UserPanel_opened{
-    height: 150px;
+    height: 175px;
+    justify-content: space-evenly;
     flex-direction: column;
+    img{margin: 0px;}
+}
+span.Header__Exit{
+    position: relative;
+    right: -50px;
+    font-size: 22px;
+    cursor: pointer;
+    img{
+        width: 25px;
+        position: absolute;
+        right: -40px;
+        top: 5px;
+    }
 }

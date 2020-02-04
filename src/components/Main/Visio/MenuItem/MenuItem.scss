@@ -42,6 +42,10 @@
         ul{
             height: 200px;
             overflow-y: scroll;
+            li:hover{
+                cursor: pointer;
+                background-color: $lightGreyText-color-hover;
+            }
         }
     }
     
