@@ -30,9 +30,9 @@ const acsReducer = (state = dashboards, action) => {
    switch (action.type) {
        case UPLOAD_DASHBOARDS:
         stateCopy = {...state};
-        if(stateCopy.dashboards===null)
-        stateCopy.dashboards={}
-        stateCopy.dashboards[action.dbName] = []
+        if(stateCopy===null)
+        stateCopy={}
+        stateCopy[action.dbName] = []
         
         action.json.dashboards.forEach(dash => {
             let body = JSON.parse(dash[4])   
@@ -43,7 +43,7 @@ const acsReducer = (state = dashboards, action) => {
                     to: toDate
                 }
                 body.pdf=body.saver=body.markAsRead='wait'
-                stateCopy.dashboards[action.dbName][dash[0]] = {
+                stateCopy[action.dbName][dash[0]] = {
                 id: dash[0],
                 name: dash[1],
                 type: dash[2],
@@ -51,37 +51,39 @@ const acsReducer = (state = dashboards, action) => {
             }
         });
         
-        if(state.filters!==null&& Object.keys(state.filters).length>0){
-            stateCopy.filters = {...state.filters}
-        }else{
-            stateCopy.filters={}
-        }
+        // if(state.filters!==null&& Object.keys(state.filters).length>0){
+        //     stateCopy.filters = {...state.filters}
+        // }else{
+        //     stateCopy.filters={}
+        // }
         
-        action.json.filters.forEach(filter => {
-            stateCopy.filters[filter[0]]=JSON.parse(filter[1])
-        });
+        // action.json.filters.forEach(filter => {
+        //     stateCopy.filters[filter[0]]=JSON.parse(filter[1])
+        // });
            return stateCopy
         case DEL_DASH:
             stateCopy=  acsIni().dashboards
             return stateCopy
        case UPLOAD_CIRCLE_DIAGRAM:
             stateCopy = getDashBody(state,action)
-            stateCopy.dashboards[action.dbName][action.id].body.logs = {...state.dashboards[action.dbName][action.id].body.logs}
-            stateCopy.dashboards[action.dbName][action.id].body.logs = action.json.logs
+            stateCopy[action.dbName][action.id].body.logs = {...state[action.dbName][action.id].body.logs}
+            stateCopy[action.dbName][action.id].body.logs = action.json.logs
            return stateCopy
         case UPLOAD_ACS_DASHBOARDS:
+            // console.log(state)
+            // console.log(action)
             stateCopy = getDashBody(state,action)
-            stateCopy.dashboards[action.dbName][action.id].body.logs = action.json.logs.map( (e) => e._source)
-            stateCopy.dashboards[action.dbName][action.id].body.pagination = {...state.dashboards[action.dbName][action.id].body.pagination}
-            stateCopy.dashboards[action.dbName][action.id].body.pagination.total = action.json.total
-            stateCopy.dashboards[action.dbName][action.id].body.pagination.lastPage = Math.ceil(action.json.total/stateCopy.dashboards[action.dbName][action.id].body.pagination.showedLogs)
-            // console.log(stateCopy.dashboards[action.id])
+            stateCopy[action.dbName][action.id].body.logs = action.json.logs.map( (e) => e._source)
+            stateCopy[action.dbName][action.id].body.pagination = {...state[action.dbName][action.id].body.pagination}
+            stateCopy[action.dbName][action.id].body.pagination.total = action.json.total
+            stateCopy[action.dbName][action.id].body.pagination.lastPage = Math.ceil(action.json.total/stateCopy[action.dbName][action.id].body.pagination.showedLogs)
+            // console.log(stateCopy[action.id])
             return stateCopy
         case CHANGE_TIME:
             stateCopy = getDashBody(state,action)
-            stateCopy.dashboards[action.dbName][action.id].body.timeFilter = {... state.dashboards[action.dbName][action.id].body.timeFilter}
-            stateCopy.dashboards[action.dbName][action.id].body.timeFilter.from = (action.startDate)
-            stateCopy.dashboards[action.dbName][action.id].body.timeFilter.to = (action.endDate)
+            stateCopy[action.dbName][action.id].body.timeFilter = {... state[action.dbName][action.id].body.timeFilter}
+            stateCopy[action.dbName][action.id].body.timeFilter.from = (action.startDate)
+            stateCopy[action.dbName][action.id].body.timeFilter.to = (action.endDate)
 
             return stateCopy
         case CHANGE_PARAM_FILTER:
@@ -100,63 +102,63 @@ const acsReducer = (state = dashboards, action) => {
             }
             delete copyData.devices
             }
-             stateCopy.dashboards[action.dbName][action.id].body.paramFilter = copyData
+             stateCopy[action.dbName][action.id].body.paramFilter = copyData
             return stateCopy
 
         case CHANGE_UPLOAD:
             stateCopy = getDashBody(state,action)
-            stateCopy.dashboards[action.dbName][action.id].body.uploads = {... state.dashboards[action.dbName][action.id].body.uploads}
-            stateCopy.dashboards[action.dbName][action.id].body.uploads.uploads = action.uploads
+            stateCopy[action.dbName][action.id].body.uploads = {... state[action.dbName][action.id].body.uploads}
+            stateCopy[action.dbName][action.id].body.uploads.uploads = action.uploads
             return stateCopy
         case CHANGE_UPLOAD_PARAMS:
             stateCopy = getDashBody(state,action)
-            stateCopy.dashboards[action.dbName][action.id].body.uploads = {... state.dashboards[action.dbName][action.id].body.uploads}
-            stateCopy.dashboards[action.dbName][action.id].body.uploads.timeNum = action.params.timeNum
-            stateCopy.dashboards[action.dbName][action.id].body.uploads.timeKind = parseInt(action.params.timeKind)
-            stateCopy.dashboards[action.dbName][action.id].body.uploads.from_number = action.params.from_number
-            stateCopy.dashboards[action.dbName][action.id].body.uploads.from_time_type = action.params.from_time_type
+            stateCopy[action.dbName][action.id].body.uploads = {... state[action.dbName][action.id].body.uploads}
+            stateCopy[action.dbName][action.id].body.uploads.timeNum = action.params.timeNum
+            stateCopy[action.dbName][action.id].body.uploads.timeKind = parseInt(action.params.timeKind)
+            stateCopy[action.dbName][action.id].body.uploads.from_number = action.params.from_number
+            stateCopy[action.dbName][action.id].body.uploads.from_time_type = action.params.from_time_type
             return stateCopy
         case CHANGE_PAGE:
             stateCopy = getDashBody(state,action)
-            stateCopy.dashboards[action.dbName][action.id].body.pagination = {... state.dashboards[action.dbName][action.id].body.pagination}
-            if(action.page===1)  stateCopy.dashboards[action.dbName][action.id].body.pagination.fromPage = 1
+            stateCopy[action.dbName][action.id].body.pagination = {... state[action.dbName][action.id].body.pagination}
+            if(action.page===1)  stateCopy[action.dbName][action.id].body.pagination.fromPage = 1
             else{
-                if(action.page=== state.dashboards[action.dbName][action.id].body.pagination.fromPage+ state.dashboards[action.dbName][action.id].body.pagination.showedPages-1 && action.page !==  state.dashboards[action.dbName][action.id].body.pagination.lastPage){
-                     stateCopy.dashboards[action.dbName][action.id].body.pagination.fromPage =  state.dashboards[action.dbName][action.id].body.pagination.fromPage +  state.dashboards[action.dbName][action.id].body.pagination.showedPages - 2
-                }else if(action.page=== state.dashboards[action.dbName][action.id].body.pagination.lastPage){
-                    if(Math.ceil( state.dashboards[action.dbName][action.id].body.pagination.total/ state.dashboards[action.dbName][action.id].body.pagination.showedLogs)< state.dashboards[action.dbName][action.id].body.pagination.showedPages)
-                         stateCopy.dashboards[action.dbName][action.id].body.pagination.fromPage =  state.dashboards[action.dbName][action.id].body.pagination.lastPage - Math.ceil( state.dashboards[action.dbName][action.id].body.pagination.total/ state.dashboards[action.dbName][action.id].body.pagination.showedLogs) + 1
-                    else  stateCopy.dashboards[action.dbName][action.id].body.pagination.fromPage =  state.dashboards[action.dbName][action.id].body.pagination.lastPage -  state.dashboards[action.dbName][action.id].body.pagination.showedPages + 1
-                }else if(action.page=== state.dashboards[action.dbName][action.id].body.pagination.fromPage){
-                    let fromPage = state.dashboards[action.dbName][action.id].body.pagination.fromPage -  state.dashboards[action.dbName][action.id].body.pagination.showedPages + 2
-                    if(fromPage===0)  stateCopy.dashboards[action.dbName][action.id].body.pagination.fromPage = 1
-                    else   stateCopy.dashboards[action.dbName][action.id].body.pagination.fromPage = fromPage
+                if(action.page=== state[action.dbName][action.id].body.pagination.fromPage+ state[action.dbName][action.id].body.pagination.showedPages-1 && action.page !==  state[action.dbName][action.id].body.pagination.lastPage){
+                     stateCopy[action.dbName][action.id].body.pagination.fromPage =  state[action.dbName][action.id].body.pagination.fromPage +  state[action.dbName][action.id].body.pagination.showedPages - 2
+                }else if(action.page=== state[action.dbName][action.id].body.pagination.lastPage){
+                    if(Math.ceil( state[action.dbName][action.id].body.pagination.total/ state[action.dbName][action.id].body.pagination.showedLogs)< state[action.dbName][action.id].body.pagination.showedPages)
+                         stateCopy[action.dbName][action.id].body.pagination.fromPage =  state[action.dbName][action.id].body.pagination.lastPage - Math.ceil( state[action.dbName][action.id].body.pagination.total/ state[action.dbName][action.id].body.pagination.showedLogs) + 1
+                    else  stateCopy[action.dbName][action.id].body.pagination.fromPage =  state[action.dbName][action.id].body.pagination.lastPage -  state[action.dbName][action.id].body.pagination.showedPages + 1
+                }else if(action.page=== state[action.dbName][action.id].body.pagination.fromPage){
+                    let fromPage = state[action.dbName][action.id].body.pagination.fromPage -  state[action.dbName][action.id].body.pagination.showedPages + 2
+                    if(fromPage===0)  stateCopy[action.dbName][action.id].body.pagination.fromPage = 1
+                    else   stateCopy[action.dbName][action.id].body.pagination.fromPage = fromPage
                 }
             }
-             stateCopy.dashboards[action.dbName][action.id].body.pagination.currentPage = action.page
+             stateCopy[action.dbName][action.id].body.pagination.currentPage = action.page
             return stateCopy
             
         case CHANGE_SHOWED_LOGS:
             stateCopy = getDashBody(state,action)
-            stateCopy.dashboards[action.dbName][action.id].body.pagination = {... state.dashboards[action.dbName][action.id].body.pagination}
-            for (let element of   state.dashboards[action.dbName][action.id].body.pagination.showedLogsList) {
+            stateCopy[action.dbName][action.id].body.pagination = {... state[action.dbName][action.id].body.pagination}
+            for (let element of   state[action.dbName][action.id].body.pagination.showedLogsList) {
                 if (element===action.showedLogs) {
-                     stateCopy.dashboards[action.dbName][action.id].body.pagination.showedLogs = action.showedLogs
-                     stateCopy.dashboards[action.dbName][action.id].body.pagination.lastPage = Math.ceil( state.dashboards[action.dbName][action.id].body.pagination.total/action.showedLogs)
-                     stateCopy.dashboards[action.dbName][action.id].body.pagination.currentPage = 1
-                     stateCopy.dashboards[action.dbName][action.id].body.pagination.fromPage = 1
+                     stateCopy[action.dbName][action.id].body.pagination.showedLogs = action.showedLogs
+                     stateCopy[action.dbName][action.id].body.pagination.lastPage = Math.ceil( state[action.dbName][action.id].body.pagination.total/action.showedLogs)
+                     stateCopy[action.dbName][action.id].body.pagination.currentPage = 1
+                     stateCopy[action.dbName][action.id].body.pagination.fromPage = 1
                     break;
                 }
             }
             return stateCopy
         case CHANGE_SORT_PARAM:
             stateCopy = getDashBody(state,action)
-            if(action.sortParam.field=== state.dashboards[action.dbName][action.id].body.sortParam.field){
-                stateCopy.dashboards[action.dbName][action.id].body.sortParam = {... state.dashboards[action.dbName][action.id].body.sortParam}
-                stateCopy.dashboards[action.dbName][action.id].body.sortParam.direction= stateCopy.dashboards[action.dbName][action.id].body.sortParam.direction==='asc'?'desc':'asc'
+            if(action.sortParam.field=== state[action.dbName][action.id].body.sortParam.field){
+                stateCopy[action.dbName][action.id].body.sortParam = {... state[action.dbName][action.id].body.sortParam}
+                stateCopy[action.dbName][action.id].body.sortParam.direction= stateCopy[action.dbName][action.id].body.sortParam.direction==='asc'?'desc':'asc'
             }
             else{
-                stateCopy.dashboards[action.dbName][action.id].body.sortParam = {
+                stateCopy[action.dbName][action.id].body.sortParam = {
                 type: action.sortParam.type,
                 field: action.sortParam.field,
                 direction: 'asc'
@@ -165,19 +167,19 @@ const acsReducer = (state = dashboards, action) => {
             return stateCopy
         case CHANGE_CURRENT_LOG:
             stateCopy = getDashBody(state,action)
-             stateCopy.dashboards[action.dbName][action.id].body.curLog = action.number
+             stateCopy[action.dbName][action.id].body.curLog = action.number
             return stateCopy
         case CHANGE_MAIN_FIELD:
             stateCopy = getDashBody(state,action)
-             stateCopy.dashboards[action.dbName][action.id].body.paramFilter = {... state.dashboards[action.dbName][action.id].body.paramFilter}
+             stateCopy[action.dbName][action.id].body.paramFilter = {... state[action.dbName][action.id].body.paramFilter}
             //убираем старый paramFilter
-            delete  stateCopy.dashboards[action.dbName][action.id].body.paramFilter[ stateCopy.dashboards[action.dbName][action.id].body.field]
-             stateCopy.dashboards[action.dbName][action.id].body.field = action.value
+            delete  stateCopy[action.dbName][action.id].body.paramFilter[ stateCopy[action.dbName][action.id].body.field]
+             stateCopy[action.dbName][action.id].body.field = action.value
             return stateCopy
         case CHANGE_MAIN_FIELD_LIST:
             stateCopy = getDashBody(state,action)
-             stateCopy.dashboards[action.dbName][action.id].body.paramFilter = {... state.dashboards[action.dbName][action.id].body.paramFilter}        
-             stateCopy.dashboards[action.dbName][action.id].body.paramFilter[ stateCopy.dashboards[action.dbName][action.id].body.field] = action.list    
+             stateCopy[action.dbName][action.id].body.paramFilter = {... state[action.dbName][action.id].body.paramFilter}        
+             stateCopy[action.dbName][action.id].body.paramFilter[ stateCopy[action.dbName][action.id].body.field] = action.list    
             return stateCopy
        default:
            return state;
@@ -197,8 +199,8 @@ export const uploadAcs = (json,reqObj,id,dbName) =>
 export const ParamFilter = (filter,id,dbName) =>
 ({type: CHANGE_PARAM_FILTER, filter,id,dbName})
 
-export const onChangeCurrentLog = (number,id) =>
-({type: CHANGE_CURRENT_LOG, number,id})
+export const onChangeCurrentLog = (number,id,dbName) =>
+({type: CHANGE_CURRENT_LOG, number,id,dbName})
 
 export const changePage = (page,id,dbName) =>
 ({type: CHANGE_PAGE, page,id,dbName})
@@ -219,11 +221,13 @@ const  prepareTimefilter = (getState,dbName,state,indexName)=>{
     const module = getState().auth.briefUserInfo.modules[dbName]
     // console.log(module)
     // console.log(dbName,state,indexName)
-    if(module.mode==='lastViewed')  return {
-        from: module.indexes[indexName].lastViewed,
-         to:  state.body.uploads.to
-    }
-    else if(state.body.uploads.uploads){
+    
+    // if(module.mode==='lastViewed')  return {
+    //     from: module.indexes[indexName].lastViewed,
+    //      to:  state.body.uploads.to
+    // }
+    // else 
+    if(state.body.uploads.uploads){
         return {
             from: getFromDate(state.body.uploads.from_number,state.body.uploads.from_time_type).format('YYYY/MM/DD HH:mm:ss'),
              to:  state.body.uploads.to
@@ -239,7 +243,7 @@ const  prepareTimefilter = (getState,dbName,state,indexName)=>{
 export const getAcs = (id,indexName,dbName) => {
    
     return (dispatch,getState) => {
-        let state = getState().acs.dashboards.dashboards[dbName][id]
+        let state = getState().dashboards[dbName][id]
         let specialObject = {}
         let need
         let timeFilter = prepareTimefilter(getState,dbName,state,indexName)
@@ -256,7 +260,7 @@ export const getAcs = (id,indexName,dbName) => {
                 fieldName: state.body.field,
                 //если фильтр дашборда пустой либо же в этом фильтре нет ничего по нужному параметру - ищем по всем иначе берем что нужно прямо в фильтре
                 fieldList: (Object.keys(state.body.paramFilter).length===0||state.body.paramFilter[state.body.field]===undefined)?
-                getState().acs.dashboards.filters[state.body.indexName][state.body.field]:
+                getState().auth.briefUserInfo.modules[dbName].indexes[indexName].filter[state.body.field]:
                 state.body.paramFilter[state.body.field]
                 // fieldList: ["Детский садик 'вишенка'", "Крематорий 'барбекью'"]
             }
@@ -276,7 +280,7 @@ export const getAcs = (id,indexName,dbName) => {
 
 export const ChangeMainFieldThunk = (indexName,id,keyState,dashField,dbName) => {
     return (dispatch,getState) => {
-        let state = getState().acs.dashboards.dashboards[dbName][id]
+        let state = getState().dashboards[dbName][id]
         let timeFilter = {}
         
         if(state.body.uploads.uploads){
@@ -348,7 +352,7 @@ export const changeUploadModeThunk = (uploadMode,indexName,id) => {//,dbName////
 export const changeUploadsThunk = (uploads,id,indexName,dbName) => {//////////////////////////////////////////////////////////////////////////////////////////////////////////////
     return (dispatch,getState) => {
         let reducers = [changeUpdatesParams(uploads,id,dbName),changeUploads(true,id,dbName)]
-        let state = getState().acs.dashboards.dashboards[dbName][id]
+        let state = getState().dashboards[dbName][id]
         let timeFilter, specialObject = {}
             timeFilter = {
                 from: getFromDate(uploads.from_number,uploads.from_time_type).format('YYYY/MM/DD HH:mm:ss'),
@@ -369,7 +373,7 @@ export const changeUploadsThunk = (uploads,id,indexName,dbName) => {////////////
                 fieldName: state.body.field,
                 //если фильтр дашборда пустой либо же в этом фильтре нет ничего по нужному параметру - ищем по всем иначе берем что нужно прямо в фильтре
                 fieldList: (state.body.paramFilter===[]||state.body.paramFilter[state.body.field]===undefined)?
-                getState().acs.dashboards.filters[state.body.indexName][state.body.field]:
+                getState().auth.briefUserInfo.modules[dbName].indexes[indexName].filter[state.body.field]:
                 state.body.paramFilter[state.body.field]
                 // fieldList: ["Детский садик 'вишенка'", "Крематорий 'барбекью'"]
             }
@@ -391,7 +395,7 @@ export const changeUploadsThunk = (uploads,id,indexName,dbName) => {////////////
 
 export const changeShowedLogsThunk = (showedLogs,indexName,dbName,id) => {
     return (dispatch,getState) => {
-        let state = getState().acs.dashboards.dashboards[dbName][id]
+        let state = getState().dashboards[dbName][id]
         let timeFilter = prepareTimefilter(getState,dbName,state,indexName)
         let reqObj = {
             "need": "logs",
@@ -411,7 +415,7 @@ export const changeShowedLogsThunk = (showedLogs,indexName,dbName,id) => {
 
 export const changePageThunk = (page,indexName,id,dbName) => {
     return (dispatch, getState) => {
-        let state = getState().acs.dashboards.dashboards[dbName][id]       
+        let state = getState().dashboards[dbName][id]       
         let timeFilter = prepareTimefilter(getState,dbName,state,indexName)
         let reqObj = {
             "need": "logs",
@@ -431,7 +435,7 @@ export const changePageThunk = (page,indexName,id,dbName) => {
 
 export const setTimeFilterThunk = (startDate, endDate,indexName,id,dbName) => {
         return (dispatch, getState) => {
-            let state = getState().acs.dashboards.dashboards[dbName][id]
+            let state = getState().dashboards[dbName][id]
             let specialObject = {}
             let reducers = [TimeFilter(startDate, endDate,id,dbName),changeUploads(false,id,dbName)]
             let need
@@ -448,7 +452,7 @@ export const setTimeFilterThunk = (startDate, endDate,indexName,id,dbName) => {
                     fieldName: state.body.field,
                     //если фильтр дашборда пустой либо же в этом фильтре нет ничего по нужному параметру - ищем по всем иначе берем что нужно прямо в фильтре
                     fieldList: (state.body.paramFilter===[]||state.body.paramFilter[state.body.field]===undefined)?
-                    getState().acs.dashboards.filters[state.body.indexName][state.body.field]:
+                    getState().auth.briefUserInfo.modules[dbName].indexes[indexName].filter[state.body.field]:
                     state.body.paramFilter[state.body.field]
                     // fieldList: ["Детский садик 'вишенка'", "Крематорий 'барбекью'"]
                 }
@@ -473,7 +477,7 @@ export const setTimeFilterThunk = (startDate, endDate,indexName,id,dbName) => {
 }
 
 // uploads,timeFilter,filter,showedLogs,page
-export const setParamFilterThunk = (filter,indexName,dbName,id) => {
+export const setParamFilterThunk = (filter,dbName,indexName,id) => {
     // console.log(filter)
     let filterCopy = {}
     for (let param in filter) {
@@ -481,7 +485,7 @@ export const setParamFilterThunk = (filter,indexName,dbName,id) => {
     }
     delete filterCopy.opened
     return (dispatch,getState) => {
-        let state = getState().acs.dashboards.dashboards[dbName][id]
+        let state = getState().dashboards[dbName][id]
         let  specialObject = {}
         let reducers = [ParamFilter(filterCopy,id,dbName)]
         let need
@@ -499,7 +503,7 @@ export const setParamFilterThunk = (filter,indexName,dbName,id) => {
                 fieldName: state.body.field,
                 //если фильтр дашборда пустой либо же в этом фильтре нет ничего по нужному параметру - ищем по всем иначе берем что нужно прямо в фильтре
                 fieldList: (state.body.paramFilter===[]||state.body.paramFilter[state.body.field]===undefined)?
-                getState().acs.dashboards.filters[state.body.indexName][state.body.field]:
+                getState().auth.briefUserInfo.modules[dbName].indexes[indexName].filter[state.body.field]:
                 state.body.paramFilter[state.body.field]
                 // fieldList: ["Детский садик 'вишенка'", "Крематорий 'барбекью'"]
             }
@@ -522,7 +526,7 @@ export const setParamFilterThunk = (filter,indexName,dbName,id) => {
 export const changeSortThunk = (sortParam,indexName,id,dbName) => {
     
     return (dispatch,getState) => {
-        let state = getState().acs.dashboards.dashboards[dbName][id]
+        let state = getState().dashboards[dbName][id]
         let NewSortParam,specialObject = {}
         let timeFilter = prepareTimefilter(getState,dbName,state,indexName)
         if(sortParam.field===state.body.sortParam.field){
@@ -557,7 +561,7 @@ export const changeSortThunk = (sortParam,indexName,id,dbName) => {
 
 export const onSaveDashParamsThunk = (id,dbName) => {
     return (dispatch,getState) => {
-        let state = getState().acs.dashboards.dashboards[dbName][id]
+        let state = getState().dashboards[dbName][id]
         let {timeFilter,paramFilter,uploads,indexName,field} = state.body
         timeFilter = {
                 from: timeFilter.from.format('YYYY/MM/DD HH:mm:ss'),
@@ -581,7 +585,7 @@ const uniThunk = (reqObj,dispatches,dispatch, id,dbName) => {
     axios.post("php/acs-form-processor.php", reqObj).then(response => {
         // console.log(response)
         let json = JSON.parse(response.request.response);
-        // console.log(json)
+        console.log(json)
         if(reqObj['need']==='logs') dispatch(uploadAcs(json, reqObj, id,dbName))
         if(reqObj['need']==='dashboards') dispatch(uploadDashboards(reqObj.dbName,json))
         if(reqObj['need']==='Circle_Diagram') dispatch(uploadCircleDiagram(json,id,dbName))
@@ -595,8 +599,35 @@ const uniThunk = (reqObj,dispatches,dispatch, id,dbName) => {
       });;
 }
 
+//href="upload-file.php?filename=file.pdf"
 export const onCreatePdfThunk = () => {
     console.log('pdf')
+    
+    axios.post("php/upload-file.php").then(response => {
+        // console.log(response)
+        let json = JSON.parse(response.request.response);
+        console.log(json)
+        
+    }).catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .finally(function () {
+        // always executed
+      });;
+
+    // axios({
+    //     url: "php/acs-form-processor.php",
+    //     method: 'GET',
+    //     responseType: 'blob', // important
+    //   }).then((response) => {
+    //     const url = window.URL.createObjectURL(new Blob([response.data]));
+    //     const link = document.createElement('a');
+    //     link.href = url;
+    //     link.setAttribute('download', 'file.pdf');
+    //     document.body.appendChild(link);
+    //     link.click();
+    //   });
 }
 
 export const  getFromDate = (from_number,from_time_type)=>{
@@ -632,10 +663,9 @@ export const  getDashboardsThunk = (dbName) => {
 
 const getDashBody = (state,action) => {
     let stateCopy = {...state};
-    stateCopy.dashboards = {...state.dashboards}
-    stateCopy.dashboards[action.dbName] = {...state.dashboards[action.dbName]}
-    stateCopy.dashboards[action.dbName][action.id] = {...state.dashboards[action.dbName][action.id]}
-    stateCopy.dashboards[action.dbName][action.id].body = {...state.dashboards[action.dbName][action.id].body}
+    stateCopy[action.dbName] = {...state[action.dbName]}
+    stateCopy[action.dbName][action.id] = {...state[action.dbName][action.id]}
+    stateCopy[action.dbName][action.id].body = {...state[action.dbName][action.id].body}
     return stateCopy
 }
 

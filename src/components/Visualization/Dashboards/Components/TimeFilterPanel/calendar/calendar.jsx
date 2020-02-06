@@ -8,8 +8,6 @@ class Wrapper extends React.Component {
  
     constructor(props){
         super(props);
-        let start = this.props.timeFilter.from;
-        let end =  this.props.timeFilter.to;
         this.dateOptions = {
             year: 'numeric',
             month: 'numeric',
@@ -21,11 +19,7 @@ class Wrapper extends React.Component {
     // makeSpecialString(){
     //     return 'C ' +this.props.timeFilter.from.format('DD.MM.YYYY HH:mm') + ' по '+this.props.timeFilter.to.format('DD.MM.YYYY HH:mm')// .format('YYYY/MM/DD HH:mm:ss'
     // }
-    applyCallback(startDate, endDate){
-        const {id,indexName,dbName} = this.props
-        this.props.setTimeFilterThunk(startDate, endDate, indexName, id, dbName);
-        this.props.onApply()//'C ' +this.props.timeFilter.from.format('DD.MM.YYYY HH:mm') + ' по '+this.props.timeFilter.to.format('DD.MM.YYYY HH:mm')
-    }
+   
     render(){  
             let now = new Date();
             let start = this.props.timeFilter.from;
@@ -71,15 +65,16 @@ class Wrapper extends React.Component {
             let redTheme= 'rgb(236, 28, 36)'
             let whiteTheme= 'rgb(255, 255, 255)'
             let greyTheme = '#e0e0e0'
-//DateTimeRangeContainer 
-            return(
+//                  this.applyCallback.bind(this)}
+            if(this.props.standalone){
+                return(
                     <DateTimeRangeContainer
                         ranges={ranges}
                         start={start}
                         end={end}
                         local={local}
                         maxDate={maxDate}
-                        applyCallback={this.applyCallback.bind(this)}
+                        applyCallback={this.props.applyCallback.bind(this)}
                        style={ {
                             fromDate: { backgroundColor: redTheme},
                             toDate: {backgroundColor: redTheme},
@@ -91,16 +86,42 @@ class Wrapper extends React.Component {
                             hoverColourApply: {backgroundColor: redTheme},
                         }}
                         standalone
-                        >    
-                        {/* <FormControl
+                    />    
+                        )
+            }else{
+
+             return(
+                    <DateTimeRangeContainer
+                        ranges={ranges}
+                        start={start}
+                        end={end}
+                        local={local}
+                        maxDate={maxDate}
+                        applyCallback={this.props.applyCallback.bind(this)}
+                        style={ {
+                                fromDate: { backgroundColor: redTheme},
+                                toDate: {backgroundColor: redTheme},
+                                betweenDates: {backgroundColor: greyTheme},
+                                hoverCell: {backgroundColor: redTheme},
+                                customRangeButtons: {backgroundColor: whiteTheme},
+                                customRangeSelected: {backgroundColor: redTheme},
+                                standaloneLayout:{display:'flex', maxWidth:'fit-content'},
+                                hoverColourApply: {backgroundColor: redTheme},
+                            }}
+                        
+                            > 
+                        <FormControl
                         id={"formControlsTextB"+this.props.id}
                         type="text"
                         label="Text"
                         placeholder="Enter text"
                         value={'C ' +start.format('DD.MM.YYYY HH:mm') + ' по '+end.format('DD.MM.YYYY HH:mm')}// .format('YYYY/MM/DD HH:mm:ss')
-                        />  */}
-                    </DateTimeRangeContainer>
-            );
+                        /> 
+               </DateTimeRangeContainer>
+            )
+        } 
+                       
+           
         }
 }
 export default Wrapper

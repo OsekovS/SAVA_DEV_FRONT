@@ -47,8 +47,6 @@ onCancel(){
     if(this.state.display==='deployed'){
         let filter = []
         let options
-        let devices
-        let objects
         for (const key in this.props.configObj) {
             if (this.props.configObj.hasOwnProperty(key)) {
                 if(Array.isArray(this.props.configObj[key])){
@@ -69,15 +67,12 @@ onCancel(){
             }
         }
         //this.props.configObj.translate[key]
-    return <div className="modal-form-keeper param-filter-panel"  >
+    return <div className="modal-form-keeper param-panel param-filter-panel"  >
     <div>
         <header><span><img src={require('./filter.svg')}></img>Настройки параметрического фильтра</span><button onClick={()=>{this.setState({ display: 'collapsed' });}}><img src={require('../close.svg')}></img></button></header>
             <form onSubmit={this.onSubmit} >
             <div className="wrapper">
-                {objects}
-                {devices}
-                {filter}
-                
+                {filter}  
             </div>
             <input type="submit" value="Применить"/><button onClick={this.onCancel}>Отменить</button>
         </form>  
@@ -85,7 +80,7 @@ onCancel(){
                    
 </div>
     }
-    else return <span className={'param-filter-panel param-filter-panel__collapsed'} onClick={()=>{this.setState({ display: 'deployed' });}}><img src={require('./filter.svg')}></img></span> 
+    else return <span className={'param-filter-panel param-panel param-filter-panel__collapsed'} onClick={()=>{this.setState({ display: 'deployed' });}}><img src={require('./filter.svg')}></img></span> 
     // <button className={'filter filter'+this.props.id}>Настроить фильтр</button>
 }
 }

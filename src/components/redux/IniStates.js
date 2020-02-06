@@ -1,5 +1,119 @@
 import moment from "moment"
 
+
+let a = {
+        "acs_castle_ep2":{
+            admin:"yes",
+            loaded:false,
+            indexes:{
+                "acs_castle_ep2_event":{
+                    sidebar: {active: true,text: "События устройств",to: '/visualization acs devicesLogs' },
+                    style:"devices-events",
+                    title:"События устройств",
+                    events:["top","mid","low"],
+                    fields:{
+                        significance:{
+                            hidden:false,
+                            translate:"Приоритет"
+                        },
+                        object:{
+                            hidden:false,
+                            translate:"Объекты"
+                        },
+                        device:{
+                            hidden:false,
+                            translate:"Конечные точки"
+                        },
+                        ip_device:{
+                            hidden:true,
+                            translate:"ip конечных точек"
+                        },
+                        event:{
+                            hidden:false,
+                            translate:"События"
+                        },
+                        route:{
+                            hidden:false,
+                            translate:"Направление"
+                        },
+                        person:{
+                            hidden:false,
+                            translate:"Владелец"
+                        },
+                        pass_number:{
+                            hidden:true,
+                            translate:"Номер владельца"
+                        }
+                    }
+                },
+                "acs_castle_ep2_userlog":{
+                    sidebar:{active: false,text: "События пользователей",to: '/visualization acs usersLogs' },
+                    style:"user-events",
+                    title:"События пользователей",
+                    events:["top","mid","low"],
+                    fields:{
+                        significance:{
+                            hidden:false,
+                            translate:"Приоритет"
+                        },
+                        object:{
+                            hidden:false,
+                            translate:"Объекты"
+                        },
+                        personal:{
+                            hidden:false,
+                            translate:"Персонал"
+                        },
+                        event:{
+                            hidden:false,
+                            translate:"События"
+                        }
+                    }
+                }
+            },
+            title:"SAVA СКУД «Castle»"
+        },
+        iss:{
+            admin:"yes",
+            loaded:false,
+            indexes:{
+                sns_event:{
+                    sidebar:{active: true,text: "Журналы станций",to: '/visualization iss' },
+                    style:"sns_event",
+                    title:"Журналы станций",
+                    events:["0","1"],
+                    fields:{
+                        event:{
+                            hidden:false,
+                            translate:"Событие"
+                        },
+                        event_type:{
+                            hidden:false,
+                            translate:"Тип события"
+                        },
+                        source_log:{
+                            hidden:true,
+                            translate:"Источник"
+                        },
+                        point:{
+                            hidden:false,
+                            translate:"Конечная точка"
+                        },
+                        significance:{
+                            hidden:false,
+                            translate:"Приоритет"
+                        },
+                        detailed_information:{
+                            hidden:true,
+                            translate:"Детальная информация"
+                        }
+                    }
+                }
+            }
+            ,title:"SAVA СЗИ «SNS»"
+        }
+    }
+
 export const acsIni = function(){
     let now = new Date()
     let toDate = moment((new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(),now.getMinutes(),now.getSeconds(),0)))
@@ -483,11 +597,8 @@ export const acsIni = function(){
         }]
         },
         dashboards: {
-            dashboards:{
-                iss: null,
-                acs_castle_ep2: null
-            },
-            filters: null
+            iss: null,
+            acs_castle_ep2: null
         },
         logs: {
             logs:  [{

@@ -1,8 +1,8 @@
 import React from 'react';
 import FilterPanel from '../Components/FilterPanel/FilterPanel'
-import TimeFilterPanel from '../Components/TimeFilterPanel/TimeFilterPanel'
+import TimeFilterPanel from '../Components/TimeFilterPanel/TimeFilterPanelCont'
 import Saver from '../Components/Saver/Saver'
-import Pdf from '../Components/Pdf/Pdf'
+// import Pdf from '../Components/Pdf/Pdf'
 import { Chart, Pies, Transform , Layer, Dots,Labels} from 'rumble-charts';
 import './CircleDiagram.scss';
 import Dropdown from '../Components/FilterPanel/dropdown/dropdown'
@@ -123,9 +123,9 @@ class CircleDiagram extends React.Component {
                         {this.props.title}
                         <TimeFilterPanel id={id}  uploads={this.props.uploads} indexName={indexName} dbName={dbName} timeFilter={{from:this.props.timeFilter.from, to:this.props.timeFilter.to}}></TimeFilterPanel>
                         {/* <FilterPanel configObj={this.props.filters[this.props.indexName]} iniState={this.props.paramFilter} submitCallBack={(filter)=>{this.props.setParamFilterThunk(filter,this.props.indexName,this.props.id)}} id={this.props.id}/> */}
-                        <FilterPanel fields={this.props.fields} configObj={secondField} iniState={this.props.paramFilter} submitCallBack={(filter)=>{this.props.setParamFilterThunk(filter,indexName,dbName,id)}} id={id}/>
+                        <FilterPanel fields={this.props.fields} configObj={secondField} iniState={this.props.paramFilter} submitCallBack={(filter)=>{this.props.setParamFilterThunk(filter,dbName,indexName,id)}} id={id}/>
                         <Saver  id={id} dbName = {dbName} display={this.props.saver}/>
-                        <Pdf  id={this.props.id} display={this.props.saver}/>
+                        {/* <Pdf  id={this.props.id} display={this.props.saver}/> */}
                     </header>  
                    <div>
                     <Chart width={180} height={180} series={series}>

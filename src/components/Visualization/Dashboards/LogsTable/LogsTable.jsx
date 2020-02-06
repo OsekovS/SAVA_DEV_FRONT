@@ -3,9 +3,10 @@ import FilterPanel from '../Components/FilterPanel/FilterPanel'
 import PagesBar from './pagesBar/PagesBar'
 import Table from '../Components/Table/Table'
 import ShowedLogsBar from './ShowedLogsBar/ShowedLogsBar'
-import TimeFilterPanel from '../Components/TimeFilterPanel/TimeFilterPanel'
+import TimeFilterPanel from '../Components/TimeFilterPanel/TimeFilterPanelCont'
 import Saver from '../Components/Saver/Saver'
 import MarkAsRead from '../Components/MarkAsRead/MarkAsRead'
+import Pdf from '../Components/Pdf/Pdf'
 import './Logtable.scss'
 // import  {getFromDate} from "../../../../components/redux/acs-reducer";
 class rawLogsTable extends React.Component {
@@ -64,7 +65,7 @@ class rawLogsTable extends React.Component {
             </li>
         })}
         // console.log(this.props) 
-        const {id,indexName,dbName} = this.props
+        const {id,indexName,dbName, timeFilter, fields} = this.props
         const personal = {id,indexName,dbName}                 
         return <div className={"logs-table-wrapper"+' '+this.props.className}>
                   <header className="Common__header Common__header_grey Common__header_with-filter">
@@ -72,9 +73,10 @@ class rawLogsTable extends React.Component {
                     
                     <TimeFilterPanel id={id} dbName={dbName} uploads={this.props.uploads} indexName={indexName} timeFilter={{from:this.props.timeFilter.from, to:this.props.timeFilter.to}}></TimeFilterPanel>
                     {/* <LogsCount indexName={this.props.indexName} indexName={this.props.indexName}/> */}
-                     <MarkAsRead indexName={indexName} display={this.props.markAsRead} id={this.props.id} dbName={this.props.dbName}></MarkAsRead>
-                    <FilterPanel fields={this.props.fields} configObj={this.props.filter} iniState={this.props.paramFilter} submitCallBack={(filter)=>{this.props.setParamFilterThunk(filter,dbName,indexName,id)}} id={id}/>
+                    <MarkAsRead indexName={indexName} display={this.props.markAsRead} id={this.props.id} dbName={this.props.dbName}></MarkAsRead>
+                    <FilterPanel fields={fields} configObj={this.props.filter} iniState={this.props.paramFilter} submitCallBack={(filter)=>{this.props.setParamFilterThunk(filter,dbName,indexName,id)}} id={id}/>
                     <Saver  id={id} display={this.props.saver}/>
+                    <Pdf fields={fields} configObj={this.props.filter} iniState={this.props.paramFilter} timeFilter={timeFilter} indexName={indexName}/>
                   </header>    
                   <Table clazz={this.props.clazz} logs={this.props.logs} headerElements={this.props.headerElements} curLog={this.props.curLog} onClickCallback={this.props.onChangeCurrentLog} sortParam={this.props.sortParam} changeSortThunk={this.props.changeSortThunk}  id={id} dbName={dbName} indexName={indexName}/>
                   <footer>

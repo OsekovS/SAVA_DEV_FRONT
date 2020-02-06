@@ -1,6 +1,5 @@
 @import '../../../../colors.scss';
-
-.param-filter-panel{
+.param-panel{
     img{
         width: 20px;
     }
@@ -33,6 +32,9 @@
             margin: 0 auto;
         }
     }
+}
+.param-filter-panel{
+    
     // }
     form{
         padding: 10px 20px;

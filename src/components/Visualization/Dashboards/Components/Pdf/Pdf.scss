@@ -1,0 +1,20 @@
+.param-pdf-panel{
+    .param-pdf-panel_title-input{
+        width: 400px;
+    }
+    .param-pdf-panel_filters{
+        position: relative;
+        &>div{
+            height: 150px;
+            overflow: hidden;
+            box-shadow: 0 3px 6px rgba(0,0,0,.15), 0 1px 6px rgba(0,0,0,.1);
+        }
+    }
+    .param-pdf-panel_filters:hover{
+        &>div{
+            height: 300px;
+            overflow-y: scroll;
+           
+        }
+    }
+}

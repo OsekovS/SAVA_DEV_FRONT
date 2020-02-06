@@ -3,9 +3,9 @@ import React from 'react';
 import LogElem from './LogElem/LogElem.jsx'
 import './Table.scss'
 const Table = (props) => {
-
-let Elements = props.logs.map((e,number) => <LogElem viewed={props.headerElements} name={props.curLog===number?'Modules_table__current':''} items={e} onClickCallback={()=>{props.onClickCallback(number,props.id)}}/>)
 let {id,indexName,dbName} = props
+let Elements = props.logs.map((e,number) => <LogElem viewed={props.headerElements} name={props.curLog===number?'Modules_table__current':''} items={e} onClickCallback={()=>{props.onClickCallback(number,id,dbName)}}/>)
+
 let headerElements = Object.values(props.headerElements).map((e,n) => {
     if(e.field===props.sortParam.field) {
         let clazzName = props.sortParam.direction === 'asc'?"logs-table__arrow logs-table__arrow_up":"logs-table__arrow logs-table__arrow_down"

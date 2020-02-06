@@ -47,6 +47,7 @@ const authReducer = (state = initialState, action) => {
             stateCopy.briefUserInfo.name = getCookie('login')
             stateCopy.briefUserInfo.admin = getCookie('admin') === "yes" ? 'администратор' : 'оператор'
             stateCopy.briefUserInfo.modules = action.modules//JSON.parse(getCookie('modules'))
+            
             // for (const moduleKey in filters) {
             //     if (filters.hasOwnProperty(moduleKey)) {
             //         // indexes[moduleKey]=[]
@@ -76,6 +77,7 @@ const authReducer = (state = initialState, action) => {
                     stateCopy.briefUserInfo.modules[key] = {...state.briefUserInfo.modules[key]}
                     stateCopy.briefUserInfo.modules[key].mode = 'lastViewed'
                     stateCopy.briefUserInfo.modules[key].indexes = {...state.briefUserInfo.modules[key].indexes}
+                    stateCopy.briefUserInfo.modules[key].loaded=true
                     for (const index in action.data[key]) {
                         stateCopy.briefUserInfo.modules[key].indexes[index].logsCount={}
                         if (action.data[key].hasOwnProperty(index)) {
@@ -135,12 +137,13 @@ export const getLogsCountThumk = () =>{
 
 export const onChangeUserSawThunk = (indexName,id,dbName) => {
     // console.log(moment(new Date()).format('YYYY/MM/DD HH:mm:ss'))
+    console.log(dbName)
     return (dispatch,getState) => {
         const newTime = moment(new Date()).format('YYYY/MM/DD HH:mm:ss')
         const briefUserInfo = getState().auth.briefUserInfo
         const ReqObj ={
             need: 'changeTimeMark',
-            id,indexName,
+            id,indexName,dbName,
             time: newTime,
             login: briefUserInfo.name 
         }
