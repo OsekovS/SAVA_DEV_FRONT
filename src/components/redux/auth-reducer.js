@@ -6,6 +6,7 @@ const LOG_IN = "LOG_IN"
 const LOG_OUT = "LOG_OUT"
 const UPDATE_PANEL_LOGS_COUNT = 'UPDATE_PANEL_LOGS_COUNT'
 const UPLOAD_LAST_TIME = 'UPLOAD_LAST_TIME'
+const CHANGE_LAST_VIEWED = 'CHANGE_LAST_VIEWED'
 
 let initialState = {
     isAuth: false,
@@ -98,13 +99,21 @@ const authReducer = (state = initialState, action) => {
             stateCopy.briefUserInfo.modules[dbName].indexes[indexName] = {...state.briefUserInfo.modules[dbName].indexes[indexName]}
             stateCopy.briefUserInfo.modules[dbName].indexes[indexName].lastViewed = newTime
             return stateCopy
+        case CHANGE_LAST_VIEWED:
+            stateCopy = {...state}
+            stateCopy.briefUserInfo = {...state.briefUserInfo}
+            stateCopy.briefUserInfo.modules = {...state.briefUserInfo.modules}
+            stateCopy.briefUserInfo.modules[dbName] = {...state.briefUserInfo.modules[dbName]}
+            stateCopy.briefUserInfo.modules[dbName].mode = action.newLastViewed
+            return stateCopy
        default:
            return state;
    }
 }
 
+export const changelastViewed = (newLastViewed) => ({type: CHANGE_LAST_VIEWED, newLastViewed})
 export const uploadLastTime = (indexName,dbName,newTime) => ({type: UPLOAD_LAST_TIME, indexName,dbName,newTime})
-
+// export const uploadLastTime = (indexName,dbName,newTime) => ({type: CHANGE, indexName,dbName,newTime})
 // export const delUser = (id) => ({type: DEL_USER, id: id })
 const logIn = (data) => ({type: LOG_IN,data})
 export const logOut = () => ({type: LOG_OUT})
@@ -159,6 +168,7 @@ export const onChangeUserSawThunk = (indexName,id,dbName) => {
             // always executed
         });
         dispatch(uploadLastTime(indexName,dbName,newTime))
+        // dispatch(changelastViewed = (newLastViewed) => ({type: CHANGE_LAST_VIEWED, newLastViewed}))
         }
     }
 
@@ -214,6 +224,7 @@ export const checkCookies = () => {
           });
     }
 }
+
 
 
 export default authReducer;

@@ -7,7 +7,6 @@
     }
     &>div ul{
         flex: 2;
-        overflow: scroll;
         height: 200px;
         li div{
             display: inline-block;
@@ -16,6 +15,9 @@
             margin-right: 10px;
             border-radius: 50%;
         }
+    }
+    &>div ul:hover{
+        overflow: scroll;
     }
     &>div:nth-child(2){
         display: flex;
@@ -41,4 +43,5 @@
         color: #fff;
         border: none;
     }
+  
 }

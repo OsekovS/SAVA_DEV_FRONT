@@ -41,6 +41,9 @@
         ul{
             padding: 5px;
             height: 200px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
             li{padding: 10px 0 10px 10px;}
             li:hover{
                 cursor: pointer;

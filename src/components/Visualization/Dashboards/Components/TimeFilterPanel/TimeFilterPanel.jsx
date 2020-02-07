@@ -6,12 +6,15 @@ import  './TimeFilterPanel.scss'
 class TimeFilterPanel extends Component {
     constructor(props) {
       super(props);
-      
+      let preview
+      console.log(props)
+      if(props.lastViewed.isLastViewed==='lastViewed') preview = 'C ' +  props.lastViewed.date + ' (с момента последнего посещения)'
+      else preview = this.props.uploads.uploads?this.makeSpecialString(props):'C ' +this.props.timeFilter.from.format('DD.MM.YYYY HH:mm') + ' по '+this.props.timeFilter.to.format('DD.MM.YYYY HH:mm')
       // this.onApply = this.onApply.bind(this)
       this.makeSpecialString = this.makeSpecialString.bind(this)
       this.state = {
         display: 'collapsed',
-        preview: this.props.uploads.uploads?this.makeSpecialString(props):'C ' +this.props.timeFilter.from.format('DD.MM.YYYY HH:mm') + ' по '+this.props.timeFilter.to.format('DD.MM.YYYY HH:mm')
+        preview 
       };
     }
     time_upload_letters = [
@@ -59,25 +62,39 @@ class TimeFilterPanel extends Component {
       });
       return str1+' '+str2
     }
+        //Проверка одинаковости объектов
+        isObjEqual(obj1,obj2){
+          if(Object.keys(obj1).length!==Object.keys(obj2).length) return false //Объекты не совпадат если у них разное количество свойств
+          for(var propName in obj1){
+            if (!obj2.hasOwnProperty(propName)||obj1[propName].valueOf() !== obj2[propName].valueOf()) { // Есть ли свойства в обоих объектах и Одинаковы ли значения свойст  
+              return false;
+            }
+          }
+          return true
+        }
     componentWillReceiveProps(newprops){
-      this.setState({ preview: newprops.uploads.uploads?this.makeSpecialString(newprops.uploads):' c ' +newprops.timeFilter.from.format('DD.MM.YYYY HH:mm') + ' по '+newprops.timeFilter.to.format('DD.MM.YYYY HH:mm') });
+      const props=this.props
+      if(this.isObjEqual(newprops.uploads,props.uploads)||this.isObjEqual(newprops.timeFilter,props.timeFilter)||this.isObjEqual(newprops.lastViewed,props.lastViewed)){
+        // console.log('someth changed')
+        if(newprops.lastViewed.isLastViewed==='lastViewed') 
+          this.setState({ preview: 'C ' +  newprops.lastViewed.date + ' (с момента последнего посещения)' });
+        else
+          this.setState({ preview: newprops.uploads.uploads?this.makeSpecialString(newprops.uploads):' c ' +newprops.timeFilter.from.format('DD.MM.YYYY HH:mm') + ' по '+newprops.timeFilter.to.format('DD.MM.YYYY HH:mm') });
+      }
     }
 
-    // onApply(){
-    //   this.setState({ display: 'collapsed' });
-    // }
     applyCalendarCallback(startDate, endDate){
       const {id,indexName,dbName} = this.props
       this.props.setTimeFilterThunk(startDate, endDate, indexName, id, dbName);
       this.setState({ display: 'collapsed' });
-      // this.props.onApply()//'C ' +this.props.timeFilter.from.format('DD.MM.YYYY HH:mm') + ' по '+this.props.timeFilter.to.format('DD.MM.YYYY HH:mm')
+      this.props.changelastViewed('nope')
   }
     render(){
         let viget 
         const {id,indexName,dbName,timeFilter} = this.props
         let {timeKind, timeNum, from_number, from_time_type} = this.props.uploads
         if(this.state.display=== 'interval') viget = <Calendar standalone={true} timeFilter={timeFilter} applyCallback={this.applyCalendarCallback.bind(this)}/>
-        else viget = <UploadTimeSetter id={id} indexName={indexName} dbName={dbName} defineLetter={this.defineLetter} makeSpecialString={this.makeSpecialString} timeKind={timeKind} timeNum={timeNum}  from_number={from_number} from_time_type={from_time_type}  onApply={this.onApply}/>
+        else viget = <UploadTimeSetter id={id} indexName={indexName} dbName={dbName} defineLetter={this.defineLetter} makeSpecialString={this.makeSpecialString} timeKind={timeKind} timeNum={timeNum}  from_number={from_number} from_time_type={from_time_type}  onApply={()=>{this.setState({ display: 'collapsed' })}}/>
         if(this.state.display==='collapsed') return <span style={{fontSize:'16px'}} className='time-filter-panel__collapsed' onClick={()=>{this.setState({ display: 'uploads' });}}>{this.state.preview}<img src={require('./calendar.svg')}></img></span>
         else return <div className="modal-form-keeper time-filter-panel"  >
                         <div>

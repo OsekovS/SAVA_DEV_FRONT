@@ -33,7 +33,7 @@ const acsReducer = (state = dashboards, action) => {
         if(stateCopy===null)
         stateCopy={}
         stateCopy[action.dbName] = []
-        
+        // console.log(action.json.dashboards)
         action.json.dashboards.forEach(dash => {
             let body = JSON.parse(dash[4])   
             let toDate = moment(new Date(body.timeFilter.to))
@@ -50,16 +50,6 @@ const acsReducer = (state = dashboards, action) => {
                 body: body,
             }
         });
-        
-        // if(state.filters!==null&& Object.keys(state.filters).length>0){
-        //     stateCopy.filters = {...state.filters}
-        // }else{
-        //     stateCopy.filters={}
-        // }
-        
-        // action.json.filters.forEach(filter => {
-        //     stateCopy.filters[filter[0]]=JSON.parse(filter[1])
-        // });
            return stateCopy
         case DEL_DASH:
             stateCopy=  acsIni().dashboards
@@ -170,6 +160,7 @@ const acsReducer = (state = dashboards, action) => {
              stateCopy[action.dbName][action.id].body.curLog = action.number
             return stateCopy
         case CHANGE_MAIN_FIELD:
+            console.log('CHANGE_MAIN_FIELD')
             stateCopy = getDashBody(state,action)
              stateCopy[action.dbName][action.id].body.paramFilter = {... state[action.dbName][action.id].body.paramFilter}
             //убираем старый paramFilter
@@ -177,9 +168,12 @@ const acsReducer = (state = dashboards, action) => {
              stateCopy[action.dbName][action.id].body.field = action.value
             return stateCopy
         case CHANGE_MAIN_FIELD_LIST:
+            console.log(action)
+            console.log(state)
             stateCopy = getDashBody(state,action)
              stateCopy[action.dbName][action.id].body.paramFilter = {... state[action.dbName][action.id].body.paramFilter}        
-             stateCopy[action.dbName][action.id].body.paramFilter[ stateCopy[action.dbName][action.id].body.field] = action.list    
+             stateCopy[action.dbName][action.id].body.paramFilter[ stateCopy[action.dbName][action.id].body.field] = action.list 
+             console.log(stateCopy)   
             return stateCopy
        default:
            return state;
@@ -214,7 +208,10 @@ export const changeShowedLogs = (showedLogs,id,dbName) => ({ type: CHANGE_SHOWED
 export const changeSortParam = (sortParam,id,dbName) => ({ type: CHANGE_SORT_PARAM, sortParam,id,dbName})
 export const uploadDashboards = (dbName,json) => ({type: UPLOAD_DASHBOARDS,dbName, json})
 export const changeMainField = (value,id,dbName) => ({ type: CHANGE_MAIN_FIELD, value,id,dbName})
-export const changeMainFieldList = (id,dbName,list) => ({ type: CHANGE_MAIN_FIELD_LIST, list,id,dbName})
+export const changeMainFieldList = (id,dbName,list) => {
+    console.log('changeMainFieldList')
+    return    { type: CHANGE_MAIN_FIELD_LIST, list,id,dbName}
+    }  
 
 const  prepareTimefilter = (getState,dbName,state,indexName)=>{
     
@@ -222,11 +219,11 @@ const  prepareTimefilter = (getState,dbName,state,indexName)=>{
     // console.log(module)
     // console.log(dbName,state,indexName)
     
-    // if(module.mode==='lastViewed')  return {
-    //     from: module.indexes[indexName].lastViewed,
-    //      to:  state.body.uploads.to
-    // }
-    // else 
+    if(module.mode==='lastViewed')  return {
+        from: module.indexes[indexName].lastViewed,
+         to:  state.body.uploads.to
+    }
+    else 
     if(state.body.uploads.uploads){
         return {
             from: getFromDate(state.body.uploads.from_number,state.body.uploads.from_time_type).format('YYYY/MM/DD HH:mm:ss'),
@@ -483,11 +480,12 @@ export const setParamFilterThunk = (filter,dbName,indexName,id) => {
     for (let param in filter) {
         if(filter[param].length!==0) filterCopy[param] = filter[param]
     }
-    delete filterCopy.opened
+    
     return (dispatch,getState) => {
         let state = getState().dashboards[dbName][id]
+        
         let  specialObject = {}
-        let reducers = [ParamFilter(filterCopy,id,dbName)]
+        let reducers = [ParamFilter(filter,id,dbName)]
         let need
         
         if(state.type==='Table') {
@@ -499,15 +497,18 @@ export const setParamFilterThunk = (filter,dbName,indexName,id) => {
             need = 'logs'
             reducers.push(changePage(1,id,dbName))
         }else if(state.type==='Circle_Diagram'){
+            let mainField = state.body.field
+            
             specialObject={
                 fieldName: state.body.field,
                 //если фильтр дашборда пустой либо же в этом фильтре нет ничего по нужному параметру - ищем по всем иначе берем что нужно прямо в фильтре
-                fieldList: (state.body.paramFilter===[]||state.body.paramFilter[state.body.field]===undefined)?
-                getState().auth.briefUserInfo.modules[dbName].indexes[indexName].filter[state.body.field]:
-                state.body.paramFilter[state.body.field]
+                fieldList: (filterCopy[mainField]===0||filterCopy[mainField]===undefined)?
+                getState().auth.briefUserInfo.modules[dbName].indexes[indexName].filter[mainField]:
+                filterCopy[mainField]
                 // fieldList: ["Детский садик 'вишенка'", "Крематорий 'барбекью'"]
             }
             need = 'Circle_Diagram'
+            delete filterCopy[mainField]
         }
         let timeFilter = prepareTimefilter(getState,dbName,state,indexName)
         
@@ -614,20 +615,7 @@ export const onCreatePdfThunk = () => {
       })
       .finally(function () {
         // always executed
-      });;
-
-    // axios({
-    //     url: "php/acs-form-processor.php",
-    //     method: 'GET',
-    //     responseType: 'blob', // important
-    //   }).then((response) => {
-    //     const url = window.URL.createObjectURL(new Blob([response.data]));
-    //     const link = document.createElement('a');
-    //     link.href = url;
-    //     link.setAttribute('download', 'file.pdf');
-    //     document.body.appendChild(link);
-    //     link.click();
-    //   });
+      });
 }
 
 export const  getFromDate = (from_number,from_time_type)=>{

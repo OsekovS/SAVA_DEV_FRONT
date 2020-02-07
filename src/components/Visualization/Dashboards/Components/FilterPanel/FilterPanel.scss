@@ -87,35 +87,10 @@
             width: 100%;
         }
     }
+    .wrapper__columned{
+        &>div{
+            width: 50%;
+        }
+    }
     // background-color: #aaaaaa;;
 }
-// button.filter,.filter>span{
- 
-//         position: relative;
-//         // &>button{
-//         border: none;
-//         background: inherit;
-//         position: absolute;
-//         right: 140px;
-//         display: flex;
-//         top: 10px;
-//         outline: none;
-//         cursor: pointer;
-//         font-size: 14px;
-//         font-family: Arial, Helvetica, sans-serif;
-    
-//     &::after{
-//         content: "";
-//         height: 10px;
-//         position: absolute;
-//         right: -25px;
-//         top: -1px;
-//         border: 3px solid white;
-//         border-bottom: none;
-//         border-right: none;
-//         -webkit-transform: rotate(90deg);
-//         transform: rotate(-135deg);
-//         width: 10px;
-
-//     }
-// }

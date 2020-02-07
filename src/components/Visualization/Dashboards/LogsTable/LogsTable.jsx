@@ -64,17 +64,22 @@ class rawLogsTable extends React.Component {
               {e.text+curLog[e.field]}
             </li>
         })}
-        // console.log(this.props) 
-        const {id,indexName,dbName, timeFilter, fields} = this.props
+        
+        const {id,indexName,dbName, timeFilter, fields,modules} = this.props
+         
+        const lastViewed = {
+          isLastViewed: modules[dbName].indexes[indexName].mode,
+          date: modules[dbName].indexes[indexName].lastViewed
+        }
         const personal = {id,indexName,dbName}                 
         return <div className={"logs-table-wrapper"+' '+this.props.className}>
                   <header className="Common__header Common__header_grey Common__header_with-filter">
                     {this.props.title+ ''}
                     
-                    <TimeFilterPanel id={id} dbName={dbName} uploads={this.props.uploads} indexName={indexName} timeFilter={{from:this.props.timeFilter.from, to:this.props.timeFilter.to}}></TimeFilterPanel>
+                    <TimeFilterPanel lastViewed={lastViewed} id={id} dbName={dbName} uploads={this.props.uploads} indexName={indexName} timeFilter={{from:this.props.timeFilter.from, to:this.props.timeFilter.to}}></TimeFilterPanel>
                     {/* <LogsCount indexName={this.props.indexName} indexName={this.props.indexName}/> */}
                     <MarkAsRead indexName={indexName} display={this.props.markAsRead} id={this.props.id} dbName={this.props.dbName}></MarkAsRead>
-                    <FilterPanel fields={fields} configObj={this.props.filter} iniState={this.props.paramFilter} submitCallBack={(filter)=>{this.props.setParamFilterThunk(filter,dbName,indexName,id)}} id={id}/>
+                    <FilterPanel single={true} fields={fields} configObj={this.props.filter} iniState={this.props.paramFilter} submitCallBack={(filter)=>{this.props.setParamFilterThunk(filter,dbName,indexName,id)}} id={id}/>
                     <Saver  id={id} display={this.props.saver}/>
                     <Pdf fields={fields} configObj={this.props.filter} iniState={this.props.paramFilter} timeFilter={timeFilter} indexName={indexName}/>
                   </header>    
