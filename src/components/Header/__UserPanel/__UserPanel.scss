@@ -4,8 +4,8 @@
 border-left: 2px solid $white-color;
 border-right: 2px solid $white-color;
 cursor: pointer;
-width: 260px;
-height: 55px;
+width: 205px;
+height: 40px;
 box-sizing: border-box;
 text-align: center;
 display: flex;
@@ -16,17 +16,16 @@ img{
     margin: 0 20px 0 20px;
 }
 span{
-    font-size: 24px;
-    
+    font-size: 18px;   
 }
 .Header__Butt{
     background: inherit;
-    width: 14px;
-    height: 14px;
+    width: 10px;
+    height: 10px;
     border: none;
     border-left: 3px solid $white-color;
     border-bottom: 3px solid $white-color;
-    margin-left: 14px;
+    margin-left: 10px;
 }
 .Header__Butt_Down{
     transform: rotate(-45deg);
@@ -37,20 +36,21 @@ span{
 
 }
 .Header__UserPanel_opened{
-    height: 175px;
+    height: 135px;
     justify-content: space-evenly;
     flex-direction: column;
     img{margin: 0px;}
+    
 }
 span.Header__Exit{
     position: relative;
-    right: -50px;
-    font-size: 22px;
+    right: -40px;
+    font-size: 14px;
     cursor: pointer;
     img{
-        width: 25px;
+        width: 20px;
         position: absolute;
-        right: -40px;
-        top: 5px;
+        right: -30px;
+        top: 2px;
     }
 }

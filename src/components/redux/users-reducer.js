@@ -10,11 +10,7 @@ const UPLOAD_USERS = 'UPLOAD_USERS'
 
 let initialState = 
            {
-               users:  [{id: '0', name: 'admin', admin: true},
-               { id: '1', name: 'user1', admin: false,},
-               { id: '2', name: 'admin1', admin: true,},
-               { id: '3', name: 'admin2', admin: true,},
-               { id: '4', name: 'user2', admin: false,}],
+               users:  [{id: '0', name: 'admin', admin: true,modules:[1,2,3]}],
                isFetching: false,
                 // mode: ''
            }
@@ -24,33 +20,48 @@ const usersReducer = (state = initialState, action) => {
     let stateCopy
    switch (action.type) {
        case ADD_USER:
-            console.log(action)
+        console.log(action)
             let newUser = {
-                id: state.length,
+                id: state.users.length,
                 name: action.login,
-                admin:    action.admin === undefined ? false : action.admin
+                admin:    action.admin === 'yes'?'да':'нет',
+                modules:    action.modules,
             };        
             stateCopy ={...state}
             stateCopy.users = [...state.users,newUser]
-            console.log(state)
-            console.log(stateCopy)
             return stateCopy;
         case DEL_USER:
-            console.log(action.id)
             stateCopy ={...state}
-            stateCopy.users= state.users.filter(e => e.id!==action.id)
+            // stateCopy.users ={...state.users}
+            // stateCopy.users= state.users.filter(e =>{return e.id!==action.id})
+            stateCopy.users = []
+            state.users.forEach(e => {
+                if(e.id!==action.id) stateCopy.users.push({...e})
+            });
             return stateCopy
         case TOG_FECH:
                 stateCopy ={...state}
                 stateCopy.isFetching = action.status
             return stateCopy
         case UPLOAD_USERS:
+                console.log('UPLOAD_USERS')
                 stateCopy ={...state}
-                stateCopy.users = action.usernames.map( (e) => ({
-                    id: e[0],
-                    name: e[1],
-                    admin:    e[2] !== ''
-                }))
+                let a = []
+                stateCopy.users=[]
+                console.log(action.usernames)
+                action.usernames.forEach((e,n) => {
+                    let modules = e[3]
+                    modules = Object.keys(JSON.parse(e[3]))
+                    // .toString()  .join()
+               
+                    stateCopy.users.push({
+                        id: e[0],
+                        name: e[1],
+                        admin:    (e[2] === 'yes'?'да':'нет'),
+                        modules: modules
+                    })
+                });
+                console.log(stateCopy.users)
                 return stateCopy
        default:
            return state;
@@ -62,8 +73,8 @@ export const toggleIsFetching = (bool) => ({type: TOG_FECH, status: bool })
 export const delUser = (id) => ({type: DEL_USER, id: id })
 
 
-export const addUser = ({login, password_rep, password, admin}) =>
-    ({ type: ADD_USER, login: login, password_rep: password_rep, password: password, admin: admin})
+export const addUser = ({login, modules, admin}) =>
+    ({ type: ADD_USER, login: login, modules, admin})
 
 export const uploadUser = (usernames) => ({type: UPLOAD_USERS, usernames})
 
@@ -94,12 +105,15 @@ export const getUsersThunk = () => {
 
 export const delUserThunk = (id) => {
     console.log(id)
-    return (dispatch) => {
-    axios.post("php/users-form-processor.php",{delField: id}).then(response => {
+    return (dispatch,getState) => {
+    let briefUserInfo = getState().auth.briefUserInfo;
+    let modules = briefUserInfo.modules
+    let login = briefUserInfo.name
+    axios.post("php/users-form-processor.php",{delField: {id,modules,login}}).then(response => {
         console.log(response)
         let json = JSON.parse(response.request.response);
         if(json.result==="done")
-            dispatch(delUser(id));
+            dispatch(delUser(id.id));
         else alert("Не удалось удалить пользователя")
     }).catch(function (error) {
         // handle error
@@ -120,6 +134,7 @@ export const changePassThunk = (formData,id) => {
     axios.post("php/users-form-processor.php",{changePass: {id,formData}}).then(response => {
         console.log(response)
         let json = JSON.parse(response.request.response);
+        console.log(json)
         if(json.result)
         alert("Пароль успешно изменен")
         else alert("Старый пароль был введен неверно")
@@ -135,30 +150,33 @@ export const changePassThunk = (formData,id) => {
     }
 }
 
-export const addUserThunk = (user) => {
+export const addUserThunk = (user,modules) => {
     console.log(user)
-    if(user.admin === undefined)
-        user.admin = false
-    if(Object.values(user).length === 4){
+    user.admin = user.admin?'yes':'no'
+    if(Object.values(user).length >= 4){
             if(user.password===user.password_rep){
-                    return (dispatch) => {
-                axios.post("php/users-form-processor.php",{addField: user,
-                    _login: user.login,
-                    _password: user.password,
-                    _admin: user.admin
-                }).then(response => {
-                    console.log(response)
-                    let json = JSON.parse(response.request.response);
-                    if(json.result==="done")
-                        dispatch(addUser(user));
-                    else alert("Пользователь с таким id уже существует")
-                }).catch(function (error) {
-                    // handle error
-                    console.log(error);
-                })
-                .finally(function () {
-                    // always executed
-                });
+                    return (dispatch,getState) => {
+                        modules = modules.length>0?modules:Object.keys(getState().auth.briefUserInfo.modules)
+                        user.modules = modules
+                        axios.post("php/users-form-processor.php",{addField: user,
+                            _login: user.login,
+                            _password: user.password,
+                            _admin: user.admin,
+                            _modules:modules
+                        }).then(response => {
+                            
+                            let json = JSON.parse(response.request.response);
+                            console.log(json)
+                            if(json.result==="done")
+                                dispatch(addUser(user));
+                            else alert("Пользователь с таким id уже существует")
+                        }).catch(function (error) {
+                            // handle error
+                            console.log(error);
+                        })
+                        .finally(function () {
+                            // always executed
+                        });
             }
         }
         else  {

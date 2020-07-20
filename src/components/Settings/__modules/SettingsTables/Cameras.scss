@@ -1,0 +1,14 @@
+.Settings__cameras{
+    .modal-form-keeper{
+        form,header{
+            width: 600px;
+            label,div{
+                width: 435px;
+            }
+        }
+    }
+        
+    & > button{
+        margin: 20px;
+    }
+}

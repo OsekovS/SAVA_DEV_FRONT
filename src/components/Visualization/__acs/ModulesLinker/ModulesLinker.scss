@@ -1,0 +1,73 @@
+@import '../../colors.scss';
+
+.Visualization__acs{
+    padding: 10px 10px 50px 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    position: relative;
+    
+    .dashboard-wrapper{
+        margin-bottom: 50px;
+        width: 30%;
+    }
+    .dashboard-wrapper_table{
+        padding-bottom: 12px;
+        box-shadow: 0 3px 6px rgba(0,0,0,.15), 0 1px 6px rgba(0,0,0,.1);
+        &>footer .additional-info{
+            h2{
+                margin:14px 0 8px 0;
+            }
+        }
+    }
+    &>div:first-child{
+        display: flex;
+        width: 100%;
+        .aside-panel{
+            width: 200px;
+            height: fit-content;
+        }
+        .dashboard-wrapper{
+            flex: 2;
+        }
+    }
+    // .devices-logs{
+    //     margin-bottom: 25px;
+    // }
+    .table-wrapper{
+        max-height: 210px;
+        overflow-x: hidden;
+        overflow-y: scroll;
+        margin-bottom: 10px;
+    }
+    
+    .filter{
+        margin-bottom: 25px;
+    }
+    .Common__header{
+        input[type=radio]{
+            margin-left: 30px;
+            margin-right: 5px;
+        }
+    }
+    .time-filter-panel__collapsed{
+        margin-right: 25px;
+    }
+}
+@media screen and (max-width: 1900px) {
+    .Visualization__acs .dashboard-wrapper{
+        width: 45%;
+    }
+}
+@media screen and (max-width: 1275px) {
+    .Visualization__acs .dashboard-wrapper{
+        width: 95%;
+    }
+}
+@media screen and (max-width: 950px) {
+    .Visualization__acs .dashboard-wrapper{
+        .table-wrapper,.showed-logs{
+            margin-bottom: 20px;
+        }
+    }
+}

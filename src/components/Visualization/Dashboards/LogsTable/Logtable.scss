@@ -1,25 +1,23 @@
 @import '../../../colors.scss';
-.Modules_table{
-    
-    tr.Modules_table__current{
+.Modules_table {
+    tr.Modules_table__current {
         // background-color: red($color: #e93131b2);
         background-color:  #ec1c234f;
     }
     
 }
+
 .Modules_table_devices-events{
     .multi-select{
         width: 90%;
     }
 }
-.Modules_table_user-events{
-    .multi-select{
-        width: 90%;
-    }
-}
+// .Modules_table_user-events{
+   
+// }
 .Modules-table__empty{
     width: 190px;
-    margin: 20px;
+    margin: 0px 10px 20px 0px;
     position: relative;
     z-index: -1;
 }
@@ -32,8 +30,79 @@
     left: 225px;
     top: 18px;
 }
-.logs-table-wrapper{
-   
+.dashboard-wrapper_table {
+    width: 100%;
+    // background-color: darkgoldenrod;
+    height: fit-content;
+    // & >.Resizer{
+    //     margin: 0 0 15px 0;
+    // }
+    .dashboard-wrapper__settings-cont {
+        .collapser {
+            margin-right: 8px;
+            cursor: pointer;
+            position: relative;
+        }
+        .collapser::after {
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            bottom: 4px;
+            background-color: white;
+            content: '';
+        }
+        &>span{
+            &>img{
+                top: 6px;
+            }
+        }
+    }
+    // .ChangedInput {
+    //     margin-right: 35px;
+    //     img {
+    //         right: -30px;
+    //         top: -2px;
+    //     }
+    // }
+}
+.dashboard-wrapper{
+//    background-color: blue;
+    .Common__header{
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        .settings-icon {
+            height: 25px;
+            position: relative;
+            top: 3px;
+        }
+        &>div{
+            
+            &>span{
+                height: 20px;
+            }
+            &>img{
+                margin-right: 10px;
+            }
+            &>span{
+                margin-right: 15px;
+            }
+        }
+        .dashboard-wrapper__settings-cont{
+            display: flex;
+            &>span{
+                position: relative;
+            padding-right: 20px;
+            height: 100%;
+            line-height: 200%;
+            &>img{
+                position: absolute;
+            }
+           
+            }
+        
+        }
+    }
     .pages-bar, .showed-logs{
         display: inline-flex;
         li{
@@ -76,14 +145,35 @@
     footer{
         display: flex;
         justify-content: space-between;
-        padding: 0 20px;
+        padding-left: 15px;
         flex-wrap: wrap;
+        margin-top: 15px;
         .showed-logs::before{
             content: 'Количество логов на странице: ';
             margin-right: 10px;
         }
         .additional-info{
+            margin-top: 20px;
+            overflow: auto;
             width: 100%;
+            h2{
+                margin:0 0 8px 0;
+            }
+            ul{
+                // height: 100px;
+                span{
+                    font-weight: bold;
+                }
+            }
         }
     }
+}
+
+@media screen and (max-width: 1250px) {
+    .dashboard-wrapper_table .Common__header{
+        .dashboard-wrapper__settings-cont{
+            margin-left: auto;
+        }
+    }
+   
 }

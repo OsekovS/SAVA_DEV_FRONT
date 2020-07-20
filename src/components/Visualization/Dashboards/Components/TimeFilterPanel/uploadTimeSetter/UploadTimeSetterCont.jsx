@@ -1,4 +1,5 @@
-import  {changeUploadsThunk} from "../../../../../redux/acs-dashboards-reducer";
+import  {changeUploadsThunk} from "../../../../../redux/dashboards-reducer";
+import  {setLastViewThunk} from "../../../../../redux/auth-reducer";
 import {connect} from "react-redux";
 import UploadTimeSetter from './UploadTimeSetter'
 
@@ -8,7 +9,8 @@ let mapStateToProps = (state) => {
  }
 }
 let mapDispatchToProps = {
-  changeUploadsThunk
+  changeUploadsThunk,
+  setLastViewThunk
 }
 
 const UploadTimeSetterCont = connect(mapStateToProps, mapDispatchToProps)(UploadTimeSetter);

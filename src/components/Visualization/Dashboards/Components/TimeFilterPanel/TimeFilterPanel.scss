@@ -9,12 +9,14 @@
         width: 80%;
         margin: 0 auto;
         color: $black;
+        box-shadow: 2px 2px 3px rgba(0,0,0,.15), 0 1px 6px rgba(0,0,0,.1);
         header{
             background: $red-color;
             display: flex;
             justify-content: space-between;
             padding: 5px 5px 5px 10px;
             color: $white-color;
+            box-shadow: none;
             span{
                 display: flex;
                 img{margin-right: 7px;}
@@ -28,21 +30,7 @@
                 }
             }
         }
-        ul{
-            padding: 7px 5px;
-            display: flex;
-            
-            li{
-                border-radius: 5px;
-                width: 50%;
-                text-align: center;
-                padding: 3px 0;
-            }
-            li.active{
-                background-color: $red-color;
-                color: $white-color;
-            }
-        }
+ 
         //это календарик
         &>div{
             margin: 0 auto;

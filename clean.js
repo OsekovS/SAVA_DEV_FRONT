@@ -27,6 +27,29 @@ copydir.sync('../html/php', '../php', {
   cover: true    // cover file when exists, default is true
 });
 console.log("Successfully save php");
+// console.log("Save LicenceGen...");
+// copydir.sync('../html/LicenceGen', '../LicenceGen', {
+//   utimes: true,  // keep add time and modify time
+//   mode: true,    // keep file mode
+//   cover: true    // cover file when exists, default is true
+// });
+console.log("Successfully save LicenceGen");
+
+copydir.sync('../html/sh', '../sh', {
+  utimes: true,  // keep add time and modify time
+  mode: true,    // keep file mode
+  cover: true    // cover file when exists, default is true
+});
+console.log("Successfully save  sh...");
+
+
+console.log("Save lic...");
+copydir.sync('../html/lic', '../lic', {
+  utimes: true,  // keep add time and modify time
+  mode: true,    // keep file mode
+  cover: true    // cover file when exists, default is true
+});
+console.log("Successfully save lic");
 console.log("Cleaning working tree...");
 
 deleteFolderRecursive("../html");

@@ -24,23 +24,48 @@
     span:nth-child(1){
         margin-right: auto;
    }
-    .label0{
-        @include label($green-label-color,42px,25px,18px);
+   .label_Low, .label_Middle,.label_High{
+     position: relative;
+     padding-left: 10px;
+     
    }
-   .label1{
-        @include label($yell-label-color,42px,25px,18px);
+   .info-parh{
+     font-size: 14px;
+     span {
+       font-size: 12px;
+       font-style: italic;
+     }
+   }
+   .label_Low::after, .label_Middle::after,.label_High::after{
+    content: '';
+    position: absolute;
+    left: -2px;
+    top: 5px;
+   }
+    .label0,.label_Low::after{
+        @include label($green-label-color,7px,7px,14px);
+   }
+   .label1,.label_Middle::after{
+     
+        @include label($yell-label-color,7px,7px,14px);
     }
-    .label2, .label5{
-        @include label($red-label-color,42px,25px,18px);
+    .label2, .label5,.label_High::after{
+        @include label($red-label-color,7px,7px,14px);
+    }
+    p {
+      margin-bottom: 3px;
+    }
+    p:hover {
+      background-color: $lightGreyText-color;
     }
     div{
         background-color: $lightGrey-color;
-        height: 225px;
+        height: auto;
         font-size: 1em;
         font-weight: 600;
         ul{
             padding: 5px;
-            height: 200px;
+            height: auto;
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
@@ -53,7 +78,7 @@
             }
         }
         ul:hover{
-            overflow-y: scroll;
+            overflow-y: auto;
         }
     }
 

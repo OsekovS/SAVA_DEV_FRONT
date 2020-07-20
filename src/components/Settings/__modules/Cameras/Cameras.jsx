@@ -108,36 +108,36 @@ class Cameras extends React.Component {
         elemChangeCallBack={this.onChangeMode} elemDellCallBack={this.onDelRegistrator}  changeType={'changReg'}/>)
 
     return <div className="Settings__cameras">
-        <header className="Common__header Common__header_red">Объекты инфраструктуры</header>
-        <table className="Modules_table Modules_table__cam-obj">
-            <tbody>
-                {objectsElements}
-            </tbody>
-        </table>
-        <button onClick={this.onChangeMode.bind(this,{mode: 'addObj',id:''})}>Добавить</button>
-        <ObjectsReduxForm  onSubmit={this.onAddField.bind(this)}  mode={this.state.mode} callback={this.onChangeMode}/>
-        <ChangObjsForm  onSubmit={this.onChange.bind(this)} mode={this.state.mode} callback={this.onChangeMode}/>
-        <header className="Common__header Common__header_red">Список камер</header>
-        <table className="Modules_table Modules_table__cam-dev">
-            <tbody>
-                {/* <ListElem  name='list-elem list-elem__cameras list-elem__title' items={['','объект', 'имя' , 'ip адрес', 'логин']  }/> */}
-                {camerasElements}   
-            </tbody>
-        </table>
-        <button onClick={this.onChangeMode.bind(this,{mode: 'addCam'})}>Добавить</button>
-        <CamerasReduxForm objects={this.props.objects}  onSubmit={this.onAddField.bind(this)}  mode={this.state.mode} callback={this.onChangeMode} />
-        <ChangCamsForm  onSubmit={this.onChange.bind(this)} mode={this.state.mode} callback={this.onChangeMode}/>
-        <header className="Common__header Common__header_red">Список регистраторов</header>
-        <table className="Modules_table Modules_table__cam-dev">
-            <tbody>
-            {/* <ListElem  name='list-elem list-elem__cameras list-elem__title' items={['','объект', 'имя' , 'ip адрес', 'логин']  }/> */}
-                {registratorsElements}
-            </tbody>
-        </table>
-        <button onClick={this.onChangeMode.bind(this,{mode: 'addReg'})}>Добавить</button>
-        <RegsReduxForm objects={this.props.objects}  onSubmit={this.onAddField.bind(this)}  mode={this.state.mode} callback={this.onChangeMode} />
-        <ChangRegsForm  onSubmit={this.onChange.bind(this)} mode={this.state.mode} callback={this.onChangeMode}/>
-        </div>
+                <header className="Common__header Common__header_red">Объекты инфраструктуры</header>
+                <table className="Modules_table Modules_table__cam-obj">
+                    <tbody>
+                        {objectsElements}
+                    </tbody>
+                </table>
+                <button onClick={this.onChangeMode.bind(this,{mode: 'addObj',id:''})}>Добавить</button>
+                <ObjectsReduxForm  onSubmit={this.onAddField.bind(this)}  mode={this.state.mode} callback={this.onChangeMode}/>
+                <ChangObjsForm  onSubmit={this.onChange.bind(this)} mode={this.state.mode} callback={this.onChangeMode}/>
+                <header className="Common__header Common__header_red">Список камер</header>
+                <table className="Modules_table Modules_table__cam-dev">
+                    <tbody>
+                        {/* <ListElem  name='list-elem list-elem__cameras list-elem__title' items={['','объект', 'имя' , 'ip адрес', 'логин']  }/> */}
+                        {camerasElements}   
+                    </tbody>
+                </table>
+                <button onClick={this.onChangeMode.bind(this,{mode: 'addCam'})}>Добавить</button>
+                <CamerasReduxForm objects={this.props.objects}  onSubmit={this.onAddField.bind(this)}  mode={this.state.mode} callback={this.onChangeMode} />
+                <ChangCamsForm  onSubmit={this.onChange.bind(this)} mode={this.state.mode} callback={this.onChangeMode}/>
+                <header className="Common__header Common__header_red">Список регистраторов</header>
+                <table className="Modules_table Modules_table__cam-dev">
+                    <tbody>
+                    {/* <ListElem  name='list-elem list-elem__cameras list-elem__title' items={['','объект', 'имя' , 'ip адрес', 'логин']  }/> */}
+                        {registratorsElements}
+                    </tbody>
+                </table>
+                <button onClick={this.onChangeMode.bind(this,{mode: 'addReg'})}>Добавить</button>
+                <RegsReduxForm objects={this.props.objects}  onSubmit={this.onAddField.bind(this)}  mode={this.state.mode} callback={this.onChangeMode} />
+                <ChangRegsForm  onSubmit={this.onChange.bind(this)} mode={this.state.mode} callback={this.onChangeMode}/>
+            </div>
     }
 }
 export default Cameras;

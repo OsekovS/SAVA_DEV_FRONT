@@ -1,0 +1,24 @@
+@import '../colors.scss';
+.ComSidebar {
+    width: 100%;
+    overflow: hidden;
+    ul {
+        display: flex;
+
+        li {
+            background: $grey-color;
+            color: white;
+            width: 300px;
+            height: 60px;
+            line-height: 25px;
+            font-size: 18px;
+            text-align: center;
+        }
+        li.active {
+            background: $red-color;
+        }
+        li.CurrentModule{
+            background: $red-weak-color;
+        }
+    }
+}

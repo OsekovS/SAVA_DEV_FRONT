@@ -15,7 +15,7 @@ const PagesBar = (props) => {
     }
     if(props.pagination.lastPage>index){
     paginationList.push(<li className="pages-bar__ellipsis" key={index+1}>...</li>)
-    paginationList.push(<li onClick={props.callBack.bind(this,props.pagination.lastPage,indexName,id,dbName)} key={index+2}>{props.pagination.lastPage}</li>)
+    // paginationList.push(<li onClick={props.callBack.bind(this,props.pagination.lastPage,indexName,id,dbName)} key={index+2}>{props.pagination.lastPage}</li>)
     }
 
     return  <ul className="pages-bar">

@@ -7,14 +7,18 @@ import {connect} from "react-redux";
 
 class rawMain extends React.Component {
   componentDidMount() {
-      this.props.getLogsCountThumk();
+    this.intervalId = setInterval(()=>{this.props.getLogsCountThumk()},
+          5000);
+      // this.props.getLogsCountThumk();
   }
-
+  componentWillUnmount(){
+    if(this.intervalId!==undefined) clearInterval(this.intervalId);
+  }
 
   render() {
       return <main>
         <Visio {...this.props}/>
-        <Sett/>
+        {this.props.isAdmin?<Sett/>:null}
       </main>
   }
 }

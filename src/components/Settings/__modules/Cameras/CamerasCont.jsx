@@ -29,17 +29,17 @@ class rawCameras extends React.Component {
 
 let mapStateToProps = (state) => {
     return {
-            objects: state.cameras.settings.objects,
-            cameras: state.cameras.settings.cameras,
-            registrators: state.cameras.settings.registrators,
-            mode: state.cameras.settings.mode,
+        objects: state.cameras.settings.objects,
+        cameras: state.cameras.settings.cameras,
+        registrators: state.cameras.settings.registrators,
+        mode: state.cameras.settings.mode,
     }
 }
 let mapDispatchToProps =  {
-        delFieldThunk,
-        getCameras,
-        addFieldThunk,
-        changeElemThunk
+    delFieldThunk,
+    getCameras,
+    addFieldThunk,
+    changeElemThunk
 }
 
 

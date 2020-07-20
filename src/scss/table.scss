@@ -8,7 +8,7 @@ table{
     }
     
 }
-.Modules_table{
+.Table__white-black{
     width: 100%;
     border-spacing: 0;
     tr:nth-child(2n){
@@ -16,5 +16,10 @@ table{
     }
     img{
         cursor: pointer;
+    }
+}
+.Table{
+    .icon{
+        width: 34px;
     }
 }

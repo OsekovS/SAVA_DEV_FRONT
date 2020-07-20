@@ -1,4 +1,4 @@
-import  {getDashboardsThunk} from "../../../components/redux/acs-dashboards-reducer";
+import  {getDashboardsThunk} from "../../../components/redux/dashboards-reducer";
 import {connect} from "react-redux";
 import __acs from './__acs'
 
@@ -6,7 +6,9 @@ import __acs from './__acs'
 let mapStateToProps = (state) => {
     return {
         dashboards: state.dashboards,
-   }
+        paths: state.paths,
+        sidebar: state.modSidebar
+    }
 }
 let mapDispatchToProps = {
     getDashboardsThunk

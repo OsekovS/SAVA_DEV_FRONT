@@ -1,0 +1,59 @@
+@import '../../../../colors.scss';
+@import '../../../../../scss/button.scss';
+.MarkAsRead:hover{
+  background-color: $red-color;
+  padding-right: 21px;
+  border-radius: 8px;
+  padding-right: 22px;
+  padding-left: 4px;
+  
+  
+}
+.MarkAsRead {
+  cursor: pointer;
+  button {
+    color: $white-color;
+    position: relative;
+    display: block;
+    margin-left: auto;
+    @include button($red-color,115px,25px);
+    &>img {
+      width: 15px;
+      position: absolute;
+      right: 3px;
+      top: 5px;
+    }
+  }
+}
+.dashboard-wrapper .Common__header .dashboard-wrapper__settings-cont .MarkAsRead {
+  &>img{
+    width: 15px;
+    position: absolute;
+    right: 3px;
+    top: 10px;
+  }
+  &>div{
+    position: absolute;
+    z-index: 2;
+    width: 100%;
+    height: fit-content;
+    background-color: $grey-color;
+    max-height: 240px;
+    padding: 10px;
+    right: -12%;
+    width: auto;
+    
+    // width: 215%;
+    ul li{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      p{white-space: nowrap;margin-right: 10px;}
+    }
+  }
+  &>div{
+    overflow-y: scroll;
+  }
+}
+
+

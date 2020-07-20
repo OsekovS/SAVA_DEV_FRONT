@@ -7,13 +7,12 @@ class UsersContainer extends React.Component {
         this.props.getUsersThunk();
         // console.log('!')
     }
-
+    // users={this.props.users} 
+    // addUserThunk={this.props.addUserThunk}
+    // delUserThunk={this.props.delUserThunk}
+    // changePassThunk={this.props.changePassThunk}
     render() {
-        return  <__users 
-                users={this.props.users} 
-                addUserThunk={this.props.addUserThunk}
-                delUserThunk={this.props.delUserThunk}
-                changePassThunk={this.props.changePassThunk}/>
+        return  <__users {...this.props}/>
              }
 
 }
@@ -22,6 +21,8 @@ let mapStateToProps = (state) => {
     return {
         users: state.users.users,
         isFetching: state.users.isFetching,
+        modules: state.auth.briefUserInfo.modules,
+        modulesTranslate: state.auth.modulesTranslate
         // mode: state.users.mode
     }
 }

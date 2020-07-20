@@ -7,6 +7,7 @@ import './calendar.scss'
 class Wrapper extends React.Component {
  
     constructor(props){
+        // console.log(props)
         super(props);
         this.dateOptions = {
             year: 'numeric',
@@ -24,7 +25,7 @@ class Wrapper extends React.Component {
             let now = new Date();
             let start = this.props.timeFilter.from;
             let end =  this.props.timeFilter.to;
-            
+            // console.log(this.props)
             let ranges = {
                 "Сегодня": [moment(new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0,0,0,0)), moment(new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(),now.getMinutes(),0,0))],
                 "Вчера": [moment(new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0,0,0,0)).subtract(1, "days"), moment(new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23,59,0,0)).subtract(1, "days")],
@@ -117,6 +118,7 @@ class Wrapper extends React.Component {
                         placeholder="Enter text"
                         value={'C ' +start.format('DD.MM.YYYY HH:mm') + ' по '+end.format('DD.MM.YYYY HH:mm')}// .format('YYYY/MM/DD HH:mm:ss')
                         /> 
+                        <img src={require('../calendar_black.svg')}></img>
                </DateTimeRangeContainer>
             )
         } 

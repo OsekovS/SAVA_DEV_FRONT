@@ -15,11 +15,36 @@
     }
    
     label{
+        padding: 10px;
         display: flex;
         justify-content: space-between;
-        margin: 0 auto 10px auto;
+        margin: 0 auto 0 auto;
+        span{
+            display: none;
+        }
     }
     div{
         margin-bottom: 50px;
+    }
+    .Settings__Timezone{
+        label{
+            position: relative;
+            cursor: pointer;
+            padding-right: 35px;
+        }
+        label.withDelMode span{
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(38,49,55,.5);
+            border-radius: 50%;
+            position: absolute;
+            right: 0;
+            top: 7px;
+            font-size: 25px;
+            color: rgba(38,49,55,.5);
+            line-height: 16px;
+            text-align: center;
+        }
     }
 }

@@ -1,5 +1,5 @@
-import  {setTimeFilterThunk} from "../../../../redux/acs-dashboards-reducer";
-import  {changelastViewed} from "../../../../redux/auth-reducer";
+import  {setTimeFilterThunk} from "../../../../redux/dashboards-reducer";
+// import  {changelastViewed} from "../../../../redux/auth-reducer";
 import {connect} from "react-redux";
 import TimeFilterPanel from './TimeFilterPanel'
 
@@ -10,7 +10,7 @@ let mapStateToProps = (state) => {
 }
 let mapDispatchToProps = {
     setTimeFilterThunk,
-    changelastViewed
+    // changelastViewed
 }
 
 const TimeFilterPanelCont = connect(mapStateToProps, mapDispatchToProps)(TimeFilterPanel);

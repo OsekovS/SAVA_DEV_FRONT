@@ -1,27 +1,24 @@
 @import '../colors.scss';
 .Header{
-    width: 100%;
-    height: 98px;
+    // width: 100%;
+    height: 58px;
     background-color: $grey-color;
     display: flex;
-    padding: 11px 0.5% 15px 2.1%;
-    box-sizing: border-box;
+    padding: 10px 1% 2px 2.1%;
     color: $white-color;
     position: relative;
     .Header__infoPanel{
+        margin-left: auto;//!!!!!!!!!!!!!!!!!!!!!
         display: flex;
-        width: 490px;
+        width: 205px;
         .Header__AverEvents{
             margin: 3px 56px 0 0;
-        }
-        .Header__UserPanel{
-            margin: 4px 26px 0 0;
         }
     }
 }
 .Header::after{
     content: '';
-    height: 12px;
+    height: 8px;
     width: 100%;
     display: block;
     background-color: $red-color;
@@ -30,9 +27,9 @@
     left:0px;
 }
 .header__logo{
-    width: 177px;
-    height: 50px;
+    width: 130px;
+    height: 38px;
     position: relative;
-    top: 7px;
+    top: 1px;
     margin-right: auto;
 }

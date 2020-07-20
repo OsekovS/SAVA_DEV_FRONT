@@ -7,3 +7,17 @@
         
     }
 }
+
+.label__no-brackets{
+    position: relative;
+    // background-color: yellowgreen;
+}
+// h3:first-of-type:before
+.label__no-brackets:hover::before{
+    position: absolute;
+    font-size: 14px;
+    right: -460px;
+    top: 2px;
+    width: 449px;
+    content: "Пожалуйста не используйте  '";
+}

@@ -1,0 +1,30 @@
+.modal-form-keeper__acs_castle_ep2,.modal-form-keeper__iss{
+    &>header{
+        width: 500px;
+    }
+    &>form{
+        width: 500px;
+        box-sizing: border-box;
+        padding: 12px 5px 0 0;
+    }
+}
+.Settings-content-table{
+    &>button{
+        margin: 15px 0 30px 15px;
+    }
+
+    .modal-form{
+        label{
+            width: 380px;
+        }   
+        label select{
+            width: 175px;
+        }
+        &>div{
+            width: 365px;
+            button{
+                margin: 0px 0 10px 0px;
+            }
+        }
+    }
+}

@@ -13,11 +13,11 @@ class rawHeader extends React.Component{
     render() {
 
         return <><header className="Header">
-        <img className="header__logo" src={require("./header__logo.PNG")} atl="Наш логотип"></img>
+        {/* <img className="header__logo" src={require("./header__logo.PNG")} atl="Наш логотип"></img> */}
         <div className="Header__infoPanel">
-            <__AverEvents allEvents={this.props.allEvents}/>
+            {/* <__AverEvents allEvents={this.props.allEvents}/> */}
             <__UserPanel briefUserInfo={this.props.briefUserInfo}/>
-            <__Ref></__Ref>
+            {/* <__Ref></__Ref> */}
         </div>    
         </header>
         <Navbar></Navbar>

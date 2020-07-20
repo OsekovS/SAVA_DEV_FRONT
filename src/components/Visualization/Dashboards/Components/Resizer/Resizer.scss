@@ -1,0 +1,22 @@
+@import '../../../../colors.scss';
+.Resizer {
+    background-color: $grey-color;
+}
+.Resizer__Absolute{
+    content: "";
+    position: absolute;
+    // background: $grey-color;
+}
+.Resizer__Vertical{
+    bottom: -10px;
+    width: 100%;
+    height: 10px;
+    cursor: row-resize;
+}
+.Resizer__Horizontal{
+    bottom: 0px;
+    right: -7px;
+    width: 10px;
+    height: 100%;
+    cursor: col-resize;
+}

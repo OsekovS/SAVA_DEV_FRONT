@@ -1,7 +1,7 @@
 import React from 'react';
 import './Saver.scss';
 import {connect} from "react-redux";
-import {onSaveDashParamsThunk}  from "../../../../redux/acs-dashboards-reducer";
+import {onSaveDashParamsThunk}  from "../../../../redux/dashboards-reducer";
 
 const rawSaver = (props) => {
     if(props.display==='wait') return <img onClick={props.onSaveDashParamsThunk.bind(this,props.id,props.dbName)} className='saver__wait' src={require('./icon.svg')}></img>

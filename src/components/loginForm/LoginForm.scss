@@ -1,7 +1,7 @@
 @import '../../scss/button';
 @import '../colors';
 .login{
-    width: 600px;
+    width: 500px;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -10,15 +10,20 @@
     header{
         border-top-left-radius: 6px;
         border-top-right-radius: 6px;
-        font-size: 24px;
+        font-size: 20px;
+        text-align: center;
         line-height: 24px;
     }
-        label{
-            width: 340px;
-            padding-left: 75px;
-        }
-        button{
-            @include button($red-color,120px,30px);
-        }
+    .modal-form{
+        padding: 20px 0 1px 0;
+    }
+    label{
+        width: 340px;
+        padding-left: 75px;
+    }
+    button{
+        @include button($red-color,120px,30px);
+        margin: 0 auto;
+    }
     
 }

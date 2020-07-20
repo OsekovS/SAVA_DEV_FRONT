@@ -1,0 +1,10 @@
+.ChangedInput{
+    position: relative;
+    display: inline;
+    input{width: 258px;}
+    img{
+        position: absolute;
+        width: 20px;
+        cursor: pointer;
+    }
+}

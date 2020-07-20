@@ -1,24 +1,61 @@
-.logs-table-wrapper_pie{
+// position: absolute;
+// right: 2px;
+// top: 2px;
+
+// width: 100%;
+// position: relative;
+.dashboard-wrapper_pie{
     box-shadow: 0 3px 6px rgba(0,0,0,.15), 0 1px 6px rgba(0,0,0,0.10);
     border-radius: 8px;
+    padding: 0 0 10px 0;
+    position: relative;
+    .dashboard-wrapper__settings-cont{
+        &>span{
+            &>img{
+                top: 2px;
+            }
+        }
+    }
+    .dashboard-wrapper__title{
+        margin-bottom: 5px;
+        position: relative;
+        top: 4px;
+    }
+
     header{
         border-top-left-radius: 7px;
         border-top-right-radius: 7px;
     }
+    .Common__header_big {
+        position: relative;
+        padding-right: 100px;
+        .dashboard-wrapper__settings-cont{
+            position: absolute;
+            right: 0px;
+        }
+    }
     &>div ul{
         flex: 2;
         height: 200px;
+        overflow: auto;
         li div{
             display: inline-block;
             width: 10px;
             height: 10px;
             margin-right: 10px;
             border-radius: 50%;
+            
+        }
+        li{
+            cursor: pointer;
+        }
+        li:hover{
+            background-color: lightgrey;
         }
     }
-    &>div ul:hover{
-        overflow: scroll;
-    }
+    // &>div ul:hover{
+    //     overflow: scroll;
+    // }
     &>div:nth-child(2){
         display: flex;
         padding: 10px;
@@ -27,9 +64,33 @@
             margin-right: 30px;
         }
     }
+    .Modules-table__empty:after{
+        font-size: 16px;
+        top: 120px;
+        left: 190px;
+    }
+    .Modules-table__empty-minified:after{
+        font-size: 16px;
+        top: 170px;
+        left: 20px;
+    }
+    .Modules-table__empty-minified{
+        margin: 0 10px 40px 0;
+    }
+    // .ChangedInput {
+    //     margin-right: 35px;
+    //     // img {
+    //     //     right: -30px;
+    //     //     top: -2px;
+    //     // }
+    // }
 }
 .logs-table-wrapper__pie-settings{
-    
+    padding-left: 20px;
+    height: 50px;
+    &>span:last-of-type{
+        margin-top: 10px;
+    }
     &>span:nth-child(3){
         display: block;
     }

@@ -1,20 +1,93 @@
-.param-pdf-panel{
-    .param-pdf-panel_title-input{
-        width: 400px;
+@import '../../../../../scss/button.scss';
+@import '../../../../colors.scss';
+.param-pdf-panel_filters{
+    width: 900px;
+    .multi-select__cont{
+        width: 750px;
+        height: 30px;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
     }
-    .param-pdf-panel_filters{
-        position: relative;
-        &>div{
-            height: 150px;
-            overflow: hidden;
-            box-shadow: 0 3px 6px rgba(0,0,0,.15), 0 1px 6px rgba(0,0,0,.1);
+}
+.param-pdf-panel{
+    .modal-form-keeper__mode-toggler {
+        background-color: $lightGrey-color;
+        img {
+            width: 20px;
         }
     }
-    .param-pdf-panel_filters:hover{
+    &>div{
+        box-shadow: 0 3px 6px rgba(0,0,0,.15), 0 1px 6px rgba(0,0,0,.1);
+        max-width: 900px;
+    }
+    
+    .pdf-maker {
+        padding: 20px 0 20px 30px;
+        h3{
+            margin: 20px 0 10px 0;
+        }
+        &>div:last-child{
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-around;
+            button:first-of-type{
+                @include button($red-color,200px,30px);
+            }
+            button{
+                @include button($red-color,120px,30px);
+            }
+        }
+    }
+    .param-pdf-panel_title-input{
+        width: 400px;
+        
+    }
+    .param-pdf-panel_title-input__label{
+        position: relative;
+        // background-color: yellowgreen;
+    }
+    // h3:first-of-type:before
+    .param-pdf-panel_title-input__label:hover::before{
+        position: absolute;
+        font-size: 14px;
+        right: -460px;
+        top: 2px;
+        width: 449px;
+        content: 'Пожалуйста не используйте  #,<,$,+,%,>,!,`,&,*,‘,|,{,?,“,=,},/,:,\\,(пробел и @';
+    }
+    .param-pdf-panel_filters{
+        // overflow-y: auto;
+        position: relative;
         &>div{
-            height: 300px;
-            overflow-y: scroll;
-           
+            // height: 150px;
+            // overflow: hidden;
+            
+            .multi-select{
+                margin-bottom: 10px;
+            }
+        }
+    
+    }
+    .param-pdf-panel_filters__isAskSort {
+        input {
+            margin-left: 5px;
+            cursor: pointer;
+            transform: scale(1.3);
+        }
+        p {
+            font-weight: bold;
         }
     }
 }
+
+@media (max-width: 1010px) {
+    .param-pdf-panel_filters{
+        // background-color: red;
+        .multi-select__cont{
+            width: 650px;
+        }
+    }
+  }

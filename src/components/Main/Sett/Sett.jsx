@@ -3,13 +3,21 @@ import './Sett.scss';
 import __header from '../../Common/__header/__header'
 import __mainMenuItem from './MenuItem/MenuItem'
 import {NavLink} from 'react-router-dom'
-const Sett = () => {
- 
+import {connect} from "react-redux";
+const Sett = (props) => {
+    let moduleSettingsLink, sidebarValues = Object.values(props.sidebar)
+    if(sidebarValues.length>0)
+    sidebarValues.forEach(element => {
+        if(element.active) moduleSettingsLink = element.to
+    })
+    else moduleSettingsLink = '/setting module acs'
+    console.log(props.sidebar)
+    console.log(moduleSettingsLink)
     return <div className="Sett">
     <__header text={"Настройки"} clazz="Common__header Common__header_red"/>
     <ul>
-        <li>
-            <NavLink to='/setting module acs'>
+        {/* <li>
+            <NavLink to={moduleSettingsLink}>
                 <__mainMenuItem 
                         head={
                                 {
@@ -21,9 +29,9 @@ const Sett = () => {
                                     text: "Настройки подключенных модулей",
                                 }
                         }
-                        to='/setting module acs'/>
+                        to={moduleSettingsLink}/>
             </NavLink>
-        </li>
+        </li> */}
         <li>  
             <NavLink to='/setting users'>
                 <__mainMenuItem 
@@ -74,11 +82,36 @@ const Sett = () => {
                         to='/setting lic'/>
             </NavLink>
         </li>
+        <li>
+            <NavLink to='/email alert'>
+                <__mainMenuItem 
+                        head={
+                                {
+                                    text: "E-mail оповещения",
+                                }
+                            } 
+                        body={
+                                {
+                                    text: `Настройка списка адресов
+и просмотр событий`,
+                                }
+                        }
+                        to='/email alert'/>
+            </NavLink>
+        </li>
     </ul>
 </div>
 }
 
-
-
-
-export default Sett;
+let mapStateToProps = (state) => {
+    return {
+      sidebar: state.modSidebar.settings
+    }
+  }
+  let mapDispatchToProps = {
+      // addDashBoardThunk
+  }
+  
+  const SettCont = connect(mapStateToProps, mapDispatchToProps)(Sett);
+  
+export default SettCont;

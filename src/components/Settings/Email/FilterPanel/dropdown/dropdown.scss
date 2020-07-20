@@ -1,0 +1,34 @@
+// .filter{
+//     display: flex;
+// div{
+//     display: flex;
+//     flex-direction: column;
+//     label{
+//         color: black;
+//         font-size: 18px;
+//         justify-content: start;
+//     }
+// }
+// }
+.multi-select{
+    width: 450px;
+    font-size: 18px;
+  }
+  .multi-select .select-item{
+    text-align: left;
+  }
+  .multi-select .select-item .item-renderer{
+    display: flex;
+    align-items: start;
+  }
+  .multi-select .select-item .item-renderer span{
+    word-wrap: break-word;
+      width: 100%;
+  }
+  .multi-select .select-item .item-renderer input{
+   position: relative;
+   top: 4px;
+  }
+  .multi-select .select-item .item-renderer span{
+    padding-left: 5px;
+  }

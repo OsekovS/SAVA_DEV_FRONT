@@ -1,4 +1,4 @@
-import  {getDashboardsThunk} from "../../../components/redux/acs-dashboards-reducer";
+import  {getDashboardsThunk} from "../../../components/redux/dashboards-reducer";
 import {connect} from "react-redux";
 import __acs from './__acs'
 

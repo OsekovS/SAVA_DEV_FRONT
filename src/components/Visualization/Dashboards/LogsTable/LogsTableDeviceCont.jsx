@@ -1,6 +1,7 @@
 import {connect} from "react-redux";
 import rawLogsTable from './LogsTable'
-import  {getAcs,changeUploadModeThunk,setParamFilterThunk,changePageThunk,changeShowedLogsThunk,changeSortThunk,onChangeCurrentLog} from "../../../../components/redux/acs-dashboards-reducer";
+import  {getAcs,changeUploadModeThunk,setParamFilterThunk,changePageThunk,changeDashSize,
+    changeShowedLogsThunk,changeSortThunk,onChangeCurrentLog,changeCollapseMode} from "../../../../components/redux/dashboards-reducer";
 
       
 let mapStateToProps = (state) => {
@@ -19,6 +20,8 @@ let mapDispatchToProps = {
     changeShowedLogsThunk,
     changeSortThunk,
     onChangeCurrentLog,
+    changeCollapseMode,
+    changeDashSize
 }
 
 const LogsTableDeviceCont = (connect(mapStateToProps,mapDispatchToProps)(rawLogsTable));

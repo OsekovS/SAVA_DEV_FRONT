@@ -1,0 +1,106 @@
+@import '../../../colors.scss';
+.param-panel{
+    img{
+        width: 20px;
+    }
+    &>div{
+        background: white;
+        width: 80%;
+        margin: 0 auto;
+        color: $black;
+        header{
+            background: $red-color;
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 5px 5px 10px;
+            color: $white-color;
+            &>span{
+                display: flex;
+                img{margin-right: 7px;}
+                
+            }
+            &>button{
+                background-color: $red-color;
+                border: none;
+                img{
+                    background-color: $red-color;
+                }
+            }
+        }
+        //это календарик
+        &>div{
+            margin: 0 auto;
+        }
+    }
+}
+.param-filter-panel{
+    
+    // }
+    // form{
+        padding: 10px 20px;
+        box-sizing: border-box;
+        // background: white;
+        width: 100%;
+        top: 34px;
+        left: 0px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        input[type=submit],button{
+            border-radius: 3px;
+            
+            height: 27px;
+            font-size: 12px;
+            padding: 5px 10px;
+            cursor: pointer;
+            color: #fff;
+            border-radius: 3px;
+            border: none;
+        }
+        input[type=submit]{
+            background-color: rgb(236, 28, 36);
+        }
+        button{
+            background-color: rgb(117, 102, 102);
+        }
+    }
+    .wrapper{
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        flex-direction: column;
+        // background-color: yellow;
+        // height: 140px;
+        width: 100%;
+        // height: 260px;
+        width: 100%;
+        padding: 10px 0px 0 10px;
+      
+        &>div{
+            margin-bottom: 10px;
+        }
+        //,.filter__devices
+        .multi-select__cont{
+      
+            width: 95%;
+            
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .multi-select{
+            height: 30px;
+            font-size: 16px;
+        }
+        // .filter__devices .multi-select{
+        //     width: 100%;
+        // }
+    }
+    .wrapper__columned{
+        &>div{
+            width: 50%;
+        }
+    // }
+    // background-color: #aaaaaa;;
+}

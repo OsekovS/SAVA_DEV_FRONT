@@ -2,15 +2,14 @@ import React from 'react';
 import {Component} from 'react'
 import UploadTimeSetter from './uploadTimeSetter/UploadTimeSetterCont.jsx'
 import Calendar from './calendar/calendar'
+import moment from "moment"
 import  './TimeFilterPanel.scss'
 class TimeFilterPanel extends Component {
     constructor(props) {
       super(props);
-      let preview
-      console.log(props)
-      if(props.lastViewed.isLastViewed==='lastViewed') preview = 'C ' +  props.lastViewed.date + ' (с момента последнего посещения)'
-      else preview = this.props.uploads.uploads?this.makeSpecialString(props):'C ' +this.props.timeFilter.from.format('DD.MM.YYYY HH:mm') + ' по '+this.props.timeFilter.to.format('DD.MM.YYYY HH:mm')
-      // this.onApply = this.onApply.bind(this)
+      let lastViewed = props.lastViewed//JSON.parse()
+      let preview = this.props.uploads.uploads? ' с '+(moment(new Date()).subtract(lastViewed.fromNum, lastViewed.fromLetter)).format('DD.MM.YYYY HH:mm'):' с ' +this.props.timeFilter.from.format('DD.MM.YYYY HH:mm') + ' по '+this.props.timeFilter.to.format('DD.MM.YYYY HH:mm')   
+      
       this.makeSpecialString = this.makeSpecialString.bind(this)
       this.state = {
         display: 'collapsed',
@@ -72,14 +71,23 @@ class TimeFilterPanel extends Component {
           }
           return true
         }
+
     componentWillReceiveProps(newprops){
       const props=this.props
-      if(this.isObjEqual(newprops.uploads,props.uploads)||this.isObjEqual(newprops.timeFilter,props.timeFilter)||this.isObjEqual(newprops.lastViewed,props.lastViewed)){
-        // console.log('someth changed')
-        if(newprops.lastViewed.isLastViewed==='lastViewed') 
-          this.setState({ preview: 'C ' +  newprops.lastViewed.date + ' (с момента последнего посещения)' });
+      // console.log(newprops.uploads)
+      // console.log(props.uploads)
+      // console.log(newprops.timeFilter)
+      // console.log(newprops.lastViewed)
+      // console.log(this.isObjEqual(newprops.lastViewed,this.props.lastViewed))
+      if(!this.isObjEqual(newprops.uploads,props.uploads)||!this.isObjEqual(newprops.timeFilter,props.timeFilter)||this.isObjEqual(newprops.lastViewed,this.props.lastViewed)){
+        if(newprops.uploads.uploads||!this.isObjEqual(newprops.lastViewed,this.props.lastViewed)) {
+          let lastViewed = newprops.lastViewed//JSON.parse()
+          this.setState({preview:' с ' + (moment(new Date()).subtract(lastViewed.fromNum, lastViewed.fromLetter)).format('DD.MM.YYYY HH:mm')})
+          // this.setState({preview: ' с ' +  newprops.lastViewed.replace(/\//g, ".") + ' (с момента последнего прочтения)' });
+        }
+          
         else
-          this.setState({ preview: newprops.uploads.uploads?this.makeSpecialString(newprops.uploads):' c ' +newprops.timeFilter.from.format('DD.MM.YYYY HH:mm') + ' по '+newprops.timeFilter.to.format('DD.MM.YYYY HH:mm') });
+          this.setState({preview: ' c ' +newprops.timeFilter.from.format('DD.MM.YYYY HH:mm') + ' по '+newprops.timeFilter.to.format('DD.MM.YYYY HH:mm') });
       }
     }
 
@@ -87,19 +95,23 @@ class TimeFilterPanel extends Component {
       const {id,indexName,dbName} = this.props
       this.props.setTimeFilterThunk(startDate, endDate, indexName, id, dbName);
       this.setState({ display: 'collapsed' });
-      this.props.changelastViewed('nope')
+      // this.props.changelastViewed('nope',dbName)
   }
+  // <Calendar standalone={true} timeFilter={timeFilter} applyCallback={this.applyCalendarCallback.bind(this)}/> <></>
     render(){
         let viget 
-        const {id,indexName,dbName,timeFilter} = this.props
+        // console.log(this.state.display)
+        const {id,indexName,dbName,timeFilter,lastViewed} = this.props
+        // console.log(timeFilter)
+
         let {timeKind, timeNum, from_number, from_time_type} = this.props.uploads
         if(this.state.display=== 'interval') viget = <Calendar standalone={true} timeFilter={timeFilter} applyCallback={this.applyCalendarCallback.bind(this)}/>
-        else viget = <UploadTimeSetter id={id} indexName={indexName} dbName={dbName} defineLetter={this.defineLetter} makeSpecialString={this.makeSpecialString} timeKind={timeKind} timeNum={timeNum}  from_number={from_number} from_time_type={from_time_type}  onApply={()=>{this.setState({ display: 'collapsed' })}}/>
+        else viget = <UploadTimeSetter lastViewed={lastViewed} id={id} indexName={indexName} dbName={dbName} defineLetter={this.defineLetter} makeSpecialString={this.makeSpecialString} timeKind={timeKind} timeNum={timeNum}  from_number={from_number} from_time_type={from_time_type}  onApply={()=>{this.setState({ display: 'collapsed' })}}/>
         if(this.state.display==='collapsed') return <span style={{fontSize:'16px'}} className='time-filter-panel__collapsed' onClick={()=>{this.setState({ display: 'uploads' });}}>{this.state.preview}<img src={require('./calendar.svg')}></img></span>
         else return <div className="modal-form-keeper time-filter-panel"  >
-                        <div>
+                        <div >
                             <header><span><img src={require('./calendar.svg')}></img>Временные настройки</span><button onClick={()=>{this.setState({ display: 'collapsed' });}}><img src={require('../close.svg')}></img></button></header>
-                            <ul>
+                            <ul className="modal-form-keeper__mode-toggler">
                                 <li className={this.state.display==='interval'?'active':''} onClick={()=>{this.setState({ display: 'interval' });}}>В режиме временного интервала</li>
                                 <li className={this.state.display==='uploads'?'active':''} onClick={()=>{this.setState({ display: 'uploads' });}}>В режиме обновлений</li>
                             </ul>
@@ -111,35 +123,3 @@ class TimeFilterPanel extends Component {
 }
 
 export default TimeFilterPanel;
-
-//     // this.ChangeDisplay = this.ChangeDisplay.bind(this);
-    
-//     // this.handleSubmit = this.handleSubmit.bind(this);
-//   }
-//   // Вызывается после удаления компонента из DOM
-//   componentWillUnmount() {
-//     document.removeEventListener('click', this.handleClickOutside.bind(this), false);
-//   }
-
-//   // Вызывается до рендера
-//   componentWillMount() {
-//     document.addEventListener('click', this.handleClickOutside.bind(this), false);
-//   }
-
-// // Отлавливаем клик на любую область
-// handleClickOutside(e) {
-//   // Получаем ссылку на элемент, при клике на который, скрытие не будет происходить
-  
-//   const emojiBlock = document.getElementsByClassName('upload-time-setter'+this.props.id)[0];
-//   // console.log(emojiBlock)
-//   // Проверяем, есть ли в списке родительских или дочерних элементов, вышеуказанный компонент
-//   if (!e.path.includes(emojiBlock)) {
-//     // Если в области кликнутого элемента нету "emojiBlock", то проверяем ниже
-//     // Не произведен ли клик на кнопку, открывающую окно смайлов
-//     // const svgSmileBtn = document.querySelector('.chat-input__smile-btn');
-//     // Если клик не производился и на кнопку открытия окна смайлов, то скрываем блок. if (!e.path.includes(svgSmileBtn))
-//      this.setState({ display: 'collapsed' });
-//   }else{
-//     this.setState({ display: 'deployed' });
-//   }
-// }

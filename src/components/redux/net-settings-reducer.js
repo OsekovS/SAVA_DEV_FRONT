@@ -1,9 +1,11 @@
+import * as axios from 'axios'
+
 const UPDATE_NET_SETTINGS = 'UPDATE_NET_SETTINGS';
 
 let initialState = {
-    ip: '192.168.3.xxx',
-    mask: '255.255.255.xxx',
-    gw: '192.168.3.xxx'
+    ip: '192.168.3.36',
+    mask: '255.255.255.0',
+    gw: '192.168.3.1'
 };
 
 const netSettingsReducer = (state = initialState, action) => {
@@ -19,6 +21,29 @@ const netSettingsReducer = (state = initialState, action) => {
 }
 
 export const updateNetActionCreator = ({ip,mask,gw}) =>{
-    return ({ type: UPDATE_NET_SETTINGS, ip: ip,mask: mask,gw: gw })}
+    return ({ type: UPDATE_NET_SETTINGS, ip: ip,mask: mask,gw: gw })
+}
+
+export const changeNetActionThunk = (reqObj) => {
+        return (dispatch,getState) => {
+            // console.log(reqObj)
+            // return dispatch({type: ''})
+            axios.post("php/settings_admin.php",{network: reqObj}).then(response => {
+                
+                console.log(response.request)
+                let json = JSON.parse(response.request.response);
+                console.log(json)
+                // reqObj
+                // dispatch(updatePage())
+            
+            }).catch(function (error) {
+                // handle error
+                console.log(error);
+              })
+              .finally(function () {
+                // always executed
+              });
+    }
+}
 
 export default netSettingsReducer;

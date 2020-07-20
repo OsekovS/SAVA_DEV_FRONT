@@ -3,7 +3,7 @@ import './__UserPanel.scss';
 
 import {connect} from "react-redux";
 import {logOut} from '../../redux/auth-reducer'
-import {clearDash} from '../../redux/acs-dashboards-reducer'
+import {clearDash} from '../../redux/dashboards-reducer'
 class rawUserPanel extends React.Component{
     
     constructor(props) {
@@ -29,7 +29,7 @@ class rawUserPanel extends React.Component{
     render(){
         if(this.state.opened){
             return <div onClick={this.handleClick} className="Header__UserPanel Header__UserPanel_opened" >
-            <img width='45' height='45' src={require("./user.png")} alt="Пользователь"></img>
+            <img width='36' height='36' src={require("./user.png")} alt="Пользователь"></img>
             <span >{this.props.briefUserInfo.name}</span>
             <div>
                 <span>{this.props.briefUserInfo.admin}</span>
@@ -40,7 +40,7 @@ class rawUserPanel extends React.Component{
         }
         else{
             return <div onClick={this.handleClick}  className="Header__UserPanel">
-                <img width='45' height='45' src={require("./user.png")} alt="Пользователь"></img>
+                <img width='36' height='36' src={require("./user.png")} alt="Пользователь"></img>
                 <span > {this.props.briefUserInfo.name}</span>
                 <button className="Header__Butt Header__Butt_Down"></button>
             </div>

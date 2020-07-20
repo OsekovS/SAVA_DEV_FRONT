@@ -2,30 +2,13 @@ import React from 'react';
 import FilterPanel from '../Components/FilterPanel/FilterPanel'
 import TimeFilterPanel from '../Components/TimeFilterPanel/TimeFilterPanelCont'
 import Saver from '../Components/Saver/Saver'
+import Deleter from '../Components/Deleter/Deleter'
+import Resizer from '../Components/Resizer/Resizer.jsx'
+import ChangedInput from '../Components/ChangedInput/ChangedInputCont.jsx'
 // import Pdf from '../Components/Pdf/Pdf'
-import { Chart, Pies, Transform , Layer, Dots,Labels} from 'rumble-charts';
+import { Chart, Pies, Transform , Layer, Dots,Labels, Handlers} from 'rumble-charts';
 import './CircleDiagram.scss';
-import Dropdown from '../Components/FilterPanel/dropdown/dropdown'
-import {Field, reduxForm} from "redux-form";
-// import Dropdown from "@khanacademy/react-multi-select";
-const form = (props) => {
-    let fields = Object.keys(props.filter).map((e,n) => {
-        //начальное значение - отдельная запара
-        return <option value={e}>{props.filter.translate[e]}</option>
-    })
-    return <form onSubmit={props.handleSubmit}>
-                        <Field name="mainField" component={'select'}>
-                            {fields}
-                        </Field>
-            <div>
-                <button >Построить диаграмму</button> 
-            </div>
-        </form>
-      
-}
-
-const MainObjForm =  reduxForm({form: 'curMainObj'})(form)
-
+//тип соб приоритет опц поле 1 опц поле 3
 class CircleDiagram extends React.Component {
     constructor(props) {
         super(props);
@@ -35,8 +18,9 @@ class CircleDiagram extends React.Component {
           this.intervalId = setInterval(()=>{this.props.getAcs(this.props.id,this.props.indexName,this.props.dbName)},
           this.props.uploads.timeKind*this.props.uploads.timeNum);
         }
+        this.onClickOnSector = this.onClickOnSector.bind(this)
+        this.onClickOnListElem = this.onClickOnListElem.bind(this)
         
-
     }
 
     componentDidMount() {
@@ -78,39 +62,64 @@ class CircleDiagram extends React.Component {
     this.props.setParamFilterThunk(obj,dbName,indexName,id)
     
    }
-  
-
+   handleMouseMove(...args){
+     console.log(args)
+   }
+   onClickOnSector(e) {
+    let sectorColor = e.target.getAttribute('fill'),
+    {getAtClickOnCircleDiagram, dbName, indexName,id} = this.props
+    
+    this.colors.some((element, numb) => {
+      if(element===sectorColor) {
+        console.log(numb)
+        getAtClickOnCircleDiagram(id,indexName,dbName,numb)
+        return true;
+      }
+    });
+   }
+   onClickOnListElem(numb) {
+    let {getAtClickOnCircleDiagram, dbName, indexName,id} = this.props
+    getAtClickOnCircleDiagram(id,indexName,dbName,numb)
+   }
     render() {  
+    let {style, filter, field, paramFilter, logs,id,indexName,dbName,modules,uploads,title,
+      handleMouseMove, changeDashSize} = this.props
     let mainFieldList
-    if(this.props.paramFilter[this.props.field]===undefined)
+    // console.log(filter)
+    // console.log(paramFilter)
+    // console.log(field)
+    if(paramFilter[field]===undefined)
     mainFieldList = 'выбраны все поля'
      else {
-      mainFieldList = ' '+this.props.paramFilter[this.props.field].join(', ')
+      mainFieldList = ' '+paramFilter[field].join(', ')
       if(mainFieldList.length>50) mainFieldList=' '+mainFieldList.slice(0,37)+'... '
      } 
-    let secondField = {...this.props.filter}
-    let allInMainField = secondField[this.props.field]
-    delete secondField[this.props.field]
+     let allLogsEmpty=true
+    let secondField = {...filter}
+    let allInMainField = secondField[field]
+    delete secondField[field]
+    // console.log(logs)
         const series = [{
-            data: this.props.logs.count//bigData//
+            data: logs.count//bigData//
         }];
-        let filter = this.props.filter
+
         let fields = Object.keys(filter).map((e,n) => {
             //начальное значение - отдельная запара
-            if(e===this.props.field) return <option selected value={e}>{this.props.fields[e].translate}</option>
+            if(e===field) return <option selected value={e}>{this.props.fields[e].translate}</option>
             else if(e!=='translate') return <option value={e}>{this.props.fields[e].translate}</option>
         })
         let ourColors = []
              
-      const categories = this.props.logs.labels!==undefined?this.props.logs.labels.map((elem,numb)=>{
+      const categories = logs.labels!==undefined?logs.labels.map((elem,numb)=>{
         ourColors.push(this.colors[numb])
-        return <li key={numb}><div style={{backgroundColor: this.colors[numb]}}></div>{elem+' ('+this.props.logs.count[numb]+' событий)'}</li>
+        if(logs.count[numb]!==0) allLogsEmpty=false
+        return <li onClick={()=>{this.onClickOnListElem(numb)}} key={numb}><div style={{backgroundColor: this.colors[numb]}}></div>{elem+' ('+logs.count[numb]+' событий)'}</li>
       }):[]
-      const {id,indexName,dbName,modules} = this.props
+      
       const configObj = {
         mainField:{
           body: {
-            [this.props.field]: allInMainField
+            [field]: allInMainField
           },
           title: 'Основной параметр: '
         },
@@ -119,35 +128,48 @@ class CircleDiagram extends React.Component {
           title: 'Дополнительные параметры: ',
         }
        
-      }
-      const lastViewed = {
-        isLastViewed: modules[dbName].mode,
-        date: modules[dbName].indexes[indexName].lastViewed
-      }
-       return <div className="logs-table-wrapper logs-table-wrapper_pie" >
-                    <header className="Common__header Common__header_grey Common__header_with-filter">
-                        {this.props.title}
-                        <TimeFilterPanel lastViewed={lastViewed} id={id}  uploads={this.props.uploads} indexName={indexName} dbName={dbName} timeFilter={{from:this.props.timeFilter.from, to:this.props.timeFilter.to}}></TimeFilterPanel>
-                        <FilterPanel single={false} fields={this.props.fields} configObj={configObj} iniState={this.props.paramFilter} submitCallBack={this.onSetFilterSettings.bind(this)} id={id}/>
-                        <Saver  id={id} dbName = {dbName} display={this.props.saver}/>
+      },
+      width = style.width,
+      headerStyle = (width<420)?'':' Common__header_big', 
+      lastViewed = modules[dbName].indexes[indexName].lastViewed
+      let info = allLogsEmpty?<div className={width>550?"Modules-table__empty":"Modules-table__empty Modules-table__empty-minified"} ><img src={require("../Components/Table/Anonymous-Package.svg")} atl="события не найдены"></img></div>:                  
+      <div>
+        <Chart width={180} height={180} series={series}>
+          <Handlers onMouseMove={handleMouseMove} optimized={false}>
+            <Transform method={['transpose', 'stack']}>
+                <Pies  pieAttributes={{
+                  onClick: this.onClickOnSector,
+                  // onMouseLeave: e => e.target.style.fillOpacity = 0.5
+                }}
+                combined={true} colors={ourColors} />
+            </Transform>
+          </Handlers>
+        </Chart>
+        <ul>
+          {categories}
+        </ul>
+     </div>
+       return <div  style={{ width}}  className="dashboard-wrapper dashboard-wrapper_pie" >
+                    <header className={"Common__header Common__header_grey Common__header_with-filter"+headerStyle}>   
+                        <ChangedInput title={title} iniName={title} clazz={'dashboard-wrapper__title'} id={id} dbName={dbName}/>                
+                        <div  className='dashboard-wrapper__settings-cont'>
+                          <FilterPanel single={false} fields={this.props.fields} configObj={configObj} iniState={this.props.paramFilter} submitCallBack={this.onSetFilterSettings.bind(this)} id={id}/>
+                          <Saver  id={id} dbName = {dbName} display={this.props.saver}/>
+                          <Deleter id={id} dbName = {dbName}  indexName={indexName}  />
+                        </div>
+                        <div className='dashboard-wrapper__timeFilter'>
+                          <TimeFilterPanel lastViewed={lastViewed} id={id}  uploads={uploads} indexName={indexName} dbName={dbName} timeFilter={{from:this.props.timeFilter.from, to:this.props.timeFilter.to}}></TimeFilterPanel>
+                        </div>
                     </header>  
-                   <div>
-                    <Chart width={180} height={180} series={series}>
-                        <Transform method={['transpose', 'stack']}>
-                            <Pies combined={true} colors={ourColors}/>
-                        </Transform>
-                    </Chart>
-                    <ul>
-                      {categories}
-                    </ul>
-                   </div>
+                    {info}
                     <div className="logs-table-wrapper__pie-settings">
                       <span>Параметр: </span>
-                        <select onChange={(event)=>{this.props.changeMainField(event.target.value,id,dbName)}}>
+                        <select onChange={(event)=>{this.props.changeMainFieldThunk(event.target.value,dbName,indexName,id)}} >
                           {fields}
                         </select>
                         <span>Выбранные значения параметра: {mainFieldList}</span>
                     </div>
+                    <Resizer changeSize={changeDashSize} id={id} indexName={indexName} dbName={dbName} type={['width']} minVal={['minWidth']} isAbsolutePos={true}/>
             </div>
     }
     
@@ -166,64 +188,5 @@ class CircleDiagram extends React.Component {
       '#dadaeb', '#636363', '#969696', '#bdbdbd', '#d9d9d9'
     ]
   }
-
-
-
-
-
-
-
-
-
-// import Chart from '../../Graphs/Chart'
-// import Layer from '../../Graphs/Layer'
-// import Ticks from '../../Graphs/Ticks'
-// import Bars from '../../Graphs/Bars'
-// import LogsTableDeviceCont from '../logsTable/LogsTableDeviceCont'
-
-
-
-    // <Chart width={600} height={250} series={series}>
-    //     <Transform method={['transpose', 'stack']}>
-    //         <Pies combined={true} />
-    //     </Transform>
-    // </Chart>
-
-    // let xLabels1
-    // let xLabels2
-    // let clientWidth = document.body.clientWidth    
-    // if(clientWidth<1400){
-    //   xLabels1 = this.props.bar1.xLabels.filter((e,n) => n%2==0)
-    //   xLabels2 = this.props.bar2.xLabels.filter((e,n) => n%2==0)
-    // }else{
-    //   xLabels1 = this.props.bar1.xLabels;
-    //   xLabels2 = this.props.bar2.xLabels;
-    // }
-    //  <Chart width={ clientWidth/2} height={300} series={this.props.bar1.series} minY={0}>
-    //     <Layer width='90%' height='90%' position='top center'>
-    //       <Ticks
-    //         axis='y'
-    //         lineLength='100%'
-    //         lineVisible={true}
-    //         lineStyle={{stroke:'lightgray'}}
-    //         labelStyle={{textAnchor:'end',dominantBaseline:'middle',fill:'lightgray',fontSize:'0.7em'}}
-    //         labelAttributes={{x: -5}}
-    //         labelFormat={label => label}
-    //       />
-    //       <Ticks
-    //         axis='x'
-    //         ticks={{maxTicks:clientWidth<1400? 12:24}}
-    //         labels = {xLabels1}
-    //             label={({index, props}) => props.labels[index]}
-    //         labelStyle={{textAnchor:'middle',dominantBaseline:'text-before-edge',fill:'black',fontSize:'0.7em'}}
-    //         labelAttributes={{y: 3}}
-    //       />
-    //       <Bars
-    //         groupPadding='0%'
-    //         innerPadding='0.3%'
-    //       />
-    //     </Layer>
-    //   </Chart>
-
 
 export default CircleDiagram;

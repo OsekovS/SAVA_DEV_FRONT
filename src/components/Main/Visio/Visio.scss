@@ -8,9 +8,11 @@
         flex-wrap: wrap;
         justify-content: left;
         &>li {
+            height: max-content;
             width: 31.5%;  
             margin-right: 1.5%;
             position: relative;
+            box-shadow: 0 3px 6px rgba(0,0,0,.15), 0 1px 6px rgba(0,0,0,.1);
             img{
                 position: absolute;
                 bottom: 30px;

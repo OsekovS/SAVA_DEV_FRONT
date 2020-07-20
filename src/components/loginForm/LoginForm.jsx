@@ -32,6 +32,7 @@ class rawLoginForm extends React.Component {
     }
     render() {
                 if(this.props.auth.isAuth) {return <Redirect to = "/" />}
+                else if (this.props.auth.isAuth==null) return <div></div>
                 return  <ObjectsReduxForm onSubmit={this.OnLogIn} />
              }
 

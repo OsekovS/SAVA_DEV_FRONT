@@ -8,12 +8,15 @@ let initialState = {
         visualization: 'Визуализация данных',
         acs: 'СКУД',
         iss: 'СЗИ',
+        ksc: 'КСЦ',
         cameras: 'камер',
         module: 'модуля',
         setting: 'Настройка',
         users: 'пользователей',
         common: 'общая',
         lic: 'лицензии',
+        email: 'email',
+        alert: 'оповещения',
         'usersLogs': 'логи пользователей',
         'devicesLogs': 'логи устройств',
         '': 'Главная'
@@ -28,6 +31,7 @@ const navBarReducer = (state = initialState, action) => {
        case NAV_BAR_CHANGE:
             stateCopy = {...state};
             stateCopy.state = {...state.state}
+            // console.log(action.to)
             //window.location.pathname
               let arr = ('/'+action.to).split("/").slice(1).map(e => {
                 return e.split(' ').reduce((acc,cur) => acc+' '+state.translate[cur],'')

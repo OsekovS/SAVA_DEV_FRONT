@@ -1,27 +1,43 @@
 import React from 'react';
-import * as axios from 'axios'
+// import * as axios from 'axios'
 import Calendar from '../TimeFilterPanel/calendar/calendar'
-import {connect} from "react-redux";
-import {onCreatePdfThunk}  from "../../../../redux/acs-dashboards-reducer";
+// import {connect} from "react-redux";
+// import {createReportThunk}  from "../../../../redux/dashboards-reducer";
 import Dropdown from '../FilterPanel/dropdown/dropdown'
 import './Pdf.scss'
 {/* <img onClick={onCreatePdfThunk.bind(this,props.id)} className='pdf__wait' src={require('./icon.svg')}></img> */}
-const Pdf = (props) => {
-    if(props.display==='wait') return <a href="php/upload-file.php?filename=file.pdf"><img  className='pdf__wait' src={require('./icon.svg')}></img></a>
-        else return <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
-}
+// const Pdf = (props) => {
+//     if(props.display==='wait') return <a href="php/upload-file.php?filename=file.pdf"><img  className='pdf__wait' src={require('./re.svg')}></img></a>
+//         else return <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+// }
 //<a href="upload-file.php?filename=file.pdf"><img onClick={onCreatePdfThunk.bind(this,props.id)} className='pdf__wait' src={require('./icon.svg')}></img></a>
 class PdfMaker extends React.Component{
     constructor(props){
         super(props)
-        let title = 'Отчет с ' +this.props.timeFilter.from.format('DD.MM.YYYY HH:mm') + ' по '+this.props.timeFilter.to.format('DD.MM.YYYY HH:mm')
+        // console.log(props)
+        let title = 'Отчет с ' +this.props.timeFilter.from.format('DD.MM.YYYY HH:mm') + ' по '+this.props.timeFilter.to.format('DD.MM.YYYY HH:mm'),
+        // console.log(props)
+        // let fieldsInTable = Object.keys(props.fields)
+        // fieldsInTable.push('time')//необходимо в excel добавить поле время
+        // Object.keys(this.props.fields)
+        allFieldsInTable = Object.keys(props.fields).map((e,n) => {
+            return {
+                value: e,
+                label: props.fields[e].translate,
+            } 
+        })
+        allFieldsInTable.push({value: 'time',label: 'Время',})
         this.state = {
+            allFieldsInTable,
+            fieldsInTable: [],
             params: {...props.iniState},
             display: 'collapsed',
             title,
             timeFilter: props.timeFilter,
-            mainField: undefined,
-            clickButtonText: "Сотворить pdf"
+            mainField: Object.keys(props.configObj)[2],
+            clickButtonText: "Сгенерировать отчет",
+            mode: 'pdf',
+            trend: true
         };
         this.handleTitleChange = this.handleTitleChange.bind(this);
         this.changeMainField = this.changeMainField.bind(this);
@@ -62,8 +78,10 @@ class PdfMaker extends React.Component{
                         } 
                     })
                     filter.push(
-                        <Dropdown selected={this.state.params[key]===undefined?[]:this.state.params[key]} iniState={this.state.params[key]===undefined?[]:this.state.params[key]} name={key} options={options} 
+                        <div className="multi-select__cont"><span>{this.props.fields[key].translate}</span><Dropdown selected={this.state.params[key]===undefined?[]:this.state.params[key]} iniState={this.state.params[key]===undefined?[]:this.state.params[key]} name={key} options={options} 
                         preview={this.props.fields[key].translate} onChangeCallBack={(this.onChangeFilterField.bind(this))}/>
+                    </div>
+                        
                     )
                 }
             }
@@ -81,47 +99,10 @@ class PdfMaker extends React.Component{
         return true
     }
     onSubmit(){
-        // this.props.createPdfThunk
-        let obj = {params:[{}]}
-        obj.params[0].timerange = {
-            "starttime": this.state.timeFilter.from.format('YYYY/MM/DD HH:mm:ss'),
-            "endtime": this.state.timeFilter.to.format('YYYY/MM/DD HH:mm:ss')
-        }
-        obj.params[0].filter = this.state.params
-        obj.params[0].grouping = {
-            "name": "по объектам",
-            "argument": this.state.mainField
-        }
-        obj.params[0].type = this.state.title
-        obj.params[0].indexName = this.props.indexName
-        let reqObj={
-            str:JSON.stringify(obj)
-        }
-        console.log(reqObj)
-        this.setState({clickButtonText: 'ожидайте окончания создания отчета..'});
-        // axios.get(`php/upload-file.php`);
-        axios.post("php/make-file.php", reqObj).then(response => {
-            this.setState({clickButtonText: "Сотворить pdf"});
-            // console.log(response)
-            let json = JSON.parse(response.request.response);
-            console.log(json)
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('href', 'php/upload-file.php');
-            link.setAttribute('target', '_blank');
-            document.body.appendChild(link);
-            link.click();
-           
-        }).catch(function (error) {
-            // handle error
-            console.log(error);
-          })
-          .finally(function () {
-            // always executed
-          });;
-
-
+        // let fields = Object.keys(this.props.fields)
+        // fields.push('time')//необходимо в excel добавить поле время
+        console.log(this.state)
+        this.props.createReportThunk(this.state, this.props.indexName)
         this.setState({display: 'collapsed'});
     }
     // Изменился ли фильтр
@@ -130,37 +111,69 @@ class PdfMaker extends React.Component{
         if(!this.isObjEqual(nextProps.iniState,this.state.params)) this.setState({params: nextProps.iniState});
     }
     render() {
-        // console.log(this.state.iniState)
+        // console.log(this.state.fieldsInTable)
+        let {from, to} = this.state.timeFilter
         if(this.state.display==='collapsed')
-            return  <img onClick={()=>{this.setState({ display: 'deployed' });}} className='pdf__wait' src={require('./icon.svg')}></img>
+            return  <img onClick={()=>{this.setState({ display: 'deployed' });}} className='pdf__wait' src={require('./report.svg')}></img>
         else {
+            let { timeFilter, mode, trend, fieldsInTable, allFieldsInTable} = this.state
             let fields = Object.keys(this.props.configObj).map((e,n) => {
                 //начальное значение - отдельная запара
-                if(e===this.props.field) return <option selected value={e}>{this.props.fields[e].translate}</option>
+                if(n===2) return <option selected value={e}>{this.props.fields[e].translate}</option>
                 else if(e!=='translate') return <option value={e}>{this.props.fields[e].translate}</option>
             })
-            let { timeFilter} = this.state
+            if(mode === 'excel') fields.push(<option value='time'>Время</option>) //необходимо в excel добавить поле время
             return  <div className="modal-form-keeper param-pdf-panel param-panel"  >
-            <div>
-                <header><span>Настройки отчета</span><button onClick={()=>{this.setState({ display: 'collapsed' });}}><img src={require('../close.svg')}></img></button></header>
-                    <form onSubmit={this.onSubmit} >
-                        <h3>Название отчета:</h3>
-                            <input onChange={this.handleTitleChange} type="text" value={this.state.title} className='param-pdf-panel_title-input'/>
-                            
-                        <h3>Настройка временного интервала с ... по ...</h3>
-                        <Calendar standalone={false} timeFilter={timeFilter} applyCallback={this.applyCalendarCallback.bind(this)}/>
-                        <h3>Настройка фильтра</h3>
-                            <div className='param-pdf-panel_filters'>
-                                <div>{this.makeFilter()}</div>
+                <div>
+                {/* onSubmit={this.onSubmit} */}
+                    <header><span>Настройки отчета</span><button onClick={()=>{this.setState({ display: 'collapsed' });}}><img src={require('../close.svg')}></img></button></header>
+                        <ul className="modal-form-keeper__mode-toggler">
+                            <li className={mode==='excel'?'active':''} onClick={()=>{this.setState({ mode: 'excel' });}}>
+                                Excel формат  <img   src={require('./excelIcon.svg')}></img>
+                            </li>
+                            <li className={mode==='pdf'?'active':''} onClick={()=>{this.setState({ mode: 'pdf' });}}>
+                                Pdf формат  <img   src={require('./pdfIcon.svg')}></img>
+                            </li>
+                        </ul>
+                        <div className='modal-form_light-grey pdf-maker'  >
+                            <h3>Название отчета:</h3>
+                                <label className='param-pdf-panel_title-input__label'><input onChange={this.handleTitleChange} type="text" value={this.state.title} className='param-pdf-panel_title-input'/></label>
+                                
+                            <h3>{'Настройка временного интервала с '+from.format('DD.MM.YYYY HH:mm')+' по '+to.format('DD.MM.YYYY HH:mm')}</h3>
+                            <Calendar standalone={false} timeFilter={timeFilter} applyCallback={this.applyCalendarCallback.bind(this)}/>
+                            <h3>Настройка фильтра</h3>
+                                <div className='param-pdf-panel_filters'>
+                                    <div>{this.makeFilter()}</div>
+                                </div>
+                                {mode==='pdf'?<>
+                                        <h3>Группировать отчет в таблице по полю:</h3>
+                                        <select onChange={(event)=>{this.changeMainField(event.target.value)}}>
+                                            {fields}
+                                        </select>
+                                    </>:
+                                    <>
+                                        <h3>Сортировать записи в таблице по полю:</h3>
+                                        <select onChange={(event)=>{this.changeMainField(event.target.value)}}>
+                                            {fields}
+                                        </select>
+                                        <div>
+                                            <h3 className='param-pdf-panel_filters__isAskSort'>Сортировать по возрастанию
+                                            <input checked={trend} onChange={()=>{this.setState({ trend: !trend})}} type="checkbox"></input>
+                                            </h3>
+                                            <h3>Поля, которые необходимо вывести в таблицу (выберите хотя бы 1):</h3>
+                                            <Dropdown selected={fieldsInTable} iniState={[]} name={'key'} options={allFieldsInTable} 
+                                                preview={'...'} onChangeCallBack={(keyState)=>{this.setState({fieldsInTable: keyState})}}/>
+                                        </div>
+
+                                    </>
+                                }
+                            <div>
+                                <button onClick={this.onSubmit}>{this.state.clickButtonText}</button>
+                                {/* <input type="submit" value={this.state.clickButtonText}/> */}
+                                <button onClick={()=>{this.setState({ display: 'collapsed' });}}>Отменить</button>
                             </div>
-                        <h3>Группировать отчет в таблице по полю:</h3>
-                            <select onChange={(event)=>{this.changeMainField(event.target.value)}}>
-                            {fields}
-                            </select>
-                    <input type="submit" value={this.state.clickButtonText}/><button onClick={this.onCancel}>Отменить</button>
-                </form>  
-            </div>
-                        
+                        </div>  
+                </div>         
             </div>
         }
             

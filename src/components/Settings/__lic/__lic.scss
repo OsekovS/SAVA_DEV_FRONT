@@ -6,12 +6,12 @@
     form{
         width: 400px;
         margin: 0 auto;
-        height: 300px;
+        height: 340px;
         display: flex;
         flex-direction: column;
         justify-content: space-evenly;
         input[type=submit]{
-            @include button($red-color,230px,40px);
+            @include button($red-color,80px,25px);
             display: block;
             margin: 0 auto;
         }
@@ -19,7 +19,7 @@
             display: none;
         }
         label{
-            @include button($red-color,150px,30px);
+            @include button($red-color,110px,25px);
             display: inline-block;
             margin-left: 15px;
         }
@@ -29,6 +29,16 @@
         p:nth-child(7){
             display: flex;
             align-items: center;
+        }
+        .loadInput{
+            margin-bottom: 20px;
+            position: relative;
+            span{
+                position: absolute;
+                right: 67px;
+                font-size: 12px;
+                bottom: -20px;
+            }
         }
     }
 
