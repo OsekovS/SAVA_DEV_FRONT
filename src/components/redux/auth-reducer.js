@@ -97,11 +97,7 @@ const authReducer = (state = initialState, action) => {
                             let list = Object.keys(action.data[key][index])
                             // console.log(list)
                             list.sort(compareLastIndexLook.bind(this,action.data[key][index]))
-                            // console.log(list)
-                            // list.forEach(key => {
-                            //     const event = indexes[index].logsCount[key]
-                            //     eventsCount.push(<p onClick={()=>this.props.changeFilterByClickOnMenuItemThunk({significance: [event.key]},index,dbName)}>{event.key}: <span  className={'label'+'_'+event.style}>{event.doc_count>999?'999+':event.doc_count}</span></p>) 
-                            // });
+
                             
                             stateCopy.briefUserInfo.modules[key].indexes[index].logsCount = action.data[key][index]
                         }
@@ -283,7 +279,7 @@ export const checkCookies = () => {
         axios.post("php/users-form-processor.php",{"upload":{
             login: getCookie("login"),
             hash: getCookie("hash"),
-            modules: (getCookie('modules'))//,aggs:true,aggsParam: 'significance'
+            modules: (getCookie('modules'))
             // modules: getCookie("modules"),
             
         }}).then(response => {
