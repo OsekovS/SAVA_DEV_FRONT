@@ -4,7 +4,7 @@ import {connect} from "react-redux";
 import {onSaveDashParamsThunk}  from "../../../../redux/dashboards-reducer";
 
 const rawSaver = (props) => {
-    if(props.display==='wait') return <img onClick={props.onSaveDashParamsThunk.bind(this,props.id,props.dbName)} className='saver__wait' src={require('./icon.svg')}></img>
+    if(props.display==='wait') return <div data-title="сохранение изменений" className='saver comment' ><img  onClick={props.onSaveDashParamsThunk.bind(this,props.id,props.dbName)} src={require('./icon.svg')}></img></div>
         else return <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
 }
 

@@ -39,7 +39,7 @@ class rawUserPanel extends React.Component{
         </div>
         }
         else{
-            return <div onClick={this.handleClick}  className="Header__UserPanel">
+            return <div onClick={this.handleClick}  className="Header__UserPanel comment"  data-title="выход">
                 <img width='36' height='36' src={require("./user.png")} alt="Пользователь"></img>
                 <span > {this.props.briefUserInfo.name}</span>
                 <button className="Header__Butt Header__Butt_Down"></button>

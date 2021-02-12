@@ -6,6 +6,7 @@ import moment from "moment"
 import  './TimeFilterPanel.scss'
 class TimeFilterPanel extends Component {
     constructor(props) {
+   
       super(props);
       let lastViewed = props.lastViewed//JSON.parse()
       let preview = this.props.uploads.uploads? ' с '+(moment(new Date()).subtract(lastViewed.fromNum, lastViewed.fromLetter)).format('DD.MM.YYYY HH:mm'):' с ' +this.props.timeFilter.from.format('DD.MM.YYYY HH:mm') + ' по '+this.props.timeFilter.to.format('DD.MM.YYYY HH:mm')   
@@ -107,7 +108,8 @@ class TimeFilterPanel extends Component {
         let {timeKind, timeNum, from_number, from_time_type} = this.props.uploads
         if(this.state.display=== 'interval') viget = <Calendar standalone={true} timeFilter={timeFilter} applyCallback={this.applyCalendarCallback.bind(this)}/>
         else viget = <UploadTimeSetter lastViewed={lastViewed} id={id} indexName={indexName} dbName={dbName} defineLetter={this.defineLetter} makeSpecialString={this.makeSpecialString} timeKind={timeKind} timeNum={timeNum}  from_number={from_number} from_time_type={from_time_type}  onApply={()=>{this.setState({ display: 'collapsed' })}}/>
-        if(this.state.display==='collapsed') return <span style={{fontSize:'16px'}} className='time-filter-panel__collapsed' onClick={()=>{this.setState({ display: 'uploads' });}}>{this.state.preview}<img src={require('./calendar.svg')}></img></span>
+        if(this.state.display==='collapsed') return <span data-title="изменение временных настроек" style={{fontSize:'16px'}} className='time-filter-panel__collapsed comment' onClick={()=>{this.setState({ display: 'uploads' });}}><img src={require('./calendar.svg')}></img></span>
+        // if(this.state.display==='collapsed') return <span data-title="изменение временных настроек" style={{fontSize:'16px'}} className='time-filter-panel__collapsed comment' onClick={()=>{this.setState({ display: 'uploads' });}}>{this.state.preview}<img src={require('./calendar.svg')}></img></span>
         else return <div className="modal-form-keeper time-filter-panel"  >
                         <div >
                             <header><span><img src={require('./calendar.svg')}></img>Временные настройки</span><button onClick={()=>{this.setState({ display: 'collapsed' });}}><img src={require('../close.svg')}></img></button></header>

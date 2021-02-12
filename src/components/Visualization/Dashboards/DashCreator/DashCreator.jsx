@@ -7,10 +7,20 @@ class PdfMaker extends React.Component{
     constructor(props){
         super(props)
         console.log(props)
-        let index = props.indexes[props.indexName]
+        let index = null, moduleName,
+        {indexName, indexes } = props
+        if(props.isCommon) {
+            moduleName = ''
+            indexName = ''
+            indexes = '' 
+        } 
+        else{
+            index = props.indexes[props.indexName]
+        }
         this.state = {
             display: 'collapsed',
-            mainField: index?Object.keys(index.filter)[2]:null
+            mainField: index?Object.keys(index.filter)[2]:null,
+            indexName, indexes, moduleName, name:""
         };
         this.onSubmit = this.onSubmit.bind(this);
 
@@ -23,51 +33,89 @@ class PdfMaker extends React.Component{
     //       })  
     //   }
     onSubmit = () => {
-        let {indexName,dbName} = this.props
-        this.props.addDashBoardThunk(indexName,dbName,this.state.mainField)
-        this.setState({ display: 'collapsed' })
+        let {dbName} = this.props, {indexName, mainField, name} = this.state
+        if(indexName !== ""){
+            this.props.addDashBoardThunk(indexName, dbName, mainField, name)
+            this.setState({ display: 'collapsed' })
+        }else alert('Необходимо заполнить все поля')
+
     }
 
     render() {
-        // console.log(this.state.mainField)
-        let str = `Сгенерировать отчет
-(выбрано 10 позиций)`
         if(this.state.display==='collapsed')
             return <>
-                        <button className='DashCreator'  onClick={()=>{this.setState({ display: 'deployed' });}}>Добавить дашборд +</button>
+                        <button className={this.props.className}  onClick={()=>{this.setState({ display: 'deployed' });}}>{this.props.innerText}</button>
                     </>
         else {
+            console.log(this.state)
             console.log(this.props)
-            let index = this.props.indexes[this.props.indexName]
-            if(this.state.mainField===null) this.setState({ mainField: Object.keys(index.filter) })
-            let fields = Object.keys(index.filter).map((e,n) => {
-                //начальное значение - отдельная запара
-                if(e===this.state.mainField) return <option selected value={e}>{index.fields[e].translate}</option>
-                else if(e!=='translate') return <option value={e}>{index.fields[e].translate}</option>
-            })
+            let {indexName, indexes, mainField, moduleName, name} = this.state, fields, 
+                index, {isCommon, modules} = this.props,
+                modulesOptions = moduleName === "" ? [<option selected value={undefined}>{' '}</option>] : [],
+                indexesOptions = indexName === "" ? [<option selected value={undefined}>{' '}</option>] : []
+            if(isCommon) {
+                //заполнение модулей 
+                Object.keys(modules).forEach((e,n) => {
+                    modulesOptions.push(<option selected={e === moduleName} value={e}>{modules[e].title}</option>)
+                })
+                //заполнение индексов 
+                if(moduleName!=="") Object.keys(indexes).forEach((e,n) => {
+                    
+                    if(e === mainField) indexesOptions.push(<option selected value={e}>{indexes[e].title}</option>)
+                    else indexesOptions.push(<option value={e}>{indexes[e].title}</option>)
+                })
+            }
+            if(indexName !== ""){
+                index = indexes[indexName]
+                //выбираем по умолчанию самый первый элемент из возможных полей
+                if(mainField === null) this.setState({ mainField: Object.keys(index.filter)[0] })
+                    fields = Object.keys(index.filter).map((e,n) => {
+                    //начальное значение - отдельная запара
+                    if(e === mainField) return <option selected value={e}>{index.fields[e].translate}</option>
+                    else if(e!=='translate') return <option value={e}>{index.fields[e].translate}</option>
+                })
+            }
+
             return  <div className="modal-form-keeper"  >
                 <div className='modal-form__dashCreator'>
                     <header><h3>Добавление нового графика</h3><button onClick={()=>{this.setState({ display: 'collapsed' });}}><img src={require('../Components/close.svg')}></img></button></header>
-                        <form onSubmit={this.onSubmit} >
-                            {/* <h3>Тип дашборда:</h3>
-                            <select onChange={(event)=>{this.changeMainField(event.target.value)}}>
-                                <option selected value='Circle'>Круговая диаграмма</option>
-                            </select> */}
-                       
-                            {/* <h3>Название отчета:</h3>
-                                <input onChange={this.handleTitleChange} type="text" value={this.state.title} className='param-pdf-panel_title-input'/>
-                                 */}
-                            {/* <h3>Настройка фильтра</h3>
-                                <div className='param-pdf-panel_filters'>
-                                    <div>{this.makeFilter()}</div>
-                                </div> */}
-                            <h3>Построение круговой диаграммы по параметру:</h3>
-                                <select onChange={(event)=>{this.setState({ mainField: event.target.value })}}>
-                                {fields}
-                                </select>
+                        <form >
+                            <div>
+                                <h3>Название графика:</h3>
+                                <input onChange={(event)=>{this.setState({name: event.target.value})}} type="text" value={name} className='dashCreator__name'/>    
+                                {isCommon?
+                                <>
+                                    <h3>Выберите модуль:</h3>
+                                    <select onChange={(event)=>{this.setState({moduleName: event.target.value, indexes: modules[event.target.value].indexes, indexName:""})}}>
+                                        {modulesOptions}
+                                    </select>
+                                    <h3>Выберите таблицу в модуле:</h3>
+                                    <select onChange={(event)=>{this.setState({indexName: event.target.value})}}>
+                                        {indexesOptions}
+                                    </select>
+                                </>
+                                :null}
+                                {/* <h3>Тип дашборда:</h3>
+                                <select onChange={(event)=>{this.changeMainField(event.target.value)}}>
+                                    <option selected value='Circle'>Круговая диаграмма</option>
+                                </select> */}
+                        
+                                {/* <h3>Название отчета:</h3>
+                                    <input onChange={this.handleTitleChange} type="text" value={this.state.title} className='param-pdf-panel_title-input'/>
+                                    */}
+                                {/* <h3>Настройка фильтра</h3>
+                                    <div className='param-pdf-panel_filters'>
+                                        <div>{this.makeFilter()}</div>
+                                    </div> */}
+                                <h3>Построение круговой диаграммы по параметру:</h3>
+                                    <select onChange={(event)=>{this.setState({ mainField: event.target.value })}}>
+                                        {fields}
+                                    </select>
+                            </div>
                         <div>
-                            <button onClick={this.onSubmit}>Добавить дашборд</button>
-                            <button onClick={()=>{this.setState({ display: 'collapsed' });}}>Отменить</button>
+                            {/* <input type="submit" value="Добавить дашборд"/> */}
+                            <button onClick={(e)=>{e.preventDefault(); this.onSubmit()}}>Добавить дашборд</button>
+                            <button onClick={(e)=>{e.preventDefault(); this.setState({ display: 'collapsed' });}}>Отменить</button>
                         </div>
                     </form>  
                 </div>         

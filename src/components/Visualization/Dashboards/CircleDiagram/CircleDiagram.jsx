@@ -5,8 +5,8 @@ import Saver from '../Components/Saver/Saver'
 import Deleter from '../Components/Deleter/Deleter'
 import Resizer from '../Components/Resizer/Resizer.jsx'
 import ChangedInput from '../Components/ChangedInput/ChangedInputCont.jsx'
-// import Pdf from '../Components/Pdf/Pdf'
-import { Chart, Pies, Transform , Layer, Dots,Labels, Handlers} from 'rumble-charts';
+import MotionArrow from '../Components/MotionArrow/MotionArrow'
+import { Chart, Pies, Transform , Handlers} from 'rumble-charts';
 import './CircleDiagram.scss';
 //тип соб приоритет опц поле 1 опц поле 3
 class CircleDiagram extends React.Component {
@@ -15,7 +15,9 @@ class CircleDiagram extends React.Component {
         //в состоянии хранится значение нашего фильтра по "главному" полю
         //остальные отправляются в фильтр
         if(this.props.uploads.uploads){
-          this.intervalId = setInterval(()=>{this.props.getAcs(this.props.id,this.props.indexName,this.props.dbName)},
+          let {dbName, infoDbName} = this.props
+          let sendedDbName =(dbName!=='sava_core'?dbName:{name:infoDbName})
+          this.intervalId = setInterval(()=>{this.props.getAcs(this.props.id,this.props.indexName,sendedDbName)},
           this.props.uploads.timeKind*this.props.uploads.timeNum);
         }
         this.onClickOnSector = this.onClickOnSector.bind(this)
@@ -24,7 +26,9 @@ class CircleDiagram extends React.Component {
     }
 
     componentDidMount() {
-      this.props.getAcs(this.props.id,this.props.indexName,this.props.dbName)
+      let {dbName, infoDbName, id, indexName} = this.props
+      let sendedDbName =(dbName!=='sava_core'?dbName:{name:infoDbName})
+      this.props.getAcs(id,indexName,sendedDbName)
     }
     componentWillUnmount(){
       if(this.intervalId!==undefined) clearInterval(this.intervalId);
@@ -42,24 +46,30 @@ class CircleDiagram extends React.Component {
     }
     // Изменяется интервал
     componentWillReceiveProps(nextProps){
+      //улучшение для общей страницы дошиков
+      let {dbName,infoDbName} = this.props
+      let sendedDbName =(dbName!=='sava_core'?dbName:{name:infoDbName})
+      
       //если существует таймер и отключены обновл
       if(this.intervalId!==undefined&&nextProps.uploads.uploads===false){
         clearInterval(this.intervalId);
       }
       //включены обновления а были выключены
       else if(nextProps.uploads.uploads&&nextProps.uploads.uploads!==this.props.uploads.uploads){
-        this.intervalId = setInterval(()=>{this.props.getAcs(this.props.id,this.props.indexName,this.props.dbName)}, this.props.uploads.timeKind*this.props.uploads.timeNum);
+        this.intervalId = setInterval(()=>{this.props.getAcs(this.props.id, this.props.indexName, sendedDbName)}, this.props.uploads.timeKind*this.props.uploads.timeNum);
       }else if(nextProps.uploads.uploads&&!this.isObjEqual(nextProps.uploads,this.props.uploads)){
         clearInterval(this.intervalId);
-        this.intervalId = setInterval(()=>{this.props.getAcs(this.props.id,this.props.indexName,this.props.dbName)}, nextProps.uploads.timeKind*nextProps.uploads.timeNum);
+        this.intervalId = setInterval(()=>{this.props.getAcs(this.props.id, this.props.indexName, sendedDbName)}, nextProps.uploads.timeKind*nextProps.uploads.timeNum);
       }
   }
 
    onSetFilterSettings(filter){
-     const {id,indexName,dbName,field} = this.props
+     const {id,indexName,dbName,field,infoDbName} = this.props
+     //улучшение для общей страницы дошиков
+     let sendedDbName =(dbName!=='sava_core'?dbName:{name:infoDbName})
      let obj = {...filter.secondField}
      obj[this.props.field]=filter.mainField[field]
-    this.props.setParamFilterThunk(obj,dbName,indexName,id)
+    this.props.setParamFilterThunk(obj,sendedDbName,indexName,id)
     
    }
    handleMouseMove(...args){
@@ -82,22 +92,19 @@ class CircleDiagram extends React.Component {
     getAtClickOnCircleDiagram(id,indexName,dbName,numb)
    }
     render() {  
-    let {style, filter, field, paramFilter, logs,id,indexName,dbName,modules,uploads,title,
-      handleMouseMove, changeDashSize} = this.props
-    let mainFieldList
-    // console.log(filter)
-    // console.log(paramFilter)
-    // console.log(field)
-    if(paramFilter[field]===undefined)
-    mainFieldList = 'выбраны все поля'
-     else {
-      mainFieldList = ' '+paramFilter[field].join(', ')
-      if(mainFieldList.length>50) mainFieldList=' '+mainFieldList.slice(0,37)+'... '
-     } 
-     let allLogsEmpty=true
-    let secondField = {...filter}
-    let allInMainField = secondField[field]
-    delete secondField[field]
+        let {style, filter, field, paramFilter, logs, id, indexName, dbName, modules, uploads, title,
+          handleMouseMove, changeDashSize, serNum, isLast, infoDbName} = this.props,
+          mainFieldList
+        if(paramFilter[field]===undefined)
+        mainFieldList = 'выбраны все поля'
+          else {
+          mainFieldList = ' '+paramFilter[field].join(', ')
+          if(mainFieldList.length>50) mainFieldList=' '+mainFieldList.slice(0,37)+'... '
+          } 
+          let allLogsEmpty=true
+        let secondField = {...filter}
+        let allInMainField = secondField[field]
+        delete secondField[field]
     // console.log(logs)
         const series = [{
             data: logs.count//bigData//
@@ -131,7 +138,7 @@ class CircleDiagram extends React.Component {
       },
       width = style.width,
       headerStyle = (width<420)?'':' Common__header_big', 
-      lastViewed = modules[dbName].indexes[indexName].lastViewed
+      lastViewed = modules[(dbName!=='sava_core'?dbName:this.props.infoDbName)].indexes[indexName].lastViewed
       let info = allLogsEmpty?<div className={width>550?"Modules-table__empty":"Modules-table__empty Modules-table__empty-minified"} ><img src={require("../Components/Table/Anonymous-Package.svg")} atl="события не найдены"></img></div>:                  
       <div>
         <Chart width={180} height={180} series={series}>
@@ -150,26 +157,35 @@ class CircleDiagram extends React.Component {
         </ul>
      </div>
        return <div  style={{ width}}  className="dashboard-wrapper dashboard-wrapper_pie" >
-                    <header className={"Common__header Common__header_grey Common__header_with-filter"+headerStyle}>   
-                        <ChangedInput title={title} iniName={title} clazz={'dashboard-wrapper__title'} id={id} dbName={dbName}/>                
-                        <div  className='dashboard-wrapper__settings-cont'>
-                          <FilterPanel single={false} fields={this.props.fields} configObj={configObj} iniState={this.props.paramFilter} submitCallBack={this.onSetFilterSettings.bind(this)} id={id}/>
-                          <Saver  id={id} dbName = {dbName} display={this.props.saver}/>
-                          <Deleter id={id} dbName = {dbName}  indexName={indexName}  />
-                        </div>
-                        <div className='dashboard-wrapper__timeFilter'>
-                          <TimeFilterPanel lastViewed={lastViewed} id={id}  uploads={uploads} indexName={indexName} dbName={dbName} timeFilter={{from:this.props.timeFilter.from, to:this.props.timeFilter.to}}></TimeFilterPanel>
-                        </div>
-                    </header>  
-                    {info}
-                    <div className="logs-table-wrapper__pie-settings">
-                      <span>Параметр: </span>
-                        <select onChange={(event)=>{this.props.changeMainFieldThunk(event.target.value,dbName,indexName,id)}} >
-                          {fields}
-                        </select>
-                        <span>Выбранные значения параметра: {mainFieldList}</span>
+                <header className={"Common__header Common__header_grey Common__header_with-filter"+headerStyle}>   
+                    <ChangedInput title={title} id={id} dbName={dbName} lastViewed={lastViewed}
+                      timeFilter={{from:this.props.timeFilter.from, to:this.props.timeFilter.to}} uploads={uploads}
+                      type={'Circle_Diagram'}
+                    />            
+                    <div  className='dashboard-wrapper__settings-cont'>
+                      <FilterPanel imgSrc={require('../Components/FilterPanel/filter_white.svg')} single={false} fields={this.props.fields} configObj={configObj} iniState={this.props.paramFilter} submitCallBack={this.onSetFilterSettings.bind(this)} id={id}/>
+                      <TimeFilterPanel lastViewed={lastViewed} id={id}  uploads={uploads} indexName={indexName} dbName={dbName==='sava_core'?{name: infoDbName}:dbName} timeFilter={{from:this.props.timeFilter.from, to:this.props.timeFilter.to}}></TimeFilterPanel>
+                      <Saver  id={id} dbName = {dbName==='sava_core'?{name: infoDbName}:dbName} display={this.props.saver}/>
+                      <Deleter id={id} dbName = {dbName}  indexName={indexName}  />
                     </div>
-                    <Resizer changeSize={changeDashSize} id={id} indexName={indexName} dbName={dbName} type={['width']} minVal={['minWidth']} isAbsolutePos={true}/>
+                    {/* <div className='dashboard-wrapper__timeFilter'>
+                      <TimeFilterPanel lastViewed={lastViewed} id={id}  uploads={uploads} indexName={indexName} dbName={dbName} timeFilter={{from:this.props.timeFilter.from, to:this.props.timeFilter.to}}></TimeFilterPanel>
+                    </div> */}
+                </header>  
+                {info}
+                <div className="logs-table-wrapper__pie-settings">
+                  <span>Параметр: </span>
+                    <select onChange={(event)=>{this.props.changeMainFieldThunk(event.target.value,
+                      dbName==='sava_core'?{name: infoDbName}:dbName,indexName,id)}} >
+                      {fields}
+                    </select>
+                    <span>Выбранные значения параметра: {mainFieldList}</span>
+                </div>
+                <Resizer changeSize={changeDashSize} id={id} indexName={indexName} dbName={dbName} type={['width']} minVal={['minWidth']} isAbsolutePos={true}/>
+                {/* <MotionArrow id={id} dbName = {dbName}  indexName={indexName} direct={'top'}/> */}
+                {serNum===0?null:<MotionArrow id={id} dbName = {dbName}  indexName={indexName} direct={'left'}/>}
+                {isLast?null:<MotionArrow id={id} dbName = {dbName}  indexName={indexName} direct={'right'}/>}
+                {/* <MotionArrow id={id} dbName = {dbName}  indexName={indexName} direct={'bottom'}/> */}
             </div>
     }
     

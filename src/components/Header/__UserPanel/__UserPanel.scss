@@ -1,4 +1,7 @@
 @import '../../colors.scss';
+.Header__UserPanel.comment:hover::after{
+    top: 120%;
+}
 .Header__UserPanel{
 
 border-left: 2px solid $white-color;

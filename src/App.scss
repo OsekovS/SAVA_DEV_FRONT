@@ -1,5 +1,14 @@
 @import './scss/scss_core.scss';
+@import './components/colors.scss';
+.multi-select .dropdown .dropdown-heading {
+  .dropdown-heading-value {
 
+  padding-right: 25px !important;
+  }
+  .dropdown-heading-dropdown-arrow span{
+    border-color: $red-label-color transparent transparent !important;
+  }
+}
 .app-wrapper{
   max-width: 1900px;
   margin: 0 auto;

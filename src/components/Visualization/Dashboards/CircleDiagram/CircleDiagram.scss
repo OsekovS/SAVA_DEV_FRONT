@@ -1,25 +1,40 @@
-// position: absolute;
-// right: 2px;
-// top: 2px;
+.dashboard-wrapper_pie.dashboard-wrapper .Common__header {
 
-// width: 100%;
-// position: relative;
+    .param-filter-panel__collapsed{
+        // right: -5px;
+        width: 20px;
+        top: -1px;
+        position: relative;
+        height: 20px;
+    }
+    .param-filter-panel__collapsed.comment:hover::after{
+        top: -1px;
+    }
+}
 .dashboard-wrapper_pie{
     box-shadow: 0 3px 6px rgba(0,0,0,.15), 0 1px 6px rgba(0,0,0,0.10);
     border-radius: 8px;
     padding: 0 0 10px 0;
     position: relative;
+    height: 306px;
+    .ChangedInput.marquee {
+        width: 100%;
+    }
     .dashboard-wrapper__settings-cont{
-        &>span{
-            &>img{
-                top: 2px;
-            }
-        }
+        width: 110px;
+        padding: 0px 10px;
+        //этот блок служит для того, чтобы скрывать бегущую строку
+        background-color: inherit;
+        // &>span{
+        //     &>img{
+        //         top: 2px;
+        //     }
+        // }
     }
     .dashboard-wrapper__title{
-        margin-bottom: 5px;
+        margin-right: 5px;
         position: relative;
-        top: 4px;
+        top: 5px;
     }
 
     header{
@@ -77,13 +92,39 @@
     .Modules-table__empty-minified{
         margin: 0 10px 40px 0;
     }
-    // .ChangedInput {
-    //     margin-right: 35px;
-    //     // img {
-    //     //     right: -30px;
-    //     //     top: -2px;
-    //     // }
-    // }
+    
+    .Arrow__top{
+        top: -25px;
+    }
+    .Arrow__top::before{
+        top: 0px;
+        right: -50%;
+    }
+    .Arrow__left {
+        top: 0;
+        left: -25px;
+    }
+    .Arrow__left::before{
+        top: 50%;
+        right: -2px;
+    }
+    .Arrow__right {
+        top: 0;
+        right: -25px;
+    }
+    .Arrow__right::before{
+        top: 50%;
+        right: -8px;
+    }
+    .Arrow__bottom {
+        bottom: -25px;
+    }
+    .Arrow__bottom::before{
+        top: 5px;
+        right: -50%;
+    }
+
+
 }
 .logs-table-wrapper__pie-settings{
     padding-left: 20px;

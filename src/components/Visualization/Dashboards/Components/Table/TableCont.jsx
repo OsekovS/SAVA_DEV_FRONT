@@ -1,5 +1,5 @@
 import {connect} from "react-redux";
-import {deleteHeaderElem, changeDashSize,changeHeaderElemSize}  from "../../../../redux/dashboards-reducer";
+import {changeDashSize,changeHeaderElemSize,changeHeaderElemPos}  from "../../../../redux/dashboards-reducer";
 import Table from './Table.jsx'      
 
 let mapStateToProps = (state) => {
@@ -11,9 +11,9 @@ let mapStateToProps = (state) => {
 
 
 let mapDispatchToProps = {
-    deleteHeaderElem,
     changeDashSize,
-    changeHeaderElemSize
+    changeHeaderElemSize,
+    changeHeaderElemPos
 }
 
 const TableCont = (connect(mapStateToProps,mapDispatchToProps)(Table));

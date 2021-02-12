@@ -1,3 +1,6 @@
+
+
+
 .lds-ring {
   display: inline-block;
   position: relative;
@@ -37,16 +40,17 @@
   // cursor: pointer;
   // position: absolute;
 }
-.saver__wait{
-  width: 20px;
-  right: 40px;
+.saver {
+  position: relative;
+  cursor: pointer;
+  img{
+    width: 20px;
+    right: 40px;
+  }
   // top: 7px;
 }
-.pdf__wait{
-  // top: 5px;
-  // right: 8px;
-  width: 24px;
-}
+
+
 .markAsRead__wait{
   // right: 110px;
   &>img{

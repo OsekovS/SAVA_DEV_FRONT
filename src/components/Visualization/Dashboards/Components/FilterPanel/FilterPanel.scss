@@ -19,13 +19,22 @@
                 img{margin-right: 7px;}
                 
             }
-            &>button{
+            &>div img{
                 background-color: $red-color;
                 border: none;
-                img{
-                    background-color: $red-color;
+                width: 20px;
+                cursor: pointer;
+                // img{
+                //     background-color: $red-color;
+                // }
+                &:first-child{
+                    margin-right: 15px;
+                }
+                &.comment:hover:after {
+                    left: 100%;
                 }
             }
+
         }
         //это календарик
         &>div{
@@ -33,7 +42,7 @@
         }
     }
 }
-.param-filter-panel{
+.param-filter-panel, .modal-form-keeper.param-panel.param-filter-panel{
     &>div {
         height: fit-content;
         form {
@@ -42,10 +51,10 @@
         }
     }
     // }
-    form{
-        padding: 10px 20px;
+    div.modal-form_light-grey{
+        padding: 10px 20px 20px 20px;
         box-sizing: border-box;
-        // background: white;
+        // background: blue;
         width: 100%;
         top: 34px;
         left: 0px;
@@ -54,8 +63,9 @@
         justify-content: space-around;
         input[type=submit],button{
             border-radius: 3px;
-            
-            height: 27px;
+            width: 85px;
+            // height: 27px;
+            line-height: inherit;
             font-size: 12px;
             padding: 5px 10px;
             cursor: pointer;
@@ -63,12 +73,13 @@
             border-radius: 3px;
             border: none;
         }
-        input[type=submit]{
-            background-color: rgb(236, 28, 36);
-        }
         button{
             background-color: rgb(117, 102, 102);
         }
+        button:nth-of-type(1){
+            background-color: rgb(236, 28, 36);
+        }
+
     }
     .wrapper{
         display: flex;
@@ -80,6 +91,7 @@
         // height: 260px;
         width: 100%;
         padding: 10px 0px 0 10px;
+        margin-bottom: 20px;
         h2 {
             margin-bottom: 10px;
         }
@@ -109,4 +121,12 @@
         }
     }
     // background-color: #aaaaaa;;
+}
+.param-filter-panel__collapsed{
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+}
+.param-filter-panel__collapsed.comment:hover::after{
+    top: 90%;
 }

@@ -49,12 +49,66 @@
     }
 }
 .logs-table__arrow{
-    z-index: -1;
+    // z-index: -1;
     position: relative;
     top: 2px;
     width: 10px;
 }
-
+.logs-table__elemOnRedact{
+    img{
+        display: none;
+    }
+}
+.logs-table__elemOnRedact:hover{
+    // text-align: center;
+    padding-left: 30px;
+    box-sizing: border-box;
+    color: white;
+    .logs-table__arrow-right,.logs-table__arrow-left{
+        position: absolute;
+        width: 25px;
+        height: 25px;
+        top: 5px;
+    }
+    .logs-table__arrow-right::before,.logs-table__arrow-left::before{
+        content: "";
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        border: 2px solid #fff;
+        border-left: none;
+        border-bottom: none;
+        top: 6px;
+        position: absolute;
+    }
+    .logs-table__arrow-right{
+        right: 4px;
+    }
+    .logs-table__arrow-left{
+        left: 4px;
+    }
+    .logs-table__arrow-right::before{
+        transform: rotate(45deg);
+        right: 6px;
+    }
+    .logs-table__arrow-left::before{
+        transform: rotate(-135deg);
+        left: 6px;
+    }
+    // img{
+    //     display: inline;
+    // }
+    // img.logs-table__arrow-right{
+    //     transform: rotate(-180deg);
+    //     width: 14px;
+    //     position: absolute;
+    //     right: 5px;
+    // }
+    // img.logs-table__arrow-left{
+    //     position: absolute;
+    //     left: 5px;
+    // }
+}
 .logs-table__arrow_up{
     transform: rotate(-90deg);
 }

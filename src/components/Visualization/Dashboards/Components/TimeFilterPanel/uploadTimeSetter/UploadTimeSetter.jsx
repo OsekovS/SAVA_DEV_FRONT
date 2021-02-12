@@ -7,14 +7,6 @@ class UploadTimeSetter extends Component {
     super(props);
     let uploadsLetter, nowMoment = moment(Date.now()), fromMoment = moment(new Date(props.lastViewed)),fromLetterEnd,
     {fromNum, fromLetter} = props.lastViewed
-    console.log(typeof(fromNum))
-    // if(nowMoment.diff(fromMoment, 'months')>1) fromLetter = 'months'
-    // else if(nowMoment.diff(fromMoment, 'days')>1) fromLetter = 'days'
-    // else if(nowMoment.diff(fromMoment, 'hours')>1) fromLetter = 'hours'
-    // else if(nowMoment.diff(fromMoment, 'minutes')>1) fromLetter = 'minutes'
-    // else if(nowMoment.diff(fromMoment, 'seconds')>1) fromLetter = 'seconds'
-    // else fromLetter = null
-    // fromNum = nowMoment.diff(fromMoment, fromLetter)
     uploadsLetter = props.defineLetter(props.timeNum/1000)
     fromLetterEnd = props.defineLetter(fromNum)
     this.state = {
@@ -42,11 +34,12 @@ class UploadTimeSetter extends Component {
   ]
   onInputChange(event,number,letter,minValue){
     let value
-    value=event.target.value
-    console.log(typeof(value))
-    if(value>minValue){
+    value= Number.parseInt(event.target.value)//===""?1:event.target.value
+    console.log(value)
+
+    if(isNaN(value) || value > minValue){
       if(number==="timeNum") this.setState({[letter]: this.props.defineLetter((value)), [number]: value*1000});
-      else this.setState({[letter]: this.props.defineLetter((value)), [number]: value});
+      else this.setState({[letter]: this.props.defineLetter((value)), [number]: (value)});
     }
     console.log(this.props.defineLetter((value)))
   }
@@ -60,7 +53,8 @@ class UploadTimeSetter extends Component {
     event.preventDefault()
     const {id,indexName,dbName} = this.props
     this.props.changeUploadsThunk(this.state,id,indexName,dbName)
-    this.props.setLastViewThunk({fromNum:this.state.fromNum,fromLetter:this.state.fromLetter},indexName,dbName)
+    this.props.setLastViewThunk({fromNum:this.state.fromNum,fromLetter:this.state.fromLetter},indexName,
+      (typeof dbName==='object'?dbName.name:dbName))
     this.props.onApply()
   }
 
@@ -79,8 +73,10 @@ class UploadTimeSetter extends Component {
       return (
         <div className={'upload-time-setter upload-time-setter'+this.props.id}>
           <form  className="upload-time-setter__settings" onSubmit={this.onSubmit} >
-              <label>Интервал обновления: <br/> 
-                <input type="number" value={this.state.timeNum/1000} onChange={(e)=>{this.onInputChange(e,'timeNum','uploadsLetter',5)}} />
+            <div>
+              <label className='comment' data-title="желательное значение - более 5 секунд">Интервал обновления: <br/> 
+                <input   type="number" value={this.state.timeNum/1000}  
+                  onChange={(e)=>{this.onInputChange(e,'timeNum','uploadsLetter',0)}} />
                 <select onChange={this.onSelectChange.bind(this,"timeKind")}>
                   {timeTypes}
                 </select>
@@ -91,6 +87,7 @@ class UploadTimeSetter extends Component {
                   {fromTimeTypes}
                 </select>
               </label>
+            </div>
               <input type="submit" value="Применить"/>
           </form>
         </div>

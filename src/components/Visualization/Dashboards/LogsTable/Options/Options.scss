@@ -2,12 +2,13 @@
 .Options {
     width: 100%;
     height: 90px;
-    padding: 5px 0 5px 15px;
+    padding: 10px 15px 5px 15px;
+    box-sizing: border-box;
     display: flex;
-    flex-direction: column;
-    justify-content: space-around;
+    justify-content: space-between;
     img {
         width: 20px;
+        cursor: pointer;
     }
    
     &>div {
@@ -15,6 +16,9 @@
         width: fit-content;
         span {
             margin-right: 7px;
+        }
+        h3 {
+            margin-bottom: 8px;
         }
     }
     .plus{
@@ -30,5 +34,11 @@
         line-height: 16px;
         text-align: center;
         outline: none;
+    }
+    .multi-select{
+        width: 350px;
+        .dropdown .dropdown-heading .dropdown-heading-value {
+            font-size: 0.9rem;
+          }
     }
 }

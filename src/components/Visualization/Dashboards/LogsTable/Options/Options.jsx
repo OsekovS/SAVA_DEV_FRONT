@@ -1,70 +1,76 @@
 import React from 'react';
 import './Options.scss'
+import Dropdown from '../../Components/FilterPanel/dropdown/dropdown.jsx'
 class Resizer extends React.Component {
     constructor(props) {
         super(props);
+            // 0: {value: "0", label: "1 этаж"}
+            // 1: {value: "1", label: "2"}
+            let indexElements = [],
+            footerElements = null ,headerElements = null
+          
+            if(props.headerElements.length !== 0) {
+              headerElements = props.headerElements.map((indexElement) => {
+                return indexElement.field
+              })
+            }
+            if(props.footerElements.length !== 0) {
+              footerElements = props.footerElements.map((indexElement) => {
+                return indexElement.field
+              })
+            }
+            indexElements = props.indexElements.map((indexElement) => {
+              return {
+                value: indexElement.field, 
+                label: indexElement.text + ' (' + indexElement.field +')'
+              }
+            })
+            
+ 
         this.state = {
             addedFooterElem: 0,
-            addedHeaderElem: 0
+            addedHeaderElem: 0,
+            indexElements, footerElements, headerElements
         }
-
+        this.onChangeFilterCallBack = this.onChangeFilterCallBack.bind(this);
     }
 
-
+    onChangeFilterCallBack(content, field,id,dbName){
+      this.setState({ [field]: content })
+      this.props.changeViewedFields(content, field,id,dbName)
+    }
     render() {  
+      //  
         let tableOptions=[<option  value={''}>{''}</option>],footerOptions = [<option  value={''}>{''}</option>],
-            {changeHeaderElemSize, onSettings, headerElements,  indexElements,footerElements, 
-                changedElemNumb, id, dbName, addHeaderElem, addFooterElem} = this.props,
-                field, colWidth,text
-                console.log(this.props)
+            {changeHeaderElemSize, onSettings, 
+                changedElemNumb, id, dbName} = this.props,
+                field, colWidth,text, 
+                headerElementsFromProps = this.props.headerElements
+                console.log(this.state)
                 if(changedElemNumb !== null && changedElemNumb>0) {
-                  field = headerElements[changedElemNumb].field
-                  colWidth = headerElements[changedElemNumb].colWidth
-                  text = headerElements[changedElemNumb].text
+                  field = headerElementsFromProps[changedElemNumb].field
+                  colWidth = headerElementsFromProps[changedElemNumb].colWidth
+                  text = headerElementsFromProps[changedElemNumb].text
                 }
-            if(onSettings&&Array.isArray(indexElements)) indexElements.forEach((indexElement) => {
-                let isAbsentInTable = true
-                let isAbsentInFooter = true 
-                
-                for ( let index = 0; index < headerElements.length; index++) {
-                  // console.log(headerElements[index].field)
-                  if(headerElements[index].field === indexElement.field) {
-                    isAbsentInTable = false
-                    break;
-                  }
-                }
-                for ( let index = 0; index < footerElements.length; index++) {
-                  if(footerElements[index].field === indexElement.field) {
-                    isAbsentInFooter = false
-                    break;
-                  }
-                }
-                if(isAbsentInTable) tableOptions.push(<option selected={indexElement.field===this.state.addedHeaderElem} value={indexElement.field}>{indexElement.text+' ('+indexElement.field+')'}</option>)
-                if(isAbsentInFooter) footerOptions.push(<option selected={indexElement.field===this.state.addedFooterElem} value={indexElement.field}>{indexElement.text+' ('+indexElement.field+')'}</option>)
-              })
+                let {indexElements, footerElements, headerElements} = this.state
+               
+            //новый способ способ задания элементов входящих в скрытое описание и непосредственно в таблицу
             if(onSettings) return <div className='Options'>
                 <div>
-                    <span>{'Ширина столбца "'+(text===undefined||field===undefined?'(выберите один из заголовков столбца)':(text+'('+field+')'+'": ')) }</span>
+                    <h3>{'Ширина столбца "'+(text===undefined||field===undefined?'(выберите один из заголовков столбца)':(text+'('+field+')'+'": ')) }</h3>
                     <input value={colWidth} onChange={(e)=>{changeHeaderElemSize(changedElemNumb,e.target.value,id,dbName)}}  className="collapser" type="number"></input>               
                 </div>
+
                 <div>
-                    <span >Добавить в таблицу</span>
-                    <select onChange={(event)=>{this.setState({ addedHeaderElem: event.target.value })}}>
-                        {tableOptions}
-                    </select>
-                    <button onClick={()=>{addHeaderElem(this.state.addedHeaderElem,id,dbName)}} className='plus'>+</button>
-                    {/* <img src={require("./markAsReadIcon.svg")}
-                        onClick={()=>{this.setState({onSettings: !this.state.onSettings})}}></img> */}
-                </div>  
+                    <h3>Поля таблицы:</h3>
+                    <Dropdown selected={headerElements===null?[]:headerElements} iniState={headerElements} name='headerElements' options={indexElements} 
+                        preview='выбрано все' onChangeCallBack={(content, field)=>{this.onChangeFilterCallBack(content, field,id,dbName)}}/>            
+                </div>
                 <div>
-                    <span >Добавить в описание</span>
-                    <select onChange={(event)=>{this.setState({ addedFooterElem: event.target.value })}}>
-                        {footerOptions}
-                    </select>
-                    <button onClick={()=>{addFooterElem(this.state.addedFooterElem,id,dbName)}} className='plus'>+</button>
-                    {/* <img src={require("./markAsReadIcon.svg")}
-                        onClick={()=>{this.setState({onSettings: !this.state.onSettings})}}></img> */}
-                </div>  
+                    <h3>Поля описания:</h3>
+                    <Dropdown selected={footerElements===null?[]:footerElements} iniState={footerElements} name='footerElements' options={indexElements} 
+                        preview='выбрано все' onChangeCallBack={(content, field)=>{this.onChangeFilterCallBack(content, field,id,dbName)}}/>         
+                </div>     
             </div>
           else return null 
     }

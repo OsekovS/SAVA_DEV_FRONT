@@ -8,12 +8,16 @@
     color: $white-color;
     position: relative;
     .Header__infoPanel{
-        margin-left: auto;//!!!!!!!!!!!!!!!!!!!!!
+        margin-left: 15px;//!!!!!!!!!!!!!!!!!!!!!
         display: flex;
         width: 205px;
         .Header__AverEvents{
             margin: 3px 56px 0 0;
         }
+    }
+    .DiskInfo__img{
+        position: relative;
+        top: 2px;
     }
 }
 .Header::after{

@@ -13,6 +13,7 @@
   cursor: pointer;
   button {
     color: $white-color;
+    margin-top: 10px;
     position: relative;
     display: block;
     margin-left: auto;
@@ -26,11 +27,12 @@
   }
 }
 .dashboard-wrapper .Common__header .dashboard-wrapper__settings-cont .MarkAsRead {
+  width: 210px;
   &>img{
     width: 15px;
     position: absolute;
     right: 3px;
-    top: 10px;
+    top: 3px;
   }
   &>div{
     position: absolute;
@@ -51,9 +53,9 @@
       p{white-space: nowrap;margin-right: 10px;}
     }
   }
-  &>div{
-    overflow-y: scroll;
-  }
+  // &>div{
+  //   overflow-y: scroll;
+  // }
 }
 
 

@@ -1,0 +1,75 @@
+@import '../../colors.scss';
+@import '../../../scss/button.scss';
+.DiskInfo__img{
+    cursor: pointer;;
+}
+.DiskInfo{
+    color: black;
+    &>div{
+        margin: 0 auto;
+        background: white;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        width: fit-content;
+        margin: 0 auto;
+        padding: 5px 5px 12px 5px;
+        box-sizing: border-box;
+        &>p {
+            margin-left: 5px;
+        }
+    }
+    header, &>div{
+        width: 1000px;
+    }
+    button{
+        @include button($red-color,120px,30px);
+        display: block;
+        margin: 10px 10px 0 auto;
+    }
+
+
+}
+.clear-form{
+    &>div{
+        width: 750px;
+        margin: 0 auto;
+        &>form {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background: white;
+            color: black;
+            padding: 10px 20px;
+            height: 180px;
+        }
+    }
+    #DateRangePickerChildren img{
+        width: 20px;
+    }
+    .calendar {
+        background-color: white;
+
+        .cancelButton {
+            display: none;
+        }
+    }
+    .modal-form_light-grey{
+     
+
+        input[type="submit"], button{
+            @include button($red-color,120px,30px);
+        }
+        &> div:last-child{
+            // display: flex;
+            // justify-content: space-evenly;
+            margin: 0 auto;
+            input {
+                margin-right: 140px
+            }
+        }
+    }
+    .passw input{
+        margin-left: 15px;
+    }
+
+}
+// border-left: 2px solid $white-color;

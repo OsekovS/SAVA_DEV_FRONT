@@ -7,7 +7,9 @@ let mapStateToProps = (state) => {
         events: state.notific.events,
         addresses: state.notific.addresses,
         modules: state.auth.briefUserInfo.modules,
-        modulesTranslate: state.auth.modulesTranslate
+        modulesTranslate: state.auth.modulesTranslate,
+        isAdmin: state.auth.briefUserInfo.admin
+        
     }
 }
 let mapDispatchToProps = {

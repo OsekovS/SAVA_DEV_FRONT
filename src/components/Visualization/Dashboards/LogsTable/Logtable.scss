@@ -1,4 +1,12 @@
 @import '../../../colors.scss';
+
+.dashboard-wrapper_table{
+    .dashboard-wrapper__settings-cont{
+        width: 400px;
+        padding: 0 15px;
+        position: relative;    
+    }
+}
 .Modules_table {
     tr.Modules_table__current {
         // background-color: red($color: #e93131b2);
@@ -32,75 +40,115 @@
 }
 .dashboard-wrapper_table {
     width: 100%;
+    margin-left: 30px;
+    margin-right: 30px;
     // background-color: darkgoldenrod;
     height: fit-content;
-    // & >.Resizer{
-    //     margin: 0 0 15px 0;
-    // }
+    .ChangedInput.marquee {
+        width: 100%;
+    }
     .dashboard-wrapper__settings-cont {
         .collapser {
-            margin-right: 8px;
+            width: 20px;
             cursor: pointer;
             position: relative;
         }
-        .collapser::after {
+        .collapser::before {
             position: absolute;
             width: 100%;
             height: 4px;
             bottom: 4px;
-            background-color: white;
+            background-color: $white-color;
             content: '';
         }
-        &>span{
-            &>img{
-                top: 6px;
-            }
-        }
     }
-    // .ChangedInput {
-    //     margin-right: 35px;
-    //     img {
-    //         right: -30px;
-    //         top: -2px;
-    //     }
-    // }
+    
+    .Arrow__top{
+        top: -25px;
+    }
+    .Arrow__top::before{
+        top: 0px;
+        right: -50%;
+    }
+    .Arrow__left {
+        top: 0;
+        left: -25px;
+    }
+    .Arrow__left::before{
+        top: 50%;
+        right: -2px;
+    }
+    .Arrow__right {
+        top: 0;
+        right: -26px;
+    }
+    .Arrow__right::before{
+        top: 50%;
+        right: -8px;
+    }
+    .Arrow__bottom {
+        bottom: -25px;
+    }
+    .Arrow__bottom::before{
+        top: 5px;
+        right: -50%;
+    }
 }
 .dashboard-wrapper{
 //    background-color: blue;
     .Common__header{
         display: flex;
-        justify-content: space-between;
+
         flex-wrap: wrap;
         .settings-icon {
-            height: 25px;
-            position: relative;
-            top: 3px;
+            img{
+                height: 25px;
+            }
+            // position: relative;
+            // top: 3px;
+            // right: 5px;
         }
+        .saver{
+            // top: 6px;
+            // right: 6px;
+        }
+        .pdf__wait{
+            margin-right: 4px;
+            // top: 3px;
+            width: 24px;
+          }
         &>div{
             
             &>span{
                 height: 20px;
             }
-            &>img{
-                margin-right: 10px;
-            }
-            &>span{
-                margin-right: 15px;
-            }
+            // &>img{
+            //     margin-right: 10px;
+            // }
+            // &>span{
+            //     margin-right: 15px;
+            // }
         }
         .dashboard-wrapper__settings-cont{
             display: flex;
+            justify-content: space-between;
+            // width: 380px;
+            align-items: center;
+            margin-left: auto;
             &>span{
                 position: relative;
-            padding-right: 20px;
-            height: 100%;
-            line-height: 200%;
+            // padding-right: 20px;
+            // height: 100%;
+            // line-height: 200%;
             &>img{
                 position: absolute;
             }
            
             }
-        
+            .collapser.comment:hover::after{
+                left: -180%;
+                top: 100%;
+            }
         }
     }
     .pages-bar, .showed-logs{

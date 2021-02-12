@@ -37,7 +37,7 @@ import FilterPanel from '../FilterPanel/FilterPanel'
         })
     }
     onNameChange = (newname) => {
-        console.log(newname)
+        if(newname.length <= 40)
         this.setState(state => {
             state.name = newname
             return state
@@ -101,8 +101,8 @@ import FilterPanel from '../FilterPanel/FilterPanel'
                             </label>
                             <div>{'Настройте фильтр'+isFilterEmptyString+':'}{filterCompoent}</div>
                             <div>
-                                <button onClick={()=>{console.log(this.state);this.props.onSubmit(this.state)}}> Добавить</button>
-                                <button onClick={()=>{this.props.onClose()}}> Отменить</button>
+                                <button onClick={()=>{this.props.onSubmit(this.state)}}> Добавить</button>
+                                <button onClick={(e)=>{e.preventDefault();this.props.onClose()}}> Отменить</button>
                             </div>
                             </div>
                     </div>

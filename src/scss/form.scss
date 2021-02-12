@@ -13,13 +13,18 @@
 
 
 // 22px
-.modal-form-keeper,.login,.modal-form-keeper div{
-    &>header{
-        box-shadow: 2px -1px 3px rgba(0,0,0,.15), 0 0px 0px rgba(0,0,0,.1);
-    }
-    &>form{
+.modal-form-keeper,.login,.modal-form-keeper {
+    & > div{
         box-shadow: 0 3px 6px rgba(0,0,0,.15), 0 1px 6px rgba(0,0,0,.1);
+        border-top-left-radius: 6px;
+        border-top-right-radius: 6px;
     }
+    // &>header{
+    //     box-shadow: 2px -1px 3px rgba(0,0,0,.15), 0 0px 0px rgba(0,0,0,.1);
+    // }
+    // &>form{
+    //     box-shadow: 0 3px 6px rgba(0,0,0,.15), 0 1px 6px rgba(0,0,0,.1);
+    // }
 }
 .modal-form{
     margin: auto;
@@ -91,6 +96,7 @@
         width: 50%;
         text-align: center;
         padding: 3px 0;
+        cursor: pointer;
     }
     li.active{
         background-color: $red-color;

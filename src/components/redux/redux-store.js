@@ -1,8 +1,6 @@
 import {applyMiddleware,createStore, combineReducers} from 'redux'
 import { reducer as formReducer } from 'redux-form'
-import {headerReducer} from './header-reducer'
 import navBarReducer from './nav-bar-reducer'
-import allEventsReducer from './all-events-reducer'
 import dashboardsReducer from './dashboards-reducer'
 import modulesSettingsReducer from './modules-settings-reducer'
 import usersReducer from './users-reducer'
@@ -24,9 +22,7 @@ let reducers = combineReducers({
     auth: authReducer,
     dashboards: dashboardsReducer,
     modulesSettings: modulesSettingsReducer,
-    headerInfo: headerReducer,
     navBar: navBarReducer,
-    allEvents: allEventsReducer,
     lic: licReducer,
     form: formReducer,
     modSidebar: modSidebarReducer,

@@ -7,7 +7,7 @@ const SmtpTestFormRaw  = (props) => {
     return (
         <div className="modal-form-keeper" >
         <div>
-        <header className="Common__header Common__header_red">Введите адресс получателя для отправки тестового сообщения:</header>
+        <header className="Common__header Common__header_red">Введите адрес получателя для отправки тестового сообщения:</header>
         <form className='modal-form_light-grey modal-form_smtp smtpTestForm' onSubmit={props.handleSubmit}>
             <label>
                 <Field name='testAdress' placeholder={''} component={"input"} type="text"/> 
@@ -54,7 +54,7 @@ const smtpSetFormRaw= (props) => {
                 <label>Порт SMTP-сервера:
                     <Field name='port' placeholder={''} component={"input"} type="number"/> 
                 </label>
-                <label>Адресс отправителя:
+                <label>Адрес отправителя:
                     <Field name='adress' placeholder={'example@mail.ru'} component={"input"} type="text"/> 
                 </label>
                 {/* onChangeAuthMode */}
@@ -138,7 +138,7 @@ class PdfMaker extends React.Component{
         
         if(this.state.display==='collapsed')
             return <>
-                        <button className='DashCreator'  onClick={()=>{this.setState({ display: 'deployed' });}}>Настройки SMTP сервера</button>
+                        <button className='DashCreator__red-button'  onClick={()=>{this.setState({ display: 'deployed' });}}>Настройки SMTP сервера</button>
                     </>
         else if(this.state.display==='testMode') 
             return <>

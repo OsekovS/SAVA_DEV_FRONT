@@ -81,17 +81,18 @@ class App extends React.Component {
   render() {
     let {modSidebar} = this.props.state, otherModules = null,
     isAdmin = this.props.state.auth.briefUserInfo.admin==='администратор'?true:false
-    console.log(isAdmin)
+    console.log(this.props)
     if(isAdmin) otherModules = <>
     {/* ЗДЕСЬ СИДЯТ МОДУЛЕЙ НАСТРОЙКИ */}
     {/* <Settings__modules  /> */}
       {/* <Route path='/setting module acs' render={()=><Settings__modules  />}></Route> */}
       <Route path='/setting users' render={()=><Settings__users />}></Route>
-      <Route path='/setting common' render={()=><Settings__common  />}></Route>
-      <Route path='/setting lic' render = { () =>  <Settings__lic />  } exactd/>
+      {/*В данной версии скрыто <Route path='/setting common' render={()=><Settings__common  />}></Route> */}
+      
       <Route  path='/email alert' render = { () =>  <Settings__email/> }></Route>  
+      <Route path='/setting lic' render = { () =>  <Settings__lic />  } exactd/>
     </> 
-        console.log(this.ReactModules)
+        // console.log(this.ReactModules)
     return (<div className='app-wrapper'>
     <Header />
     {this.ReactModules===undefined?null:this.ReactModules}

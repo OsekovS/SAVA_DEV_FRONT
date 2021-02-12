@@ -10,6 +10,7 @@ import MarkAsRead from '../Components/MarkAsRead/MarkAsRead'
 import Pdf from '../Components/Pdf/PdfCont'
 import ChangedInput from '../Components/ChangedInput/ChangedInputCont.jsx'
 import Resizer from '../Components/Resizer/Resizer.jsx'
+import MotionArrow from '../Components/MotionArrow/MotionArrow'
 import './Logtable.scss'
 
 // import  {getFromDate} from "../../../../components/redux/acs-reducer";
@@ -56,7 +57,7 @@ class rawLogsTable extends React.Component {
       let newLength = nextProps.headerElements.length 
       //действие происходит в случае удаления элемента 
       if(newLength < this.props.headerElements.length &&newLength>0) this.setState({changedElemNumb: this.state.changedElemNumb-1})
-      if(newLength==0) this.setState({onSettings: false})
+      // if(newLength==0) this.setState({onSettings: false})
       
       // onSettings
       //если существует таймер и отключены обновл
@@ -80,22 +81,22 @@ class rawLogsTable extends React.Component {
       let curLog, 
        {onSettings,changedElemNumb} = this.state, footerElements
       const {id,indexName,dbName, timeFilter, fields,modules,uploads, style, name,title,collapsed,changeCollapseMode,
-        changeDashSize, headerElements,  indexElements} = this.props,
+        changeDashSize, headerElements,  indexElements, serNum, isLast, setParamFilterThunk,
+        paramFilter, filter} = this.props,
         footerElementsJS = this.props.footerElements
        
-        console.log(this.props)
+        // console.log(this.props)
         // console.log(this.props)
         if(this.props.curLog!==null&&this.props.logs.length!==0&&this.props.logs.length>this.props.curLog){
             curLog = this.props.logs[this.props.curLog]
-            footerElements = footerElementsJS.map((e) => {
+            //.filter((e)=>curLog[e.field]!=='None') добавили
+            footerElements = footerElementsJS.filter((e)=>curLog[e.field]!=='None').map((e) => {
             return <li>
-              {<span>{e.text+' ('+e.field+'):'}</span>} {curLog[e.field].length>0?curLog[e.field]:'-'}
+              {<span>{e.text+': '}</span>} {curLog[e.field].length>0?curLog[e.field]:'-'}
+              {/* {<span>{e.text+' ('+e.field+'):'}</span>} {curLog[e.field].length>0?curLog[e.field]:'-'} */}
             </li>
             // <span>{e.text}</span>  e.text+
         })}
-        
-        
-        
         
         const lastViewed = modules[dbName].indexes[indexName].lastViewed
         const personal = {id,indexName,dbName} 
@@ -104,17 +105,27 @@ class rawLogsTable extends React.Component {
         return <div   className={"dashboard-wrapper dashboard-wrapper_table"+' '+this.props.className}>
                   <header className="Common__header Common__header_grey Common__header_with-filter">
                     <div>
-                      <ChangedInput title={title} id={id} dbName={dbName}/> 
-                      <TimeFilterPanel lastViewed={lastViewed} id={id} dbName={dbName} uploads={uploads} indexName={indexName} timeFilter={{from:this.props.timeFilter.from, to:this.props.timeFilter.to}}></TimeFilterPanel>
+                      <ChangedInput title={title} id={id} dbName={dbName} lastViewed={lastViewed} 
+                        timeFilter={{from:this.props.timeFilter.from, to:this.props.timeFilter.to}}
+                        type={'Table'} uploads={uploads}
+                      /> 
+                      {/* <TimeFilterPanel lastViewed={lastViewed} id={id} dbName={dbName} uploads={uploads} indexName={indexName} timeFilter={{from:this.props.timeFilter.from, to:this.props.timeFilter.to}}></TimeFilterPanel> */}
                     </div>
                     <div className='dashboard-wrapper__settings-cont'>
                       <MarkAsRead indexName={indexName} display={this.props.markAsRead} id={id} dbName={dbName}></MarkAsRead>
-                      <img className='settings-icon' src={require(this.state.onSettings?"./settings-active.svg":"./settings.svg")}
-                        onClick={()=>{this.setState({onSettings: !this.state.onSettings})}}></img>
-                      <FilterPanel single={true} fields={fields} configObj={this.props.filter} iniState={this.props.paramFilter} submitCallBack={(filter)=>{this.props.setParamFilterThunk(filter,dbName,indexName,id)}} id={id}/>
-                      <Saver  id={id}  dbName = {dbName}  display={this.props.saver}/>
-                      <Pdf fields={fields} configObj={this.props.filter} iniState={this.props.paramFilter} timeFilter={timeFilter} indexName={indexName}/>
-                      <span className="collapser" onClick={()=>{changeCollapseMode(id,dbName,!collapsed)}}></span>
+                      {/* <div  className='dashboard-wrapper__settings-cont'> */}
+                        <div data-title="настройки таблицы" className='settings-icon comment'>
+                          <img src={require(this.state.onSettings?"./settings-active.svg":"../../../img/settings.svg")}
+                          onClick={()=>{this.setState({onSettings: !this.state.onSettings,changedElemNumb: 0})}}></img>
+                        </div>
+                        <FilterPanel imgSrc={require('../Components/FilterPanel/filter_white.svg')} single={true} fields={fields}
+                           configObj={filter} iniState={paramFilter} 
+                           submitCallBack={(filter)=>{setParamFilterThunk(filter,dbName,indexName,id)}} id={id}/>
+                        <TimeFilterPanel lastViewed={lastViewed} id={id} dbName={dbName} uploads={uploads} indexName={indexName} timeFilter={{from:this.props.timeFilter.from, to:this.props.timeFilter.to}}></TimeFilterPanel>
+                        <Saver  id={id}  dbName = {dbName}  display={this.props.saver}/>
+                        <Pdf fields={fields} configObj={this.props.filter} iniState={this.props.paramFilter} timeFilter={timeFilter} indexName={indexName}/>
+                        <span data-title="свернуть таблицу"  className="collapser comment" onClick={()=>{changeCollapseMode(id,dbName,!collapsed)}}></span>
+                      {/* </div> */}
                       {/* <span className="collapser" onClick={()=>{this.setState({collapsed: !this.state.collapsed})}}></span> */}
                     </div>
                   </header>    
@@ -126,7 +137,7 @@ class rawLogsTable extends React.Component {
                         headerElements={headerElements}  indexElements={indexElements} footerElements={footerElementsJS}/>:null }
                       <Table onSettings={onSettings} style={{ minHeight: style.height-90}}  clazz={this.props.clazz} logs={this.props.logs} headerElements={this.props.headerElements} curLog={this.props.curLog} onClickCallback={this.onClickOnElem} sortParam={this.props.sortParam} 
                         resizer={{isResizer:false,type: ['height'], minVal: ['minHeight']}}  changeSortThunk={this.props.changeSortThunk}  id={id} dbName={dbName} indexName={indexName} 
-                        onHeaderElemChose={(numb)=>{this.setState({changedElemNumb: numb})}}/>
+                        onHeaderElemChose={(numb)=>{this.setState({changedElemNumb: numb})}} />
                       {this.props.curLog !== null ? <Resizer changeSize={changeDashSize} id={id} indexName={indexName} dbName={dbName} type={['height']} minVal={['minHeight']}  isAbsolutePos={false}/>:null}
                       <footer>
                         <span>Всего событий: {this.props.pagination.total}</span>
@@ -145,7 +156,9 @@ class rawLogsTable extends React.Component {
                      {this.props.curLog !== null ?
                      <Resizer changeSize={changeDashSize} id={id} indexName={indexName} dbName={dbName} type={['footerHeight']} minVal={['minFooterHeight']} isAbsolutePos={true}/>:
                       <Resizer changeSize={changeDashSize} id={id} indexName={indexName} dbName={dbName} type={['height']} minVal={['minHeight']}  isAbsolutePos={true}/>}
-                      
+                      {serNum===0?null:<MotionArrow style={style} id={id} dbName = {dbName}  indexName={indexName} direct={'left'}/>}
+                      {isLast?null:<MotionArrow style={style} id={id} dbName = {dbName}  indexName={indexName} direct={'right'}/>}
+                
                     </>
                   }
                   

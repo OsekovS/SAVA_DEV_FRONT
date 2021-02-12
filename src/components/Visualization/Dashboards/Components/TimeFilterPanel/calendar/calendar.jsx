@@ -15,17 +15,24 @@ class Wrapper extends React.Component {
             day: 'numeric',
             hour: 'numeric',
             minute: 'numeric'
-          };       
+        };       
+        this.state = {
+            now: new Date(),
+            mode: 'oldMode'
+        }
+        setInterval(()=>{
+            this.setState({now: new Date()});
+            // console.log('tick');
+            document.getElementById('DateTimeInput_end')
+        },
+            3000)
     }
     // makeSpecialString(){
     //     return 'C ' +this.props.timeFilter.from.format('DD.MM.YYYY HH:mm') + ' по '+this.props.timeFilter.to.format('DD.MM.YYYY HH:mm')// .format('YYYY/MM/DD HH:mm:ss'
     // }
    
     render(){  
-            let now = new Date();
-            let start = this.props.timeFilter.from;
-            let end =  this.props.timeFilter.to;
-            // console.log(this.props)
+            let {now, mode} = this.state;           
             let ranges = {
                 "Сегодня": [moment(new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0,0,0,0)), moment(new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(),now.getMinutes(),0,0))],
                 "Вчера": [moment(new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0,0,0,0)).subtract(1, "days"), moment(new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23,59,0,0)).subtract(1, "days")],
@@ -36,6 +43,9 @@ class Wrapper extends React.Component {
                 "Пол года": [moment(new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0,0,0,0)).subtract(6, "months"),  moment(new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(),now.getMinutes(),0,0))],
                 "Год": [moment(new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0,0,0,0)).subtract(12, "months"),  moment(new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(),now.getMinutes(),0,0))],
             }
+            let start = mode==='oldMode' ? this.props.timeFilter.from : ranges[mode][0];
+            let end = mode==='oldMode' ?  this.props.timeFilter.to : ranges[mode][1];
+            // console.log('CALENDARRRR!',ranges)
             let local = {
                 "format":"DD.MM.YYYY, HH:mm",
                 "sundayFirst" : false,
@@ -76,6 +86,7 @@ class Wrapper extends React.Component {
                         local={local}
                         maxDate={maxDate}
                         applyCallback={this.props.applyCallback.bind(this)}
+                        rangeCallback={(num,curState)=>{this.setState({mode:curState});}}
                        style={ {
                             fromDate: { backgroundColor: redTheme},
                             toDate: {backgroundColor: redTheme},
@@ -93,12 +104,14 @@ class Wrapper extends React.Component {
 
              return(
                     <DateTimeRangeContainer
+                        now={now}
                         ranges={ranges}
                         start={start}
                         end={end}
                         local={local}
                         maxDate={maxDate}
                         applyCallback={this.props.applyCallback.bind(this)}
+                        rangeCallback={(num,curState)=>{this.setState({mode:curState});}}
                         style={ {
                                 fromDate: { backgroundColor: redTheme},
                                 toDate: {backgroundColor: redTheme},

@@ -1,10 +1,11 @@
 import React from 'react';
-import './Saver.scss';
+import './Deleter.scss';
 import {connect} from "react-redux";
 import {onDashDeleteThunk}  from "../../../../redux/dashboards-reducer";
 
 const rawDeleter = (props) => {
-    return <img onClick={props.onDashDeleteThunk.bind(this,props.id,props.dbName,props.indexName)} className='saver__wait' src={require('../close.svg')}></img>
+    return <div data-title="удалить"  className={'Deleter comment'} ><img onClick={props.onDashDeleteThunk.bind(this,props.id,props.dbName,props.indexName)} src={require('../close.svg')}></img></div>
+    
 }
 
 let mapStateToProps = (state) => {

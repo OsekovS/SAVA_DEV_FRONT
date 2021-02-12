@@ -9,6 +9,7 @@ let initialState = {
         acs: 'СКУД',
         iss: 'СЗИ',
         ksc: 'КСЦ',
+        thycotic: 'Thycotic server',
         cameras: 'камер',
         module: 'модуля',
         setting: 'Настройка',

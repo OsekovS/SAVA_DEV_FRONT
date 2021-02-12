@@ -812,3 +812,22 @@ export const acsIni = function(){
 //                         {"text":"Тип события","type":"text","field":"etdn","colWidth":92},
 //                         {"text":"Сервис","type":"text","field":"et","colWidth":92},
 //                         {"text":"Объект","type":"text","field":"hdn","colWidth":92}]}
+
+let circleDg4 = {
+     "field":"significance", 
+     "style":{"width":435,"minWidth":435},
+     "indexName":"acs_castle_ep2_userlog", 
+     "logs":[], 
+     "timeFilter":{"from": "2019/01/26 00:00:00", "to": "2020/01/26 23:59:00"}, 
+     "uploads":{"uploads":false,"timeKind":1,"timeNum":11000,"to":"now/d"}, 
+     "paramFilter":{} 
+}
+
+let barDg4 = {
+    "style":{"width":435,"minWidth":435,"height":900,"minHeight":300},
+    "indexName":"sns_event", 
+    "logs":[], 
+    "timeFilter":{"from": "2019/01/26 00:00:00", "to": "2020/01/26 23:59:00"}, 
+    "uploads":{"uploads":false,"timeKind":1,"timeNum":11000,"to":"now/d"}, 
+    "paramFilter":{} 
+}

@@ -4,25 +4,25 @@ import LogElem from './LogElem/LogElem.jsx'
 import Resizer from '../Resizer/Resizer.jsx'
 import './Table.scss'
 const Table = (props) => {
-let {id,indexName,dbName,style, onClickCallback, resizer,onSettings,deleteHeaderElem,
+    // console.log(props)
+let {id,indexName,dbName,style, onClickCallback, resizer,onSettings, changeHeaderElemPos,
     changeSortThunk,changeDashSize,onHeaderElemChose, modules} = props
 const {isResizer, type, minVal} = resizer;
 
 let Elements = props.logs.map((e,number) => <LogElem signStyle={modules[dbName].indexes[indexName].events} viewed={props.headerElements} name={props.curLog===number?'Modules_table__current':''} items={e} onClickCallback={()=>{onClickCallback(number,id,dbName)}}/>)
-
+let headerElementsLastNum = props.headerElements.length - 1
 let headerElements = Object.values(props.headerElements).map((e,n) => {
     if(onSettings) {
-        if(e.field===props.sortParam.field) {
-            return  <td  onClick={()=>{onHeaderElemChose(n)}} style={{width:e.colWidth}}  key={n} >{e.text.length>0?<span>{e.text}</span>:''}
-                        <img onClick={()=>{deleteHeaderElem(n,id,dbName)}} src={require('./delete.svg')} ></img>
-                {/* <Resizer changeSize={(delta)=>{changeHeaderElemSize(delta,id,dbName,n)}} changeSize={changeHeaderElemSize} id={id} indexName={indexName} dbName={dbName} type={['width']} minVal={['minWidth']}  isAbsolutePos={true}/> */}
+        let innerText =e.text.length>0?e.text:''
+        return  <td className={"logs-table__elemOnRedact"}  onClick={()=>{onHeaderElemChose(n)}} style={{width:e.colWidth}}  key={n} >
+            {/* <img  className={"logs-table__arrow-left"} src={require('./horizontal.svg')}></img> */}
+            {n!==0?<div onClick={(e)=>{e.preventDefault();changeHeaderElemPos(n,id,dbName,'left')}} className={"logs-table__arrow-left"}></div>:<></>}
+            <span>{innerText}</span>
+            {n!==headerElementsLastNum?<div onClick={(e)=>{e.preventDefault();changeHeaderElemPos(n,id,dbName,'right')}}  className={"logs-table__arrow-right"}></div>:<></>}
+            {/* <img className={"logs-table__arrow-right"} src={require('./horizontal.svg')}></img> */}
             </td>
-        }//
-        else return  <td onClick={()=>{onHeaderElemChose(n)}} style={{width:e.colWidth}} key={n} >{e.text.length>0?<span>{e.text}</span>:''}
-                <img  onClick={(e)=>{deleteHeaderElem(n,id,dbName);e.stopPropagation()}} src={require('./delete.svg')} ></img>
-                {/* <Resizer changeSize={(...args)=>{console.log(args)}} id={id} indexName={indexName} dbName={dbName} type={['width']} minVal={['minWidth']}  isAbsolutePos={true}/> */}
-            </td>//<img src={require('./multimedia.svg')}></img>
-    }else {
+    }
+    else {
         if(e.field===props.sortParam.field) {
             let clazzName = props.sortParam.direction === 'asc'?"logs-table__arrow logs-table__arrow_up":"logs-table__arrow logs-table__arrow_down"
             return  <td style={{width:e.colWidth}} onClick={()=>{changeSortThunk(e,indexName,id,dbName)}} key={n} >{e.text.length>0?<span>{e.text}</span>:''}

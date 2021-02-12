@@ -1,0 +1,42 @@
+.Arrow {
+    position: absolute;
+    // background: springgreen;
+}
+.Arrow:hover::before {
+    content:'';
+    cursor: pointer;
+    display: block;
+    position: relative;
+    width: 20px;
+    height: 20px;
+    border-bottom: 3px solid rgba(1,100,100,0.5);
+    border-right: 3px solid rgba(1,100,100,0.5);
+}
+.Arrow__top{
+    width: inherit;
+    height: 25px;
+}
+.Arrow__top::before{
+    transform: rotate(-135deg);
+}
+.Arrow__left {
+    width: 25px;
+    height: inherit;
+}
+.Arrow__left::before{
+    transform: rotate(135deg);
+}
+.Arrow__right {
+    width: 25px;
+    height: inherit;
+}
+.Arrow__right::before{
+    transform: rotate(-45deg);
+}
+.Arrow__bottom {
+    width: inherit;
+    height: 25px;
+}
+.Arrow__bottom::before{
+    transform: rotate(45deg);
+}

@@ -9,7 +9,7 @@ import './FilterPanel.scss'
         if(props.single)
         this.state = {
             params: {...props.iniState},
-            display: 'collapsed'
+            display: props.deployed?'deployed':'collapsed'
         }
         else{
             let params = {}
@@ -34,7 +34,7 @@ import './FilterPanel.scss'
             });
             this.state = {
                 params,
-                display: 'collapsed'
+                display: props.deployed?'deployed':'collapsed'
             };
             // console.log(params)
         }
@@ -43,6 +43,7 @@ import './FilterPanel.scss'
         this.onCancel = this.onCancel.bind(this);
         this.generateFiltersList = this.generateFiltersList.bind(this);
         this.onChangeField = this.onChangeField.bind(this);
+        this.onCleanFilter = this.onCleanFilter.bind(this);
       }
 
   onChangeField = (keyState,key,groupName)=>{
@@ -63,22 +64,19 @@ import './FilterPanel.scss'
      
   }
     componentWillReceiveProps(props){
-        if(props.single) this.setState({ params: {...props.iniState}, });
-        else {
+        // if(props.single) this.setState({ params: {...props.iniState}, });
+        // else {
             //выполняется в случае, если изменилось главное поле
-            // console.log(props.configObj.mainField)
-            // console.log(this.state.params.mainField)
-            if(props.configObj.mainField&&this.state.params.mainField&&Object.keys(props.configObj.mainField.body)[0]
+            if(!props.single && props.configObj.mainField&&this.state.params.mainField&&Object.keys(props.configObj.mainField.body)[0]
             !==Object.keys(this.state.params.mainField)[0]){
                 this.setState(state => {
                     state.params.secondField = {...state.params.mainField ,...state.params.secondField}
                     state.params.mainField = props.configObj.mainField.body 
-                    
                     return state
                   })
             }
             // if(Object.keys(props.configObj.mainField.body)[0]!==Object.keys(this.state.mainField.body)[0])
-        }
+        // }
     }
 generateFiltersList(configObj,filterState,groupName){
     
@@ -86,7 +84,7 @@ generateFiltersList(configObj,filterState,groupName){
     let filter = []
     let options
     let onChangeCallBack,
-    {iniState} = this.props //filterState[key]===undefined?[]:filterState[key]
+    {iniState, isInvert} = this.props //filterState[key]===undefined?[]:filterState[key]
     // console.log(configObj)
     // console.log(filterState)
     // console.log(groupName)
@@ -106,7 +104,7 @@ generateFiltersList(configObj,filterState,groupName){
                 // console.log(xxx)
                 // console.log(filterState[key])
                 filter.push(
-                    <div className="multi-select__cont"><span>{this.props.fields[key].translate}</span><Dropdown selected={xxx} iniState={iniState[key]===undefined?[]:iniState[key]} name={key} options={options} 
+                    <div className="multi-select__cont"><span>{this.props.fields[key].translate}</span><Dropdown isInvert={isInvert} selected={xxx} iniState={iniState[key]===undefined?[]:iniState[key]} name={key} options={options} 
                         preview={this.props.fields[key].translate} onChangeCallBack={onChangeCallBack}/>
                     </div>
                 )
@@ -118,25 +116,37 @@ generateFiltersList(configObj,filterState,groupName){
 
 onSubmit(event){
     event.preventDefault()
-    this.setState({ display: 'collapsed' });
+    if(!this.props.deployed) this.setState({ display: 'collapsed' });
     this.props.submitCallBack(this.state.params)
 }
 onCancel(){
     this.setState({ display: 'collapsed' });
 }
+onCleanFilter(){
+    if(this.props.single){
+        this.setState({params: {} });
+    }
+    else{
+        this.setState({ 
+            params: {
+                mainField: {},
+                secondField: {}
+            }
+        });
+    }
+}
 
     render() {
         // console.log(this.props)//.configObj)
         // console.log(this.state)//.params)
-        let filter = []
-    if(this.state.display==='deployed'){
-         
-        if(this.props.single){
-            filter = this.generateFiltersList(this.props.configObj,this.state.params)
-        }else Object.keys(this.props.configObj).map((key,n) => {
+        let filter = [], {single, configObj} = this.props
+    if(this.state.display==='deployed'){         
+        if(single){
+            filter = this.generateFiltersList(configObj,this.state.params)
+        }else Object.keys(configObj).map((key,n) => {
                 filter.push(
-                    <div className="wrapper"><h2>{this.props.configObj[key].title}</h2>
-                        {this.generateFiltersList(this.props.configObj[key].body,this.state.params[key],key)}
+                    <div className="wrapper"><h2>{configObj[key].title}</h2>
+                        {this.generateFiltersList(configObj[key].body,this.state.params[key],key)}
                     </div>
                 )
                
@@ -144,17 +154,29 @@ onCancel(){
         )
         return <div className="modal-form-keeper param-panel param-filter-panel"  >
                 <div>
-                    <header><span><img src={require('./filter.svg')}></img>Настройки параметрического фильтра</span><button onClick={()=>{this.setState({ display: 'collapsed' });}}><img src={require('../close.svg')}></img></button></header>
-                        <form  className='modal-form_light-grey' onSubmit={this.onSubmit} >
-                        <div className={this.props.single?"wrapper":"wrapper wrapper__columned"}>
+                    <header>
+                        <span><img src={require('./filter_white.svg')}></img>Настройки параметрического фильтра</span>
+                        <div>
+                            <img data-title="сброс настроек фильтра" className='comment' onClick={this.onCleanFilter} src={require('./clean.svg')}></img>
+                            <img onClick={()=>{this.setState({ display: 'collapsed' });}} src={require('../close.svg')}></img>
+                            {/* <button data-title="сброс настроек фильтра" className='comment' onClick={this.onCleanFilter}><img src={require('./clean.svg')}></img></button>
+                            <button onClick={()=>{this.setState({ display: 'collapsed' });}}><img src={require('../close.svg')}></img></button> */}
+                        </div>
+                    </header>
+                    <div  className='modal-form_light-grey' onSubmit={this.onSubmit} >
+                        <div className={single?"wrapper":"wrapper wrapper__columned"}>
                             {filter}  
                         </div>
-                        <input type="submit" value="Применить"/><button onClick={this.onCancel}>Отменить</button>
-                    </form>  
+                        {/* <input type="submit" value="Применить"/> */}
+                        {/* <div className="param-filter-panel_butWrapper"> */}
+                            <button onClick={this.onSubmit}>Применить</button>
+                            <button onClick={(e)=>{e.preventDefault();this.onCancel()}}>Отменить</button>
+                        {/* </div> */}
+                    </div>  
                 </div>            
             </div>
     }
-    else return <span className={'param-filter-panel param-panel param-filter-panel__collapsed'} onClick={()=>{this.setState({ display: 'deployed' });}}><img src={require('./filter.svg')}></img></span> 
+    else return <span data-title="фильтр"  className={'param-filter-panel param-panel param-filter-panel__collapsed comment'} onClick={()=>{this.setState({ display: 'deployed' });}}><img src={this.props.imgSrc}></img></span> 
 }
 }
 

@@ -22,8 +22,8 @@ let mapStateToProps = (state) => {
         users: state.users.users,
         isFetching: state.users.isFetching,
         modules: state.auth.briefUserInfo.modules,
-        modulesTranslate: state.auth.modulesTranslate
-        // mode: state.users.mode
+        modulesTranslate: state.auth.modulesTranslate,
+        isAdmin: state.auth.briefUserInfo.admin
     }
 }
 let mapDispatchToProps ={

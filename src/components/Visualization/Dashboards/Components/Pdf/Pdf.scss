@@ -1,5 +1,11 @@
 @import '../../../../../scss/button.scss';
 @import '../../../../colors.scss';
+.pdf__wait img{
+    // top: 5px;
+    // right: 8px;
+    cursor: pointer;
+    width: 24px;
+  }
 .param-pdf-panel_filters{
     width: 900px;
     .multi-select__cont{

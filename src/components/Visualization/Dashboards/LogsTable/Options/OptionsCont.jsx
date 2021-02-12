@@ -1,6 +1,6 @@
 import {connect} from "react-redux";
 import Options from './Options'
-import  {changeHeaderElemSize, addHeaderElem, addFooterElem} from "../../../../redux/dashboards-reducer";
+import  {changeHeaderElemSize, changeViewedFields} from "../../../../redux/dashboards-reducer";
 
       
 let mapStateToProps = (state) => {
@@ -11,8 +11,7 @@ let mapStateToProps = (state) => {
 
 let mapDispatchToProps = {
     changeHeaderElemSize,
-    addHeaderElem,
-    addFooterElem
+    changeViewedFields
 }
 
 const OptionsCont = (connect(mapStateToProps,mapDispatchToProps)(Options));

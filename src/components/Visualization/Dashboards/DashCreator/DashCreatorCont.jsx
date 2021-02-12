@@ -5,6 +5,7 @@ import DashCreator from './DashCreator'
 
 let mapStateToProps = (state) => {
   return {
+    modules: state.auth.briefUserInfo.modules
  }
 }
 let mapDispatchToProps = {

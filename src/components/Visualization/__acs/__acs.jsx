@@ -5,6 +5,7 @@ import './__acs.scss';
 import __header from '../../Common/__header/__header'
 import LogsTableDeviceCont from '../Dashboards/LogsTable/LogsTableDeviceCont'
 import CircleDiagramCont from '../Dashboards/CircleDiagram/CircleDiagramCont'
+import BarDiagramCont from '../Dashboards/BarDiagram/BarDiagramCont'
 import DashCreator from '../Dashboards/DashCreator/DashCreatorCont'
 import ComSidebar from '../../ComSidebar/ComSidebarCont'
 // import ModulesLinker from '../ModulesLinker/ModulesLinkerCont'
@@ -53,34 +54,28 @@ class __acs extends React.Component {
     // this.props.getDashboardsThunk(this.props.dbName)
   }
   makeDashboards(indexName,clazz){
-    //console.log(this.state)
-    // console.log(this.props)
     let a = [],
     {modules, dashboards} = this.props,
     {current} = this.state,
     indexes = modules[current].indexes
 
-    //console.log(indexName)
-    //console.log(current)
-   Object.values(dashboards[current]).forEach((e,n) => {
-    
-     
-      // let indexes = this.props.dashboards[this.state.current]
-      if(e.body.indexName===indexName && e.type==="Table")  a.push(
-        // <div>
-          /* <Sidebar dbName={this.props.dbName} sidebar={this.props.sidebar}  type= 'dashboards'></Sidebar> */
-          <LogsTableDeviceCont fields={indexes[e.body.indexName].fields} filter={indexes[e.body.indexName].filter} dbName={this.state.current} clazz={e.body.indexName} {...e.body}  title={e.name} key={e.id} id={e.id} className={"Modules_table_"+clazz}/>
-        /* </div> */
-        )//id={n} 
-      })
-      Object.values(this.props.dashboards[this.state.current]).forEach((e,n) => {
-        if(e.body.indexName===indexName && e.type==="Circle_Diagram") a.push(<CircleDiagramCont fields={indexes[e.body.indexName].fields} filter={indexes[e.body.indexName].filter} dbName={this.state.current} {...e.body} title={e.name} key={e.id} id={e.id} />    )//id={n}
-    });
-    //console.log(a)  this.props.
-    a.push(
-      <DashCreator indexName={indexName} indexes={indexes} dbName={current} />
-    )
-  return a
+    let dashLen = Object.values(this.props.dashboards[this.state.current]).length - 1;
+    Object.values(this.props.dashboards[this.state.current]).forEach((e,n) => {
+      if(e.body.indexName===indexName){
+        if(e.type==="Table")  a.push(<LogsTableDeviceCont fields={indexes[e.body.indexName].fields} filter={indexes[e.body.indexName].filter} dbName={this.state.current} clazz={e.body.indexName} {...e.body}
+            title={e.name} key={e.id} id={e.id} className={"Modules_table_"+clazz} isLast = { n === dashLen } serNum = {n}/>
+        )
+        if(e.type==="Circle_Diagram") a.push(<CircleDiagramCont fields={indexes[e.body.indexName].fields} filter={indexes[e.body.indexName].filter}
+            dbName={this.state.current} {...e.body} title={e.name} key={e.id} id={e.id} isLast = { n === dashLen } serNum = {n}/>    )//id={n}
+        if(e.type==="Bar_Diagram") a.push(<BarDiagramCont fields={indexes[e.body.indexName].fields} filter={indexes[e.body.indexName].filter}
+          dbName={this.state.current} {...e.body} title={e.name} key={e.id} id={e.id} isLast = { n === dashLen } serNum = {n}/>    )//id={n}
+        }
+      });
+      a.push(
+        <DashCreator innerText={'Добавить дашборд +'} isCommon={false} className={'DashCreator__red-button'} indexName={indexName} indexes={indexes} dbName={current} />
+      )
+      return a
+
   }
   makeRoutes(paths){
     let Routes = [], index
@@ -101,17 +96,16 @@ class __acs extends React.Component {
     return Routes
   }
   render() {
-    // 
+
     let {dashboards, paths, modulesName} = this.props, Routes
     if(dashboards[this.state.current]){
       if(Object.keys(paths)!==0)
       Routes = this.makeRoutes(paths)
       // console.log(Routes)
       return <BrowserRouter >
-      {/* <ModulesLinker paths={paths}/> */}
-      
       <div className="Visualization__acs">
-        <ComSidebar modulesName={modulesName} current={this.state.current}/>
+        {/* ГОРИЗОНТАЛЬНЫЙ САЙДБАР УБРАН ДЛЯ ВЕРСИИ МОСГАЗ */}
+        {Object.keys(modulesName).length>1?<ComSidebar modulesName={modulesName} current={this.state.current}/>:null}
         {Routes}
       </div>
       </BrowserRouter>

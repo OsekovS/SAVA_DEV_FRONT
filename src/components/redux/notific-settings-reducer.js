@@ -182,6 +182,7 @@ export const onAddEventThunk = (event) => {
           "db":"emailnotificationevents"
         }
       }
+      console.log("onAddEventThunk")
     console.log(event)
     return (dispatch,getState) => {
         axios.post("php/settings_admin.php",{notific:{purpose:'addEvent', event, socketJSON}}).then(response => {
@@ -197,6 +198,7 @@ export const onAddEventThunk = (event) => {
             })
             .finally(function () {
             // always executed
+            console.log("finally");
             });
     }
 }
@@ -209,7 +211,8 @@ export const onAddAdressThunk = (adress) => {
           "db":"emailaddressees"
         }
       }
-      
+      console.log("onAddAdressThunk")
+      console.log(adress)
     return (dispatch,getState) => {
         axios.post("php/settings_admin.php",{notific:{purpose:'addAdress', adress, socketJSON}}).then(response => {
             console.log(response.request)
@@ -222,7 +225,7 @@ export const onAddAdressThunk = (adress) => {
             console.log(error);
             })
             .finally(function () {
-            // always executed
+                console.log("finally");
             });
     }
 }
@@ -372,7 +375,7 @@ export const smtpTestThunk = (adress) => {
             console.log(response.request)
             let json = JSON.parse(response.request.response);
             console.log(json)
-            alert(json.result!==null?json.python:'ошибка')
+            alert((json===null||json.result===null)?'ошибка':json.python)
             // dispatch(updateSmtp(event))
 
             // event.login=getCookie("login")

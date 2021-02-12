@@ -15,28 +15,27 @@ class PdfMaker extends React.Component{
     constructor(props){
         super(props)
         // console.log(props)
-        let title = 'Отчет с ' +this.props.timeFilter.from.format('DD.MM.YYYY HH:mm') + ' по '+this.props.timeFilter.to.format('DD.MM.YYYY HH:mm'),
-        // console.log(props)
-        // let fieldsInTable = Object.keys(props.fields)
-        // fieldsInTable.push('time')//необходимо в excel добавить поле время
-        // Object.keys(this.props.fields)
+        let title = "Введите название",//'Отчет с ' +this.props.timeFilter.from.format('DD.MM.YYYY HH:mm') + ' по '+this.props.timeFilter.to.format('DD.MM.YYYY HH:mm'),
+        fieldsInTable = [],//хотим чтобы изначально все поля были в таблице
         allFieldsInTable = Object.keys(props.fields).map((e,n) => {
+            fieldsInTable.push(e)
             return {
                 value: e,
                 label: props.fields[e].translate,
             } 
         })
+        fieldsInTable.push('time')
         allFieldsInTable.push({value: 'time',label: 'Время',})
         this.state = {
             allFieldsInTable,
-            fieldsInTable: [],
+            fieldsInTable,
             params: {...props.iniState},
             display: 'collapsed',
             title,
             timeFilter: props.timeFilter,
             mainField: Object.keys(props.configObj)[2],
             clickButtonText: "Сгенерировать отчет",
-            mode: 'pdf',
+            mode: 'excel',
             trend: true
         };
         this.handleTitleChange = this.handleTitleChange.bind(this);
@@ -50,7 +49,7 @@ class PdfMaker extends React.Component{
     applyCalendarCallback(startDate, endDate){
         
         this.setState({ 
-            title :'Отчет с ' +startDate.format('DD.MM.YYYY HH:mm') + ' по '+endDate.format('DD.MM.YYYY HH:mm'),
+            //title :'Отчет с ' +startDate.format('DD.MM.YYYY HH:mm') + ' по '+endDate.format('DD.MM.YYYY HH:mm'), //убрал автопереим файла
             timeFilter: {from:startDate,to:endDate}
          });
     // this.props.onApply()//'C ' +this.props.timeFilter.from.format('DD.MM.YYYY HH:mm') + ' по '+this.props.timeFilter.to.format('DD.MM.YYYY HH:mm')
@@ -114,27 +113,30 @@ class PdfMaker extends React.Component{
         // console.log(this.state.fieldsInTable)
         let {from, to} = this.state.timeFilter
         if(this.state.display==='collapsed')
-            return  <img onClick={()=>{this.setState({ display: 'deployed' });}} className='pdf__wait' src={require('./report.svg')}></img>
+            return  <div data-title="меню генерации отчета" className='pdf__wait comment'><img onClick={()=>{this.setState({ display: 'deployed' });}} src={require('./report.svg')}></img></div>
         else {
             let { timeFilter, mode, trend, fieldsInTable, allFieldsInTable} = this.state
+
             let fields = Object.keys(this.props.configObj).map((e,n) => {
                 //начальное значение - отдельная запара
                 if(n===2) return <option selected value={e}>{this.props.fields[e].translate}</option>
                 else if(e!=='translate') return <option value={e}>{this.props.fields[e].translate}</option>
             })
-            if(mode === 'excel') fields.push(<option value='time'>Время</option>) //необходимо в excel добавить поле время
+            // if(mode === 'excel') fields.push(<option value='time'>Время</option>) //необходимо в excel добавить поле время (строка когда были пдф и ексель)
+            fields.push(<option value='time'>Время</option>) //необходимо в excel добавить поле время
             return  <div className="modal-form-keeper param-pdf-panel param-panel"  >
                 <div>
                 {/* onSubmit={this.onSubmit} */}
-                    <header><span>Настройки отчета</span><button onClick={()=>{this.setState({ display: 'collapsed' });}}><img src={require('../close.svg')}></img></button></header>
-                        <ul className="modal-form-keeper__mode-toggler">
+                    <header><span>Настройки отчета</span><img onClick={()=>{this.setState({ display: 'collapsed' });}} src={require('../close.svg')}></img></header>
+                        {/* это добавляется когда есть и эксель и пдф */}
+                        {/* <ul className="modal-form-keeper__mode-toggler">
                             <li className={mode==='excel'?'active':''} onClick={()=>{this.setState({ mode: 'excel' });}}>
                                 Excel формат  <img   src={require('./excelIcon.svg')}></img>
                             </li>
                             <li className={mode==='pdf'?'active':''} onClick={()=>{this.setState({ mode: 'pdf' });}}>
                                 Pdf формат  <img   src={require('./pdfIcon.svg')}></img>
                             </li>
-                        </ul>
+                        </ul> */}
                         <div className='modal-form_light-grey pdf-maker'  >
                             <h3>Название отчета:</h3>
                                 <label className='param-pdf-panel_title-input__label'><input onChange={this.handleTitleChange} type="text" value={this.state.title} className='param-pdf-panel_title-input'/></label>
@@ -145,7 +147,8 @@ class PdfMaker extends React.Component{
                                 <div className='param-pdf-panel_filters'>
                                     <div>{this.makeFilter()}</div>
                                 </div>
-                                {mode==='pdf'?<>
+                                {/* это добавляется когда есть и эксель и пдф */}
+                                {/* {mode==='pdf'?<>
                                         <h3>Группировать отчет в таблице по полю:</h3>
                                         <select onChange={(event)=>{this.changeMainField(event.target.value)}}>
                                             {fields}
@@ -166,7 +169,22 @@ class PdfMaker extends React.Component{
                                         </div>
 
                                     </>
-                                }
+                                } */}
+                                <>
+                                        {/* <h3>Сортировать записи в таблице по полю:</h3>
+                                        <select onChange={(event)=>{this.changeMainField(event.target.value)}}>
+                                            {fields}
+                                        </select> */}
+                                        <div>
+                                            {/* <h3 className='param-pdf-panel_filters__isAskSort'>Сортировать по возрастанию
+                                            <input checked={trend} onChange={()=>{this.setState({ trend: !trend})}} type="checkbox"></input>
+                                            </h3> */}
+                                            <h3>Поля, которые необходимо вывести в таблицу (выберите хотя бы 1):</h3>
+                                            <Dropdown isInvert={true} selected={fieldsInTable} iniState={[]} name={'key'} options={allFieldsInTable} 
+                                                preview={''} onChangeCallBack={(keyState)=>{this.setState({fieldsInTable: keyState})}}/>
+                                        </div>
+
+                                    </>
                             <div>
                                 <button onClick={this.onSubmit}>{this.state.clickButtonText}</button>
                                 {/* <input type="submit" value={this.state.clickButtonText}/> */}

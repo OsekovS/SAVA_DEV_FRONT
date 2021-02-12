@@ -3,10 +3,6 @@ const UPDATE_HEADER_EVENTS = 'UPDATE_HEADER_EVENTS';
 let initialState = {
     briefUserInfo: {name: 'administrator',
     admin: 'администратор'},
-    allEvents: {
-            exceptions: 469,
-            errors: 12
-    }
 };
 
 export const headerReducer = (state = initialState, action) => {

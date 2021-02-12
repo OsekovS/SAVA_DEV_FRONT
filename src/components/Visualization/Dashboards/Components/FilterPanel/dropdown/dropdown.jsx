@@ -8,8 +8,8 @@ const dropdown = (props) => {
         onSelectedChanged={(selected)=>{props.onChangeCallBack(selected,props.name)}}
        
         overrideStrings={{
-          selectSomeItems: "Выбраны все поля "+"'"+props.preview+"'",
-          allItemsAreSelected: props.preview,//"Выбраны все поля "+"'"+this.props.preview+"'",
+          selectSomeItems: (props.isInvert?"Не выбрано ни одного поля " :"Выбраны все поля ") + props.preview,//+"'"+props.preview+"'"),
+          allItemsAreSelected: "Выбраны все поля " + props.preview ,//"Выбраны все поля "+"'"+this.props.preview+"'",
           selectAll: "Выбрать все",
           search: "Введите ключевое слово",
       }}

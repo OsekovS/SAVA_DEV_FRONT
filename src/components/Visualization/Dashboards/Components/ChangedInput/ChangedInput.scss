@@ -1,3 +1,4 @@
+@import '../../../../colors.scss';
 .ChangedInput{
     position: relative;
     display: inline;
@@ -7,4 +8,11 @@
         width: 20px;
         cursor: pointer;
     }
+}
+.ChangedInput.comment:hover::after{
+    top:95%;
+}
+.ChangedInput.marquee span {
+    color:$white-color;
+    font-size:16px;
 }

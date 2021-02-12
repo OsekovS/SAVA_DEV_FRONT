@@ -120,10 +120,11 @@ class Email extends React.Component {
         })
         console.log(iniEvents)
         iniEvents.forEach(element => {
-            iniState.push({
-                value: events[element].id,
-                label: events[element].name
-            })
+            iniState.push(element)
+            // iniState.push({
+            //     value: events[element].id,
+            //     label: events[element].name
+            // })
         });
         console.log(iniState)
         this.setState(state => {
@@ -167,6 +168,7 @@ class Email extends React.Component {
             } 
         }):null
         // console.log(eventsForDropdown)
+        // console.log(filterState)
         if(props.view){
             return (
                 <div className="modal-form-keeper" >
@@ -174,7 +176,7 @@ class Email extends React.Component {
                         <header className="Common__header Common__header_red">Добавление получателя события</header>
                     <form className='modal-form_light-grey' onSubmit={props.handleSubmit}>
                         <label>Почтовый адрес:
-                            <Field name='name' placeholder={'Название события'} component={"input"} type="text"/> 
+                            <Field name='name' placeholder={'Почта'} component={"input"} type="text"/> 
                         </label>
                         <label>Название темы сообщения:
                             <Field name='theme' placeholder={'Название темы'} component={"input"} type="text"/> 
@@ -206,16 +208,17 @@ class Email extends React.Component {
     }
 
     adressEventsForm = (props) => {
-        
+        console.log(props)
         let {view, allEvents, addresses, filterCurList, onEventsListChange} = props, iniEvents, iniState = [], adressName,eventsForDropdown
 
-        if(view.numb){
+        if(view){
             eventsForDropdown = allEvents?allEvents.map(({id,name}) => {
                 return {
                     value: id,
                     label: name,
                 } 
             }):null
+
             return (
                 <div className="modal-form-keeper" >
                     <div>
@@ -229,8 +232,8 @@ class Email extends React.Component {
                         <Field name='newTheme' placeholder={view.adressTheme} component={"input"} type="text"/> 
                     </label>
                     <div>
-                        {/* <input type="submit" value="Добавить"/> */}
-                        <button onClick={(e)=>{props.handleSubmit()}}> Применить</button>
+                        <input type="submit" value="Применить"/>
+                        {/* <button onClick={(e)=>{e.preventDefault();props.handleSubmit()}}> Применить</button> */}
                         <button onClick={(e)=>{e.preventDefault();props.onClose()}}> Отменить</button>
                     </div>
                 </form>
@@ -255,33 +258,29 @@ class Email extends React.Component {
         let {modules, events, addresses, onChangeEventFilterThunk, onDellEventThunk, onDellAdressThunk, modulesTranslate} = this.props
         let {eventsFormViewed, adressFormViewed, adressFormFilter, adressEventsViewed, changedEventsList} = this.state
         let curIndex, curModule, filterCompoent
-        // 
-        // console.log(adressEventsViewed) && events.length>0
+
   
         let eventsComponents,addressesComponents 
         if(modules!==undefined && this.translateObj!==undefined ){
             let header,pack
             header = this.generateTableHeader({
                 events: "nope",
-                login: "Добавлено пользователем",
                 name: "email адрес",
+                login: "Добавлено пользователем",
                 theme: "Тема сообщения",
                 id: "0",
-                
                 login: "Добавлено пользователем",
-                
-                
+                dummy1: "",
+                dummy2: ""
             })
             addressesComponents = [<ListElem name='list-elem' items={header} key={0}  delete={false} id={0} />]
             if(addresses)addresses.forEach((element, numb) => {
-                // if(numb===0){
-                //     header = this.generateTableHeader(element)
-                //     return <ListElem name='list-elem' items={header} key={numb}  delete={false} id={numb} />
-                // }
                 pack = { }
-                Object.keys(header).forEach((key)=>{
+                Object.keys(element).forEach((key)=>{
+                    if(key!=='events'&&key!=='id')
                     pack[key]= element[key]
                 })
+                console.log(pack)
                 // console.log(addresse/sComponents)
                 addressesComponents.push( <ListElem name='list-elem' items={pack} key={numb} elemDellCallBack={()=>{onDellAdressThunk(element.id)}} id={element.id} delete={true} change={true} onChangeClick={(numb)=>{this.onAdressRedact(numb)}}/>)
             });
@@ -291,24 +290,24 @@ class Email extends React.Component {
                 indexname: "Таблица",
                 filter: "nope",
                 id: "0",                
-                login: "Добавлено пользователем",                                
+                login: "Добавлено пользователем",
+                dummy1: "",
+                dummy2: ""                
             })
             eventsComponents = [<ListElem name='list-elem' items={header} key={0}  delete={false} id={0} />]//[]
            
             if(events)events.forEach((element, numb) => {
 
-                // if(numb===0){
-                //     header = this.generateTableHeader(element)
-                //     return <ListElem name='list-elem' items={header} key={numb}  delete={false} id={numb} />
-                // }
                 let {modulename, indexname,login,filter,id} = element
                 pack = { }
                 // console.log(modulesTranslate)
                 if(modulesTranslate){
-                    Object.keys(header).forEach((key)=>{
-                        if(key==='indexname') pack[key] = modulesTranslate.indexes[element[key]]
-                        else if(key==='modulename') pack[key] = modulesTranslate[element[key]]
-                        else pack[key] = element[key]
+                    Object.keys(element).forEach((key)=>{
+                        if(key!=='id'&&key!=='filter'){
+                            if(key==='indexname') pack[key] = modulesTranslate.indexes[element[key]]
+                            else if(key==='modulename') pack[key] = modulesTranslate[element[key]]
+                            else pack[key] = element[key]
+                        }
                     })
                 }
 
@@ -318,9 +317,9 @@ class Email extends React.Component {
                
                 eventsComponents.push( <ListElem name='list-elem' items={pack} key={numb} elemDellCallBack={()=>{onDellEventThunk(id)}} filter={true} iniState={JSON.parse(filter)} delete={true} id={numb} filterConfigObj={configObj} fields={fields} onFilterChange={(filter)=>{onChangeEventFilterThunk(element.id, login, filter)}}/>)
             });
-            
+            console.log(eventsComponents)
         }
-        return <div className="Settings__email">
+        return this.props.isAdmin==='администратор'?<div className="Settings__email">
             <SmtpSetForm/>
                 <div>
                     Cписок адресов
@@ -351,7 +350,7 @@ class Email extends React.Component {
                 <AddAdressForm onChangeFilterCallBack={(e)=>{this.setState({adressFormFilter:e})}} filterState={adressFormFilter} events={events} onSubmit={this.onAddAdress} view={adressFormViewed}  onClose={()=>{this.setState({adressFormViewed:false})}}/>
                 <AdressEventsForm onSubmit={this.onEditAdressEvents}  view={adressEventsViewed} allEvents={events} addresses={addresses} onEventsListChange={(e)=>{this.onEventsListChange(e)}} filterCurList={changedEventsList} onClose = {()=>{this.setState({adressEventsViewed: false})}}/>
                 
-                </div>
+                </div>:<></>
     }
 }
 export default Email;

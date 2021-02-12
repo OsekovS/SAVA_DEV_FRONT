@@ -16,25 +16,27 @@ const acsReducer = (state = dashboards, action) => {
         console.log(action.json.dashboards)
         action.json.dashboards.forEach(dash => {
             let body = JSON.parse(dash[4])   
-            // console.log(body)
-            let toDate = moment(new Date(body.timeFilter.to))
-            let fromDate = moment(new Date(body.timeFilter.from))
-                body.timeFilter= {
-                    from: fromDate,
-                    to: toDate
-                }
-                body.pdf=body.saver=body.markAsRead='wait'
-                stateCopy[action.dbName][dash[0]] = {
+            if(body.timeFilter!==undefined){
+                let toDate = moment(new Date(body.timeFilter.to))
+                let fromDate = moment(new Date(body.timeFilter.from))
+                    body.timeFilter= {
+                        from: fromDate,
+                        to: toDate
+                    }
+            }
+            body.pdf=body.saver=body.markAsRead='wait'
+            stateCopy[action.dbName][dash[0]] = {
                 id: dash[0],
                 name: dash[1],
                 type: dash[2],
                 body: body,
                  
             }
-            // if(dash[0]==8) 
-            stateCopy[action.dbName][dash[0]].search_after = {head:[0,'0']}
+            if(body.type==='Table') 
+                stateCopy[action.dbName][dash[0]].search_after = {head:[0,'0']}
         });
-           return stateCopy
+        console.log(stateCopy[action.dbName])
+        return stateCopy
         case 'ADD_DASHBOARDS':
             stateCopy = {...state};
             stateCopy[action.dbName] = {...state[action.dbName]}
@@ -66,19 +68,21 @@ const acsReducer = (state = dashboards, action) => {
             stateCopy=  acsIni().dashboards
             return stateCopy
        case 'UPLOAD_CIRCLE_DIAGRAM':
-           console.log(action)
-            if(action.json.logs.count.length===0 || action.json.logs.labels.length===0) {
-                // console.log('NULL')
-                return state
-            }
-            else{
-                stateCopy = getDashBody(state,action)
-            
-                // if(action.json.logs)
-                stateCopy[action.dbName][action.id].body.logs = {...state[action.dbName][action.id].body.logs}
-                stateCopy[action.dbName][action.id].body.logs = action.json.logs
-               return stateCopy
-            }
+            console.log(action)
+            stateCopy = getDashBody(state,action)
+            stateCopy[action.dbName][action.id].body.logs = {...state[action.dbName][action.id].body.logs}
+            stateCopy[action.dbName][action.id].body.logs = action.json.logs
+            return stateCopy
+        case 'UPLOAD_BAR_DIAGRAM':
+            console.log(action)
+            stateCopy = getDashBody(state,action)
+            stateCopy[action.dbName][action.id].body.logs = [...state[action.dbName][action.id].body.logs]
+            stateCopy[action.dbName][action.id].body.logs = action.json.logs.map((e)=>{
+            return {
+                date: new Date(e.date),
+                doc_count: e.doc_count
+            }})
+            return stateCopy
         case 'UPLOAD_ACS_DASHBOARDS':
             let {oldPage, curPage} = action.specialObject
             // console.log(action)
@@ -104,9 +108,10 @@ const acsReducer = (state = dashboards, action) => {
 
             return stateCopy
         case 'CHANGE_PARAM_FILTER':
+            console.log(state)
+            console.log(action)
             stateCopy = getDashBody(state,action)
             let copyData = {...action.filter}
-            console.log(copyData)
             for (const key in copyData) {
                 if (copyData.hasOwnProperty(key)&&copyData[key]===undefined||copyData[key].length===0) {
                     delete copyData[key]   
@@ -220,9 +225,6 @@ const acsReducer = (state = dashboards, action) => {
             // let {newTail, newHead} = 
             // let {oldPage, curPage} = action.sendedObj
             stateCopy = getDashBody(state,action)
-            // console.log(oldPage)
-            // console.log(curPage)
-            //oldpage undefined (для 1 страницы) либо меньше..
 
             // stateCopy[action.dbName][action.id].search_after = {...action.search_after}
             // в es нельзя отправлять строки с символом "/" поэтому мы его заменяем на //
@@ -280,16 +282,6 @@ const acsReducer = (state = dashboards, action) => {
             
             return stateCopy
         }
-        case 'DEL_HEADER_ELEM':{
-            console.log(action)
-            stateCopy = getDashBody(state,action)
-            // console.log(stateCopy[action.dbName][action.id])
-            stateCopy[action.dbName][action.id].body = {... state[action.dbName][action.id].body}  
-            stateCopy[action.dbName][action.id].body.headerElements = 
-                state[action.dbName][action.id].body.headerElements.filter((e,n) => action.num !== n)
-            
-            return stateCopy
-        }
         case 'CHANGE_HEADER_ELEM_SIZE':{
             console.log(action)
             stateCopy = getDashBody(state,action)
@@ -303,41 +295,59 @@ const acsReducer = (state = dashboards, action) => {
                 console.log(stateCopy[action.dbName][action.id].body.headerElements)
             return stateCopy
         }
-        case 'ADD_HEADER_ELEM':{
+        case 'CHANGE_VIEWED_FIELDS': {
             console.log(action)
             stateCopy = getDashBody(state,action)
             // console.log(stateCopy[action.dbName][action.id])
             stateCopy[action.dbName][action.id].body = {... state[action.dbName][action.id].body}  
-            
-            stateCopy[action.dbName][action.id].body.indexElements.forEach(element => {
-                if(element.field === action.field)
-                    stateCopy[action.dbName][action.id].body.headerElements.push(element)
-            }); 
+            stateCopy[action.dbName][action.id].body[action.field] = []
+            action.content.forEach((elem)=>{
+                stateCopy[action.dbName][action.id].body.indexElements.forEach((indexElement)=>{
+                    if(indexElement.field===elem) stateCopy[action.dbName][action.id].body[action.field].push(indexElement)
+                })
+            })
+            // stateCopy[action.dbName][action.id].body.indexElements.forEach(element => {
+            //     if(element.field === action.field)
+            //         stateCopy[action.dbName][action.id].body.footerElements.push(element)
+            // }); 
             return stateCopy;
         }
-        case 'ADD_FOOTER_ELEM':{
-            console.log(action)
+        case 'CHANGE_HEADER_ELEM_POSITION': {
+            let temp //template for change
             stateCopy = getDashBody(state,action)
             // console.log(stateCopy[action.dbName][action.id])
-            stateCopy[action.dbName][action.id].body = {... state[action.dbName][action.id].body}  
-            
-            stateCopy[action.dbName][action.id].body.indexElements.forEach(element => {
-                if(element.field === action.field)
-                    stateCopy[action.dbName][action.id].body.footerElements.push(element)
-            }); 
+            stateCopy[action.dbName][action.id].body = {... state[action.dbName][action.id].body} 
+            stateCopy[action.dbName][action.id].body.headerElements = [... state[action.dbName][action.id].body.headerElements]   
+            if(action.direction === 'left') {
+               temp = stateCopy[action.dbName][action.id].body.headerElements[action.num]
+               stateCopy[action.dbName][action.id].body.headerElements[action.num] = stateCopy[action.dbName][action.id].body.headerElements[action.num - 1]
+               stateCopy[action.dbName][action.id].body.headerElements[action.num - 1] = temp
+            }else{
+                temp = stateCopy[action.dbName][action.id].body.headerElements[action.num]
+                stateCopy[action.dbName][action.id].body.headerElements[action.num] = stateCopy[action.dbName][action.id].body.headerElements[action.num + 1]
+                stateCopy[action.dbName][action.id].body.headerElements[action.num + 1] = temp
+             }
+             
             return stateCopy;
         }
-
+        case 'SHIFT_DASH':{
+            console.log(action)
+            let tempDash //template for change
+            stateCopy = getDashBody(state,action)
+            tempDash = stateCopy[action.dbName][action.id]
+            stateCopy[action.dbName][action.id] = stateCopy[action.dbName][action.siblingId]
+            stateCopy[action.dbName][action.id].id = action.id
+            stateCopy[action.dbName][action.siblingId] = tempDash
+            stateCopy[action.dbName][action.siblingId].id = action.siblingId
+            return stateCopy;
+        }
        default:
            return state;
    }
 }
-export const addHeaderElem = (field,id,dbName) =>({type: 'ADD_HEADER_ELEM', field,id,dbName})
-export const addFooterElem = (field,id,dbName) =>({type: 'ADD_FOOTER_ELEM', field,id,dbName})
 
 export const changeHeaderElemSize = (num,width,id,dbName) =>({type: 'CHANGE_HEADER_ELEM_SIZE', num,width,id,dbName})
-
-export const deleteHeaderElem = (num,id,dbName) => ({type: 'DEL_HEADER_ELEM', num,id,dbName})
+export const changeHeaderElemPos = (num,id,dbName,direction) =>({type: 'CHANGE_HEADER_ELEM_POSITION', num,id,dbName,direction})
 
 export const clearDash = () => ({type: 'DEL_DASH'})
 
@@ -358,7 +368,8 @@ export const changePage = (page,id,dbName) =>
 
 const uploadCircleDiagram = (json,id,dbName) =>
 ({type: 'UPLOAD_CIRCLE_DIAGRAM' ,json, id,dbName})
-
+const uploadBarDiagram = (json,id,dbName) =>
+({type: 'UPLOAD_BAR_DIAGRAM' ,json, id,dbName})
 export const changeDashSize = (delta,id,dbName,changeDir,minVal) => ({type: 'CHANGE_DASH_SIZE' ,delta, id,dbName,changeDir,minVal})
 
 
@@ -374,6 +385,10 @@ export const uploadDashboards = (dbName,json) => ({type: 'UPLOAD_DASHBOARDS',dbN
 export const addDashboard = (dbName,json) => ({type: 'ADD_DASHBOARDS',dbName, json})
 export const delDashboard = (dbName,json) => ({type: 'DEL_DASHBOARDS',dbName, json})
 
+
+export const changeViewedFields = (content, field,id,dbName) => ({type: 'CHANGE_VIEWED_FIELDS',content, field,id,dbName})
+
+export const shiftDash = (id, siblingId, dbName, direction) => ({ type: 'SHIFT_DASH', id, siblingId, dbName, direction})
 export const changeMainField = (value,id,dbName) => ({ type: 'CHANGE_MAIN_FIELD', value,id,dbName})
 export const changeMainFieldList = (id,dbName,list) => { return    { type: 'CHANGE_MAIN_FIELD_LIST', list,id,dbName}  }  
 
@@ -385,7 +400,7 @@ export const changeDashSearchAfterDopParam = (id, sendedObj, search_after, dbNam
 export const changeCollapseMode = (id,dbName,collapse) => { return    { type: 'CHANGE_COLLAPSE_MODE', id, dbName, collapse}  }  
 
 const  prepareTimefilter = (getState,dbName,state,indexName)=>{
-    // console.log(args)
+    console.log(state)
     if(state.body.uploads.uploads){
         let lastViewed = getState().auth.briefUserInfo.modules[dbName].indexes[indexName].lastViewed
         return {
@@ -399,56 +414,138 @@ const  prepareTimefilter = (getState,dbName,state,indexName)=>{
         }
     }  
   }
-
-export const getAcs = (id,indexName,dbName,isFirst) => {
-   console.log(isFirst)
+export const onDashShiftThunk = (id, indexName, dbName, direction) => {
     return (dispatch,getState) => {
-        // console.log(isFirst)
-        let state = getState().dashboards[dbName][id], dispatches = []
-        let specialObject = {}
-        let need
-        let timeFilter = prepareTimefilter(getState,dbName,state,indexName)
-        // console.log('!!!')
-        // console.log(state)
-        if(state.type==='Table') {
+        console.log(id)
+        let siblingId, dashboards = getState().dashboards[dbName]
+        console.log(dashboards)
+        let reactCounter = 0, reactShifredCounter = 0
+        if(direction === 'left'){ 
+            for (const key in dashboards) {
+                if (dashboards.hasOwnProperty(key)) {
+                    if(dashboards[key].id == id) {
+                        reactCounter = key
+                        break;
+                    }
+                    else if(dbName==='sava_core' || dashboards[key].body.indexName === indexName) {
+                        reactShifredCounter = key
+                        siblingId = dashboards[key].id
+                    }
+                }
+            }
+        }
+        else {
+            let flag = false
+            for (const key in dashboards) {
+                if (dashboards.hasOwnProperty(key) && (dbName==='sava_core' || dashboards[key].body.indexName === indexName)) {
+                    if(dashboards[key].id === id) {
+                        reactCounter = key
+                        flag = true;
+                    }
+                    else if(flag){
+                        reactShifredCounter = key
+                        siblingId = dashboards[key].id
+                        break;
+                    }
+                }
+            }
+        }
+        let reqObj={
+            need:"shiftDash",
+            indexName,
+            direction,
+            shiftedId: id,
+            siblingId,
+            dbName,
+            login: getCookie('login')
+        }
+        //{type:''}
+        uniThunk(reqObj,[shiftDash(reactCounter, reactShifredCounter, dbName, direction)],
+            dispatch,id,dbName)
+    }
+}
+//
+const determDbName = (dbName, retField)=>(typeof dbName==='object'?retField:dbName);
+
+export const onClearThunk = (indexName, timeFilter, paramsFilter, password) => {
+    // console.log(args)
+    
+    return (dispatch,getState) => {
+        let reqObj={
+            need: "logsClear",
+            indexName,
+            paramsFilter,
+            timeFilter:{
+                from: timeFilter.from.format('YYYY/MM/DD HH:mm:ss'),
+                to:  timeFilter.to.format('YYYY/MM/DD HH:mm:ss'),
+            },
+            password,
+            login: getCookie('login')
+        }
+        // console.log(reqObj)
+        // dispatch({type:''})
+        axios.post("php/acs-form-processor.php", reqObj).then(response => {
+            // console.log(reqObj)
+            // console.log(response.request.response)
+            let json = JSON.parse(response.request.response);
+            console.log(json)
             
+            if(json.result === 'passwErr') alert('Неверно введенный пароль')
+            else if(json.result === 'success') alert(json.amount + ' записей успешно удалены')
+            else alert('Ошибка при удалении')
+        }).catch(function (error) {
+            // handle error
+            console.log(error);
+          })
+          .finally(function () {
+            // always executed
+          });;
+    }
+}
+export const getAcs = (id,indexName,dbName,isFirst) => {
+    return (dispatch,getState) => {
+        // if(typeof dbName==='object')  dbName = dbName.name
+        let state = getState().dashboards[determDbName(dbName,'sava_core')][id], dispatches = []
+        let specialObject = {},
+            need, timeFilter;
+        if(state.body.timeFilter!==undefined) timeFilter = prepareTimefilter(getState,determDbName(dbName,dbName.name),state,indexName)
+        if(state.type==='Table') {
             specialObject={
                 logsCount: state.body.pagination.showedLogs,//9,
                 curPage: state.body.pagination.currentPage,
                 sortParam: {...state.body.sortParam},
                 id
             }
-            need = "logs"
-                specialObject.search_after =state.body.sortParam.direction=='desc'?'first':['0','0']// [0, "0"]//state.search_after.head    
-                specialObject.idSort = 'asc'
-                need = "logs_pretty"
+            specialObject.search_after =state.body.sortParam.direction=='desc'?'first':['0','0']// [0, "0"]//state.search_after.head    
+            specialObject.idSort = 'asc'
+            need = "logs_pretty"
         }else if(state.type==='Circle_Diagram'){
-            // console.log(state.body.paramFilter)
-            // console.log(getState().auth.briefUserInfo.modules[dbName].indexes[indexName])
-            
             specialObject={
                 fieldName: state.body.field,
                 //если фильтр дашборда пустой либо же в этом фильтре нет ничего по нужному параметру - ищем по всем иначе берем что нужно прямо в фильтре
                 fieldList: (Object.keys(state.body.paramFilter).length===0||state.body.paramFilter[state.body.field]===undefined)?
-                getState().auth.briefUserInfo.modules[dbName].indexes[indexName].filter[state.body.field]:
+                getState().auth.briefUserInfo.modules[determDbName(dbName,dbName.name)].indexes[indexName].filter[state.body.field]:
                 state.body.paramFilter[state.body.field]
-                // fieldList: ["Детский садик 'вишенка'", "Крематорий 'барбекью'"]
             }
             need = 'Circle_Diagram'
-            console.log(state.body.paramFilter)
-            console.log(state.body.field)
+        }else if(state.type==='Bar_Diagram'){
+            specialObject={
+                barsCount: state.body.barsCount,
+                calendar_interval: state.body.calendar_interval,
+                order: state.body.order
+            }
+            need = 'Bar_Diagram'
         }
+        console.log(state.type)
+        console.log(specialObject)
         let paramFilter = {...state.body.paramFilter}
-        console.log(paramFilter)
         paramFilter[state.body.field] = (Object.keys(state.body.paramFilter).length===0||state.body.paramFilter[state.body.field]===undefined)?
-        getState().auth.briefUserInfo.modules[dbName].indexes[indexName].filter[state.body.field]:
+        getState().auth.briefUserInfo.modules[determDbName(dbName,dbName.name)].indexes[indexName].filter[state.body.field]:
         state.body.paramFilter[state.body.field]
-        console.log(paramFilter)
         let changeFilObj = getState().changeDashFromMenu
-        if(state.type==='Table'&&state.body.indexName==changeFilObj.indexName)  {
-            
+        if((state.type==='Table') && (state.body.indexName==changeFilObj.indexName))  {
             paramFilter.significance = changeFilObj.filter.significance
-            dispatches.push(ParamFilter(paramFilter,id,dbName))
+            dispatches.push(ParamFilter(paramFilter,id,determDbName(dbName,dbName.name)))
         }
         delete paramFilter[undefined]
         // if(state.type==='Circle_Diagram') delete paramFilter[state.body.field]
@@ -463,7 +560,7 @@ export const getAcs = (id,indexName,dbName,isFirst) => {
             changePage: isFirst
         }
         if(state.type==='Table') console.log(reqObj.paramsFilter.length)
-            uniThunk(reqObj,dispatches,dispatch,id,dbName)
+            uniThunk(reqObj,dispatches,dispatch,id,determDbName(dbName,'sava_core'))
     }
 }
 
@@ -480,10 +577,10 @@ export const onDashDeleteThunk = (id,dbName,indexName) => {
     }
 }
 
-export const addDashBoardThunk = (indexName,dbName,mainField) => {
-    console.log(indexName)
-    console.log(dbName)
-    console.log(mainField)
+export const addDashBoardThunk = (indexName,dbName,mainField,name) => {
+    // console.log(indexName)
+    // console.log(dbName)
+    // console.log(mainField)
     return (dispatch,getState) => {
         
                 let reqObj = {
@@ -491,6 +588,7 @@ export const addDashBoardThunk = (indexName,dbName,mainField) => {
                     dbName,
                     indexName,
                     mainField,
+                    name,
                     login: getState().auth.briefUserInfo.name,
                 }
                 uniThunk(reqObj,[],dispatch)
@@ -499,23 +597,18 @@ export const addDashBoardThunk = (indexName,dbName,mainField) => {
 
 export const changeMainFieldThunk = (newMainField,dbName,indexName,id) => {
     return (dispatch,getState) => {
-        let state = getState().dashboards[dbName][id]
-        let timeFilter = prepareTimefilter(getState,dbName,state,indexName)
+        let state = getState().dashboards[determDbName(dbName,'sava_core')][id]
+        let timeFilter = prepareTimefilter(getState,determDbName(dbName,dbName.name),state,indexName)
         let filterCopy = {...state.body.paramFilter}
         let specialObject={
             fieldName: newMainField,
             //если фильтр дашборда пустой либо же в этом фильтре нет ничего по нужному параметру - ищем по всем иначе берем что нужно прямо в фильтре
             fieldList: (Object.keys(state.body.paramFilter).length===0||state.body.paramFilter[newMainField]===undefined)?
-            getState().auth.briefUserInfo.modules[dbName].indexes[indexName].filter[newMainField]:
+            getState().auth.briefUserInfo.modules[determDbName(dbName,dbName.name)].indexes[indexName].filter[newMainField]:
             state.body.paramFilter[newMainField]
-            // fieldList: ["Детский садик 'вишенка'", "Крематорий 'барбекью'"]
         }
         
         let paramFilter = state.body.paramFilter
-        console.log(paramFilter)
-        // paramFilter['fieldName'] = (Object.keys(state.body.paramFilter).length===0||state.body.paramFilter[state.body.field]===undefined)?
-        // getState().auth.briefUserInfo.modules[dbName].indexes[indexName].filter[state.body.field]:
-        // state.body.paramFilter[state.body.field]
 
         delete filterCopy[newMainField]
                 let reqObj = {
@@ -526,7 +619,7 @@ export const changeMainFieldThunk = (newMainField,dbName,indexName,id) => {
                     dashType: state.type,
                     specialObject
                 }
-                uniThunk(reqObj,[changeMainField(newMainField,id,dbName)],dispatch,id,dbName)
+                uniThunk(reqObj,[changeMainField(newMainField,id,determDbName(dbName,'sava_core'))],dispatch,id,determDbName(dbName,'sava_core'))
     }
 }
 
@@ -574,17 +667,13 @@ export const changeUploadModeThunk = (uploadMode,indexName,id) => {
     }
 }
 
-export const changeUploadsThunk = (uploads,id,indexName,dbName) => {//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    console.log(':)))))')
+export const changeUploadsThunk = (uploads,id,indexName,dbName) => {
     return (dispatch,getState) => {
-        // console.log(moment(new Date()).subtract(uploads.fromNum, uploads.fromLetter).format('YYYY/MM/DD HH:mm:ss'))//,{fromNum:,fromLetter:uploads.fromLetter},indexName,dbName)
-        // let lastViewed = uploads.lastViewed
         let from = moment(new Date()).subtract(uploads.fromNum, uploads.fromLetter).format('YYYY/MM/DD HH:mm:ss')
         // let from = getState().auth.briefUserInfo.modules[dbName].indexes[indexName].lastViewed
-        console.log(uploads)
-        // console.log(getState().auth.briefUserInfo.modules[dbName])
-        let reducers = [changeUpdatesParams(uploads,id,dbName),changeUploads(true,id,dbName)]
-        let state = getState().dashboards[dbName][id]
+        let reducers = [changeUpdatesParams(uploads,id,determDbName(dbName,'sava_core')),
+            changeUploads(true,id,determDbName(dbName,'sava_core'))]
+        let state = getState().dashboards[determDbName(dbName,'sava_core')][id]
         let timeFilter, specialObject = {}
             timeFilter = {
                 from,
@@ -605,15 +694,15 @@ export const changeUploadsThunk = (uploads,id,indexName,dbName) => {////////////
             need = "logs_pretty"
             specialObject.sortParam.direction = 'asc'
 
-            reducers.push(changePage(1,id,dbName))
-            reducers.push(changeDashSearchAfterParam(id, specialObject, {head: [0,'0']}, dbName))
+            reducers.push(changePage(1,id,determDbName(dbName,'sava_core')))
+            reducers.push(changeDashSearchAfterParam(id, specialObject, {head: [0,'0']}, determDbName(dbName,'sava_core')))
         }else if(state.type==='Circle_Diagram'){
             console.log(state.body)
             specialObject={
                 fieldName: state.body.field,
                 //если фильтр дашборда пустой либо же в этом фильтре нет ничего по нужному параметру - ищем по всем иначе берем что нужно прямо в фильтре
                 fieldList: (state.body.paramFilter===[]||state.body.paramFilter[state.body.field]===undefined)?
-                getState().auth.briefUserInfo.modules[dbName].indexes[indexName].filter[state.body.field]:
+                getState().auth.briefUserInfo.modules[determDbName(dbName,dbName.name)].indexes[indexName].filter[state.body.field]:
                 state.body.paramFilter[state.body.field]
                 // fieldList: ["Детский садик 'вишенка'", "Крематорий 'барбекью'"]
             }
@@ -629,7 +718,7 @@ export const changeUploadsThunk = (uploads,id,indexName,dbName) => {////////////
             changePage:state.type==='Table'?true:undefined,
         }
         // console.log(reqObj)
-        uniThunk(reqObj,reducers,dispatch,id,dbName)
+        uniThunk(reqObj,reducers,dispatch,id,determDbName(dbName,'sava_core'))
 
     }
 }
@@ -732,37 +821,35 @@ export const changePageThunk = (page,indexName,id,dbName) => {
 
 export const setTimeFilterThunk = (startDate, endDate,indexName,id,dbName) => {
         return (dispatch, getState) => {
-            let state = getState().dashboards[dbName][id]
+            console.log(determDbName(dbName,'sava_core'))
+            console.log(dbName)
+            let state = getState().dashboards[determDbName(dbName,'sava_core')][id]
             let specialObject = {}
-            let reducers = [TimeFilter(startDate, endDate,id,dbName),changeUploads(false,id,dbName)]
+            let reducers = [TimeFilter(startDate, endDate,id,determDbName(dbName,'sava_core')),changeUploads(false,id,determDbName(dbName,'sava_core'))]
             let need
             if(state.type==='Table') {
                 specialObject={
                     logsCount: state.body.pagination.showedLogs,
                     curPage: 1,
                     sortParam: {...state.body.sortParam},
-//////////////////////////////////////////////////////////////////////////////////////////////////
                     oldPage: undefined,
                     id
-//////////////////////////////////////////////////////////////////////////////////////////////////
                 }
                 need = 'logs'
-//////////////////////////////////////////////////////////////////////////////////////////////////
             // if(id==8) {
                 specialObject.search_after = [0,'0']
                 specialObject.idSort = 'asc'
                 specialObject.sortParam.direction = 'asc'
                 need = "logs_pretty"
             // }
-//////////////////////////////////////////////////////////////////////////////////////////////////
-                reducers.push(changePage(1,id,dbName))
+                reducers.push(changePage(1,id,determDbName(dbName,'sava_core')))
                 // reducers.push(changeDashSearchAfterParam(id, specialObject, state.search_after_dop, dbName))
             }else if(state.type==='Circle_Diagram'){
                 specialObject={
                     fieldName: state.body.field,
                     //если фильтр дашборда пустой либо же в этом фильтре нет ничего по нужному параметру - ищем по всем иначе берем что нужно прямо в фильтре
                     fieldList: (state.body.paramFilter===[]||state.body.paramFilter[state.body.field]===undefined)?
-                    getState().auth.briefUserInfo.modules[dbName].indexes[indexName].filter[state.body.field]:
+                    getState().auth.briefUserInfo.modules[determDbName(dbName,dbName.name)].indexes[indexName].filter[state.body.field]:
                     state.body.paramFilter[state.body.field]
                     // fieldList: ["Детский садик 'вишенка'", "Крематорий 'барбекью'"]
                 }
@@ -781,7 +868,7 @@ export const setTimeFilterThunk = (startDate, endDate,indexName,id,dbName) => {
                 changePage: true,
             }
             // console.log('acs-form-processor.php')
-            uniThunk(reqObj,reducers,dispatch,id,dbName)
+            uniThunk(reqObj,reducers,dispatch,id,determDbName(dbName,'sava_core'))
         }
 
 }
@@ -793,19 +880,9 @@ export const setComplexSetThunkFromMain = (filter,dbName,indexName,id,newFrom) =
             if(element.type==='Table' && element.body.indexName==indexName) {
                 id = element.id
                 dispatches.push(ParamFilter(filter,id,dbName))
-                // if(!element.body.uploads.uploads) {
-                //     uploadsCopy = {...element.body.uploads}
-                //     uploadsCopy.uploads = true
-                //     dispatches.push(changeUploads(uploadsCopy,id,dbName))
-                // }
-                console.log(element.body.uploads.uploads)
                 if(element.body.uploads.uploads) {
-                    // uploadsCopy = {...element.body.uploads}
-                    // uploadsCopy.uploads = false
                     dispatches.push(changeUploads(false,id,dbName))
                 }
-                // console.log( (newFrom))
-                // console.log( )
                 dispatches.push(TimeFilter(moment(newFrom), moment(Date.now()),id,dbName))
                 
             }
@@ -816,58 +893,47 @@ export const setComplexSetThunkFromMain = (filter,dbName,indexName,id,newFrom) =
 }
 // uploads,timeFilter,filter,showedLogs,page
 export const setParamFilterThunk = (filter,dbName,indexName,id) => {
-    
-    let filterCopy = {}
-    // console.log(dbName)
-    // console.log(indexName)
+    let filterCopy = {}, timeFilter
     for (let param in filter) {
         if(filter[param]!==undefined&&filter[param].length!==0) filterCopy[param] = filter[param]
     }
     console.log(filterCopy)
     return (dispatch,getState) => {
        
-        let state = getState().dashboards[dbName][id]
+        let state = getState().dashboards[determDbName(dbName,'sava_core')][id]
         
         let  specialObject = {}
-        let reducers = [ParamFilter(filter,id,dbName)]
+        let reducers = [ParamFilter(filter,id,determDbName(dbName,'sava_core'))]
         let need
         
         if(state.type==='Table') {
             specialObject={
                 logsCount: state.body.pagination.showedLogs,
                 curPage: 1,
-                sortParam: {...state.body.sortParam}, 
-//////////////////////////////////////////////////////////////////////////////////////////////////
+                sortParam: {...state.body.sortParam},
                 oldPage: undefined,
                 id
-//////////////////////////////////////////////////////////////////////////////////////////////////
             }
-            need = 'logs'
-//////////////////////////////////////////////////////////////////////////////////////////////////
-            // if(id==8) {
-                specialObject.search_after = [0,'0']
-                specialObject.idSort = 'asc'
-                specialObject.sortParam.direction = 'asc'
-                need = "logs_pretty"
-            // }
-//////////////////////////////////////////////////////////////////////////////////////////////////
-            reducers.push(changePage(1,id,dbName))
+            specialObject.search_after = [0,'0']
+            specialObject.idSort = 'asc'
+            specialObject.sortParam.direction = 'asc'
+            need = "logs_pretty"
+            reducers.push(changePage(1,id,determDbName(dbName,'sava_core')))
         }else if(state.type==='Circle_Diagram'){
             let mainField = state.body.field
-            
             specialObject={
                 fieldName: state.body.field,
-                //если фильтр дашборда пустой либо же в этом фильтре нет ничего по нужному параметру - ищем по всем иначе берем что нужно прямо в фильтре
-                // fieldList: (filterCopy[mainField]===0||filterCopy[mainField]===undefined)?
-                // getState().auth.briefUserInfo.modules[dbName].indexes[indexName].filter[mainField]:
-                // filterCopy[mainField]
-                // fieldList: ["Детский садик 'вишенка'", "Крематорий 'барбекью'"]
             }
             need = 'Circle_Diagram'
-            // delete filterCopy[mainField]
+        }else if(state.type==='Bar_Diagram'){
+            specialObject={
+                barsCount: state.body.barsCount,
+                calendar_interval: state.body.calendar_interval,
+                order: state.body.order
+            }
+            need = 'Bar_Diagram'
         }
-        let timeFilter = prepareTimefilter(getState,dbName,state,indexName)
-        
+        if(state.body.timeFilter!==undefined) timeFilter = prepareTimefilter(getState,determDbName(dbName,dbName.name),state,indexName)
         let  reqObj={
                 need,
                 indexName,
@@ -876,7 +942,7 @@ export const setParamFilterThunk = (filter,dbName,indexName,id) => {
                 specialObject,
                 dashType: state.type
             };
-            uniThunk(reqObj,reducers,dispatch,id,dbName)          
+            uniThunk(reqObj,reducers,dispatch,id,determDbName(dbName,'sava_core'))          
     }
 }
 
@@ -927,12 +993,12 @@ export const changeSortThunk = (sortParam,indexName,id,dbName) => {
 // 31
 export const onSaveDashParamsThunk = (id,dbName) => {
     return (dispatch,getState) => {
-        let state = getState().dashboards[dbName][id]
+        let state = getState().dashboards[determDbName(dbName,'sava_core')][id]
         let {timeFilter,paramFilter,uploads,indexName,field,style,footerElements,headerElements} = state.body
-        timeFilter = {
+        if(timeFilter!==undefined) timeFilter = {
                 from: timeFilter.from.format('YYYY/MM/DD HH:mm:ss'),
                 to:  timeFilter.to.format('YYYY/MM/DD HH:mm:ss'),
-        }
+            }
         // Object.values(paramFilter).forEach(element => {
         //     console.log(element)
         // });
@@ -943,10 +1009,10 @@ export const onSaveDashParamsThunk = (id,dbName) => {
             change: {timeFilter, paramFilter, uploads, field, style,footerElements,headerElements},
             login: getState().auth.briefUserInfo.name,
             indexName,
-            dbName
+            dbName: determDbName(dbName,'sava_core')
         }
         
-        uniThunk(reqObj,[],dispatch,dbName)
+        uniThunk(reqObj,[],dispatch,determDbName(dbName,'sava_core'))
     }
 }
 
@@ -965,7 +1031,7 @@ export const onChangeDashNameThunk = (newName,id,dbName) => {
 }
 
 const uniThunk = (reqObj,dispatches,dispatch, id,dbName) => {
-    
+
     if(reqObj['need']==='logs_pretty') console.log(reqObj.paramsFilter.length)
     axios.post("php/acs-form-processor.php", reqObj).then(response => {
         // console.log(reqObj)
@@ -974,14 +1040,11 @@ const uniThunk = (reqObj,dispatches,dispatch, id,dbName) => {
         console.log(json)
         
         if(reqObj['need']==='logs') dispatch(uploadAcs(json, reqObj, id,dbName))
-        if(reqObj['need']==='dashboards') {
-
-            dispatch(uploadDashboards(reqObj.dbName,json,reqObj.need))
-        }
+        if(reqObj['need']==='dashboards') dispatch(uploadDashboards(reqObj.dbName,json,reqObj.need))
         if(reqObj['need']==='addDashboard') dispatch(addDashboard(reqObj.dbName,json,reqObj.need))
         if(reqObj['need']==='delDashboard') dispatch(delDashboard(reqObj.dbName,json,reqObj.need))
         if(reqObj['need']==='Circle_Diagram') dispatch(uploadCircleDiagram(json,id,dbName))
-
+        if(reqObj['need']==='Bar_Diagram') dispatch(uploadBarDiagram(json,id,dbName))
         if(reqObj['need']==='logs_pretty') {
             if(reqObj.timeFilter.to==='now/d'&&reqObj.changePage) dispatch(changeDashSearchAfterDopParam(id, reqObj.specialObject, json.search_after, dbName))
             else if(reqObj.changePage) dispatch(changeDashSearchAfterParam(id, reqObj.specialObject, json.search_after, dbName))
@@ -1018,7 +1081,7 @@ export const onCreatePdfThunk = () => {
 export const createReportThunk = (state, indexName, field) => {
     return (dispatch,getState) => {
         let obj, {mode, timeFilter, params, mainField, title, trend, fieldsInTable} = state
-        console.log(fieldsInTable)
+        // console.log(fieldsInTable)
         if(mode==='pdf'){
             obj = {operation: "create PDF",params:[{}]}
             obj.params[0].timerange = {
@@ -1033,7 +1096,7 @@ export const createReportThunk = (state, indexName, field) => {
             obj.params[0].type = title
             obj.params[0].indexName = indexName
         }else{
-            console.log(title)
+            // console.log(title)
             obj = {
                 operation:"create EXCEL",
                 params:{
@@ -1067,14 +1130,19 @@ export const createReportThunk = (state, indexName, field) => {
             console.log(response.request.response)
             let json = JSON.parse(response.request.response);
             console.log(json)
-            const url = window.URL.createObjectURL(new Blob([response.data]));
+            if(json.python === "OK") {
+                const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;
-            console.log('resolution='+(mode==='pdf'?'pdf':'excel'))
+            // console.log('resolution='+(mode==='pdf'?'pdf':'excel'))
             link.setAttribute('href', 'php/upload-file.php?resolution='+(mode==='pdf'?'pdf':'excel'+'&filename='+title))
             link.setAttribute('target', '_blank');
             document.body.appendChild(link);
             link.click();
+            }
+            else{
+                alert("Ошибка генерации отчета...")
+            }
            
         }).catch(function (error) {
             // handle error

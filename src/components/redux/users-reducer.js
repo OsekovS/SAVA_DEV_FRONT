@@ -32,6 +32,8 @@ const usersReducer = (state = initialState, action) => {
             return stateCopy;
         case DEL_USER:
             stateCopy ={...state}
+            console.log(state)
+            console.log(action)
             // stateCopy.users ={...state.users}
             // stateCopy.users= state.users.filter(e =>{return e.id!==action.id})
             stateCopy.users = []
@@ -53,7 +55,7 @@ const usersReducer = (state = initialState, action) => {
                     let modules = e[3]
                     modules = Object.keys(JSON.parse(e[3]))
                     // .toString()  .join()
-               
+                    
                     stateCopy.users.push({
                         id: e[0],
                         name: e[1],

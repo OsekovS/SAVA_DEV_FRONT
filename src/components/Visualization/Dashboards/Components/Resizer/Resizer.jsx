@@ -49,7 +49,7 @@ class Resizer extends React.Component {
     }
 
     render() {  
-        let {id,indexName,dbName,type,isAbsolutePos} = this.props,
+        let {type,isAbsolutePos} = this.props,
         {onMouseMove, onMouseUp} = this,
         clazz = type[0].toLowerCase().indexOf('height')!==-1?'Vertical':'Horizontal'
     //    console.log(this.props)

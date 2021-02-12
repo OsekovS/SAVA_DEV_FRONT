@@ -11,8 +11,16 @@ table{
 .Table__white-black{
     width: 100%;
     border-spacing: 0;
+    tr:nth-child(n){
+        background-color: $white-color;
+    }
     tr:nth-child(2n){
         background-color: $lightGrey-color;
+    }
+    tr:not(:first-child):hover{
+        cursor: pointer;
+        color: $white-color;
+        background-color: $lightGreyText-color-hover;
     }
     img{
         cursor: pointer;

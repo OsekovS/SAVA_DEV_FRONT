@@ -10,7 +10,6 @@ const UPDATE_PAGE = "UPDATE_PAGE"
 const LOG_IN = "LOG_IN"
 const LOG_OUT = "LOG_OUT"
 const UPDATE_PANEL_LOGS_COUNT = 'UPDATE_PANEL_LOGS_COUNT'
-const UPLOAD_LAST_TIME = 'UPLOAD_LAST_TIME'
 const CHANGE_LAST_VIEWED = 'CHANGE_LAST_VIEWED'
 
 let initialState = {
@@ -23,7 +22,6 @@ const authReducer = (state = initialState, action) => {
    let stateCopy = state
     switch (action.type) {
        case LOG_IN:
-            console.log(action)
             let modules = action.data.modules
             let indexes = {}
             stateCopy = {...state}
@@ -46,10 +44,10 @@ const authReducer = (state = initialState, action) => {
                     }
                 }
             }
-            console.log(indexes)
+            // console.log(indexes)
             setCookie('modulesTranslate',JSON.stringify(stateCopy.modulesTranslate))
             setCookie('modules',JSON.stringify(indexes))
-            console.log(getCookie('modules'))
+            // console.log(getCookie('modules'))
             setCookie("admin",action.data.admin)
             setCookie("hash",action.data.hash)
             setCookie("lic",JSON.stringify(action.data.lic))
@@ -84,8 +82,8 @@ const authReducer = (state = initialState, action) => {
             stateCopy = {...state}
             stateCopy.briefUserInfo = {...state.briefUserInfo}
             stateCopy.briefUserInfo.modules = {...state.briefUserInfo.modules}
-            console.log(state)
-            console.log(action)
+            // console.log(state)
+            // console.log(action)
             for (const key in action.data) {
                 if (action.data.hasOwnProperty(key)) {
                     stateCopy.briefUserInfo.modules[key] = {...state.briefUserInfo.modules[key]}
@@ -112,21 +110,6 @@ const authReducer = (state = initialState, action) => {
                 }
             }
             return stateCopy
-        case UPLOAD_LAST_TIME:
-            let {dbName, indexName, newTime,editedList} = action
-            stateCopy = {...state}
-            stateCopy.briefUserInfo = {...state.briefUserInfo}
-            stateCopy.briefUserInfo.modules = {...state.briefUserInfo.modules}
-            stateCopy.briefUserInfo.modules[dbName] = {...state.briefUserInfo.modules[dbName]}
-            stateCopy.briefUserInfo.modules[dbName].indexes = {...state.briefUserInfo.modules[dbName].indexes}
-            stateCopy.briefUserInfo.modules[dbName].indexes[indexName] = {...state.briefUserInfo.modules[dbName].indexes[indexName]}
-            stateCopy.briefUserInfo.modules[dbName].indexes[indexName].newLogs = {...state.briefUserInfo.modules[dbName].indexes[indexName].newLogs}
-            console.log(stateCopy.briefUserInfo.modules[dbName].indexes[indexName].newLogs)
-            editedList.forEach(element => {
-                console.log(element)
-                stateCopy.briefUserInfo.modules[dbName].indexes[indexName].newLogs[element].lastTime = newTime
-            });
-            return stateCopy
             case 'CHANGE_LAST_VIEW':{
                 console.log(action)
                 stateCopy = {...state}
@@ -138,15 +121,52 @@ const authReducer = (state = initialState, action) => {
                 stateCopy.briefUserInfo.modules[action.dbName].indexes[action.indexName].lastViewed = {fromNum:action.fromNum, fromLetter:action.fromLetter}
                 return stateCopy;
             }
-            
+            case 'UPLOAD_EDITED_LIST':{
+                console.log(action)
+                let {dbName, indexName, newTime,editedList} = action
+                stateCopy = {...state}
+                stateCopy.briefUserInfo = {...state.briefUserInfo}
+                stateCopy.briefUserInfo.modules = {...state.briefUserInfo.modules}
+                stateCopy.briefUserInfo.modules[dbName] = {...state.briefUserInfo.modules[dbName]}
+                stateCopy.briefUserInfo.modules[dbName].indexes = {...state.briefUserInfo.modules[dbName].indexes}
+                stateCopy.briefUserInfo.modules[dbName].indexes[indexName] = {...state.briefUserInfo.modules[dbName].indexes[indexName]}
+                stateCopy.briefUserInfo.modules[dbName].indexes[indexName].logsCount = {...state.briefUserInfo.modules[dbName].indexes[indexName].logsCount}
+                editedList.forEach((e)=>{
+                    stateCopy.briefUserInfo.modules[dbName].indexes[indexName].logsCount[e].lastTime = newTime
+                    stateCopy.briefUserInfo.modules[dbName].indexes[indexName].logsCount[e].doc_count = 0
+
+                })
+        
+                return stateCopy
+            }
+            case 'UPLOAD_DISK_INFO':{
+                console.log(action)
+                stateCopy = {...state}
+                stateCopy.briefUserInfo = {...state.briefUserInfo}
+                let modules = stateCopy.briefUserInfo.modules
+                stateCopy.briefUserInfo.diskInfo = action.diskInfo.filter((elem)=>{
+                    let result = false
+                    for (const moduleKey in modules) {
+                        for (const indexKey in modules[moduleKey].indexes) {
+                            if (modules.hasOwnProperty(moduleKey) && modules[moduleKey].indexes.hasOwnProperty(indexKey)
+                                && indexKey === elem['Название таблицы elasticsearch']) {
+                                    result = true;
+                            }
+                        }   
+                    }
+                    return result
+                })       
+                stateCopy.briefUserInfo.diskAvail = action.diskAvail       
+                return stateCopy
+            }
        default:
            return state;
    }
 }
 export const setLastView = ({fromNum,fromLetter},indexName,dbName) => ({type: 'CHANGE_LAST_VIEW' ,fromNum,dbName,fromLetter,indexName})
 // export const changelastViewed = (newLastViewed,dbName) => ({type: CHANGE_LAST_VIEWED, newLastViewed,dbName})
-export const uploadLastTime = (indexName,dbName,newTime,editedList) => ({type: UPLOAD_LAST_TIME, indexName,dbName,newTime,editedList})
-// export const uploadLastTime = (indexName,dbName,newTime) => ({type: CHANGE, indexName,dbName,newTime})
+export const uploadLastEditedList = (indexName,dbName,newTime,editedList) => ({type: 'UPLOAD_EDITED_LIST', indexName,dbName,newTime,editedList})
+export const updateDiskInfo = (diskInfo, diskAvail) => ({type: 'UPLOAD_DISK_INFO', diskInfo, diskAvail})
 // export const delUser = (id) => ({type: DEL_USER, id: id })
 const logIn = (data) => ({type: LOG_IN,data})
 export const logOut = () => ({type: LOG_OUT})
@@ -173,13 +193,13 @@ export const setLastViewThunk = (lastTime,indexName,dbName) =>{
 export const getLogsCountThumk = () =>{
     return (dispatch,getState) => {
         let state = getState().auth.briefUserInfo
-        console.log(state)
+        // console.log(state)
         axios.post("php/acs-form-processor.php",{need:"modulesInfo",login:state.name,modules:state.modules}).then(response => {
             // console.log({need:"modulesInfo",login:state.name,modules:state.modules})
             // console.log(response.request.response)
             // dispatch({type: ''})
             let json = JSON.parse(response.request.response);
-            console.log(json)
+            // console.log(json)
             return dispatch(updatePageLogsCount(json));
 
             // dispatch(updatePage())
@@ -211,6 +231,12 @@ export const onChangeUserSawThunk = (indexName,id,dbName,editedList) => {
             // console.log(response)
             let json = JSON.parse(response.request.response);
             console.log(json)
+            if(json.result !== null) {
+                dispatch(uploadLastEditedList(indexName,dbName,newTime,editedList))
+                alert('Выбранные события успешно отмечены')
+            }else {
+                alert('Ошибка')
+            }
         }).catch(function (error) {
             // handle error
             console.log(error);
@@ -218,17 +244,15 @@ export const onChangeUserSawThunk = (indexName,id,dbName,editedList) => {
         .finally(function () {
             // always executed
         });
-        dispatch(uploadLastTime(indexName,dbName,newTime,editedList))
+
         // dispatch(changelastViewed = (newLastViewed) => ({type: CHANGE_LAST_VIEWED, newLastViewed}))
         }
     }
 
 export const logInThunk = (logObj) => {
     return (dispatch) => {
-        // console.log(logObj)
-        
         axios.post("php/users-form-processor.php",{"auth":logObj}).then(response => {
-            console.log(response.request)
+            // console.log(response.request)
             let json = JSON.parse(response.request.response);
             console.log(json)
             if(json.result){
@@ -237,7 +261,7 @@ export const logInThunk = (logObj) => {
                 dispatch(updatePaths(json.cookies.modules));
                 dispatch(updateNetActionCreator(json.cookies.net_settings))
                 dispatch(updateTimezoneActionCreator(json.cookies.ntp_settings))
-                
+                dispatch(updateDiskInfo(json.diskInfo, json.dataAvail[0]));
             }
             else alert('Ошибка авторизации, неверно введен пароль или логин')
         }).catch(function (error) {
@@ -264,7 +288,7 @@ export const checkCookies = () => {
             
         }}).then(response => {
             
-            // console.log(response.request)
+            //console.log(response.request.response)
             let json = JSON.parse(response.request.response);
             console.log(json)
             if(json.result){
@@ -272,6 +296,7 @@ export const checkCookies = () => {
                 dispatch(afterLicUpdate(JSON.parse(getCookie("lic"))))
                 dispatch(updatePage(json.modules))
                 dispatch(updatePaths(json.modules));
+                dispatch(updateDiskInfo(json.diskInfo, json.dataAvail[0]));
             }else dispatch(logOut())//выходим в авторизацию
             // dispatch(updatePage())
         

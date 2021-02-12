@@ -1,11 +1,27 @@
 import React from 'react';
 import __mainMenuItem from './MenuItem/MenuItem'
 import __header from '../../Common/__header/__header'
+import  {getLogsCountThumk} from "../../redux/auth-reducer";
+import {connect} from "react-redux";
 // import {NavLink} from 'react-router-dom'
 import './Visio.scss';
 import { checkPropTypes } from 'prop-types';
 
-const Visio = (props) => {
+class Visio extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+          isCollapsed: true      
+        }
+    }
+    componentDidMount() {
+        this.intervalId = setInterval(()=>{
+            return (this.state.isCollapsed?null:this.props.getLogsCountThumk())
+        }, 5000);
+          // this.props.getLogsCountThumk();
+      }
+    render() {
+    let props = this.props
     // console.log(props)
     //||Object.keys(props.paths).length===0
     const MenuItems = props.modules===undefined?null:Object.keys(props.modules).map(key => {
@@ -28,14 +44,36 @@ const Visio = (props) => {
     });
 
     return <div className="Visio">
-        <__header text={"Визуализация"} clazz="Common__header Common__header_red"/>
-        <ul>
-            {MenuItems}
-        </ul>
+        {/* <__header text={"Визуализация"} clazz="Common__header Common__header_red"/> */}
+        <header className={"Common__header Common__header_red Common__header_main"}
+        onClick={()=>{this.setState({isCollapsed: !this.state.isCollapsed})}} >        
+            <div data-title="визуализация по модулям" className='comment'>
+                <span>Визуализация</span>
+            </div>
+            <img className={'collapser'} src={require("../../img/openForHeader.svg")}></img>
+        </header>
+        {this.state.isCollapsed? null :
+            <ul>
+                {MenuItems}
+            </ul>
+        }
     </div>
-}
+}}
 
-export default Visio;
+let mapStateToProps = (state) => {
+    return {
+    //   sidebar: state.modSidebar,
+    //   modules: state.auth.briefUserInfo.modules
+    }
+  }
+  
+  let mapDispatchToProps = {
+    getLogsCountThumk
+  }
+  
+  const exportedVisio = connect(mapStateToProps,mapDispatchToProps)(Visio);
+
+export default exportedVisio;
 
 // dbName: "iss"
 // head: {text: "SAVA СЗИ «SNS»"}

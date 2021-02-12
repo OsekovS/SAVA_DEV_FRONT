@@ -1,5 +1,11 @@
 @import '../../colors.scss';
 .Visio{
+    .Common__header {
+        &>div {
+            height: 24px;
+            line-height: 24px;
+        }
+    }
     width: 100%; 
     &>ul{
         padding: 16px 29px 12px 19px;

@@ -2,9 +2,10 @@
 @import '../../../scss/button.scss';
 .Settings__email{
     position: relative;
-    // .Common__header{
-    //     width: 500px;
-    // }
+    .comment:hover::after{
+        left: -130%;
+        top: 130%;
+    }
     &>div{
         width: 800px;
         margin: 0 auto 0 auto;
@@ -12,6 +13,7 @@
             padding: 0px 0 40px 0px;
             border: 1px solid $grey-color;
             overflow-y: auto;
+            overflow-x: hidden;
             max-height: 200px;
             .icon{
             }
@@ -47,7 +49,7 @@
             // padding: 10px;
             padding: 10px 0 0 0;
             box-sizing: border-box;
-            height: 150px;
+            height: 100px;
             justify-content: space-between;
             label{
                 width: 370px;
@@ -86,7 +88,7 @@
         }
         &>div {
             box-shadow: 0 3px 6px rgba(0,0,0,.15), 0 1px 6px rgba(0,0,0,.1);
-            width: 600px;
+            width: 900px;
             &>div {
                 padding: 10px 0 0 10px;
             }

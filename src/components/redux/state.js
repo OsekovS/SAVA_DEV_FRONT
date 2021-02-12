@@ -12,24 +12,6 @@ let state = {
             errors: 12
         }
     },
-    allEvents: {
-        cameras: {
-            events: 1000,
-            exceptions: 9,
-            errors: 0
-        },
-        acs: {
-            events: 1100,
-            exceptions: 406,
-            errors: 0
-        },
-        iss: {
-            events: 620,
-            exceptions: 54,
-            errors: 12
-        },
-    },
-    
     cameras: {
        settings: {objects: [{numb: '1', name: 'Санаторий Звенигород'},
         {numb: '2', name: 'Больница №46'},

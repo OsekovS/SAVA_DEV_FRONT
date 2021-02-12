@@ -1,6 +1,45 @@
 @import '../../../../scss/button.scss';
 
-.DashCreator{
+// .DashCreator{
+//     // width: 50px;
+//     // height: 50px;
+//     cursor: pointer;
+//     // border: 5px solid #263137;
+//     // border-radius: 50%;
+//     // padding: 10px;
+//     position: absolute;
+//     right: 25px;
+//     top: -32px;
+//     // top: 165px;
+//     @include button($red-color,180px,30px);
+// }
+.DashCreator__plus {
+    width: 200px;
+    height: 200px;
+    border: 10px solid rgba($color: #e9e3e398, $alpha: 0.7);
+    position: relative;
+    top: 50px;
+    border-radius: 50%;
+    background: inherit;
+    outline: none;
+    cursor: pointer;
+}
+.DashCreator__plus::before, .DashCreator__plus::after {
+    content: "";
+    position: absolute;
+    background: rgba(233,227,227,.7);
+    width: 15px;
+    height: 150px;
+    top: 15px;
+}
+.DashCreator__plus::before{
+    left: 81px;
+}
+.DashCreator__plus::after{
+    left: 81px;
+    transform: rotate(90deg);
+}
+.DashCreator__red-button{
     // width: 50px;
     // height: 50px;
     cursor: pointer;
@@ -16,8 +55,9 @@
 .modal-form__dashCreator{
     // margin-top: 100px;
     // background-color: blue;
-    width: 80%;
+    width: 600px;
     margin: 0 auto;
+    background-color:#e0e0e0;
     header {
         background: #eb4147;
         display: flex;
@@ -29,16 +69,25 @@
         }
     }
     form {
-        background-color:#e0e0e0;
+        input[type="text"]{
+            margin-bottom: 15px;
+            width: 280px;
+        }
         height: 150px;
         padding: 20px;
         display: flex;
         flex-direction: column;
+        width: 600px;
+        margin: 0 auto;
         select {
-            margin: 10px 0 60px 0;
+            margin: 10px 0 20px 0;
             width: 285px;
         }
-        div {
+        div:first-child {
+            margin: 0 auto;
+            width: fit-content;
+        }
+        div:nth-child(2) {
             display: flex;
             justify-content: space-around;
             width: 65%;

@@ -22,7 +22,7 @@ import React from 'react';
                 display: 'collapsed'
             };
         }
-        
+        this.onCleanFilter = this.onCleanFilter.bind(this);
         this.onDone = this.onDone.bind(this);
         this.onCancel = this.onCancel.bind(this);
         this.generateFiltersList = this.generateFiltersList.bind(this);
@@ -80,7 +80,19 @@ onCancel(){
     console.log('onCancel')
     this.setState({ display: 'collapsed' });
 }
-
+onCleanFilter(){
+    if(this.props.single){
+        this.setState({params: {} });
+    }
+    else{
+        this.setState({ 
+            params: {
+                mainField: {},
+                secondField: {}
+            }
+        });
+    }
+}
     render() {
         let src = require('./filter_'+this.props.color+'.svg')
         let filter = []
@@ -102,7 +114,15 @@ onCancel(){
             return <div className="modal-form-keeper param-panel param-filter-panel" >
                     <div  >
                         {/* <button onClick={()=>{this.setState({ display: 'collapsed' });}}><img src={require('./close.svg')}></img></button> */}
-                        <header><span><img src={require('./filter_white.svg')}></img>Настройки параметрического фильтра</span></header>
+                        <header>
+                            <span><img src={require('./filter_white.svg')}></img>Настройки параметрического фильтра</span>
+                            <div>
+                                <img data-title="сброс настроек фильтра" className='comment' onClick={this.onCleanFilter} src={require('./clean.svg')}></img>
+                                <img onClick={()=>{this.setState({ display: 'collapsed' });}} src={require('../close.svg')}></img>
+                                {/* <button data-title="сброс настроек фильтра" className='comment' onClick={this.onCleanFilter}><img src={require('./clean.svg')}></img></button>
+                                <button onClick={()=>{this.setState({ display: 'collapsed' });}}><img src={require('../close.svg')}></img></button> */}
+                            </div>
+                        </header>
                         <div  className='modal-form modal-form_light-grey' onSubmit={this.onSubmit} >
 
                             <div className={this.props.single?"wrapper":"wrapper wrapper__columned"}>

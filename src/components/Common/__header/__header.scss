@@ -14,7 +14,21 @@
         color: $white-color;
     }
 }
-
+.Common__header_main {
+    padding: 4px 0 8px 15px;
+    .collapser{
+        position: absolute;
+        width: 20px;
+        right: 10px;
+        top: 10px;
+    }
+    .comment:hover::after {
+        left: 0;
+        top: 100%;
+    }
+    position: relative;
+    cursor: pointer;
+}
 .Common__header_red{
     background-color: $red-color;
 }

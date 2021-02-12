@@ -41,7 +41,7 @@ class FileInput extends React.Component {
                 <p className="license__remain-time" >Осталось дней: {props.lic.remained}</p>
             </>
             :null
-        return <div className="Settings__lic">
+        return this.props.isAdmin==='администратор'?<div className="Settings__lic">
             <form encType="multipart/form-data" action="settings_admin.php" method="POST" onSubmit={this.handleSubmit}>       
                 <h2 className='h2__center'>Лицензия</h2>	
                 
@@ -60,7 +60,7 @@ class FileInput extends React.Component {
                 </p>
                 <p><input className="button__red" type="submit" name="lic" value="Загрузить" /></p>
             </form>
-        </div>
+        </div>:<></>
     //   return (
     //     <form onSubmit={this.handleSubmit}>
     //       <label>
@@ -81,7 +81,8 @@ class FileInput extends React.Component {
 
 let mapStateToProps = (state) => {
     return {
-        lic: state.lic
+        lic: state.lic,
+        isAdmin: state.auth.briefUserInfo.admin
     }
 }
 let mapDispatchToProps ={
