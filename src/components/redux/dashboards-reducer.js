@@ -544,7 +544,7 @@ export const getAcs = (id,indexName,dbName,isFirst) => {
         state.body.paramFilter[state.body.field]
         let changeFilObj = getState().changeDashFromMenu
         if((state.type==='Table') && (state.body.indexName==changeFilObj.indexName))  {
-            paramFilter.significance = changeFilObj.filter.significance
+            paramFilter.severity = changeFilObj.filter.severity
             dispatches.push(ParamFilter(paramFilter,id,determDbName(dbName,dbName.name)))
         }
         delete paramFilter[undefined]
@@ -1107,7 +1107,7 @@ export const createReportThunk = (state, indexName, field) => {
                                     endtime: timeFilter.to.format('YYYY/MM/DD HH:mm:ss')
                                 },
                                 filter: params,//params,//{person:["Артем Артишев"]},
-                                field:fieldsInTable,//:["object","pass_number","time","route","person","significance","event","ip_device","device"],
+                                field:fieldsInTable,//:["object","pass_number","time","route","person","severity","event","ip_device","device"],
                                 
                                 grouping:{field: mainField, trend:trend?'asc':'desc'},//{field:"time",trend:"asc"},
                                 pagename: title,//,e"Отчет с 16.04.2019"
