@@ -43,7 +43,7 @@ class rawMainMenuItem extends React.Component {
                     list.forEach(key => {
                         const event = indexes[index].logsCount[key]
                         if(event.doc_count>0)
-                        eventsCount.push(<p  className={'info-parh label'+'_'+event.style} onClick={()=>this.props.setComplexSetThunkFromMain({severity: [event.key]},dbName,index,null,event.lastTime)}>{event.key}: {event.doc_count>999?'999+':event.doc_count} <span>(с {event.lastTime}).</span></p>) 
+                        eventsCount.push(<p  className={'info-parh label'+'_'+event.style} onClick={()=>this.props.setComplexSetThunkFromMain({significance: [event.key]},dbName,index,null,event.lastTime)}>{event.key}: {event.doc_count>999?'999+':event.doc_count} <span>(с {event.lastTime}).</span></p>) 
                     });
                     
                     // eventsCount
